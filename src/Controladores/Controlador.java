@@ -24,8 +24,10 @@ public class Controlador {
     EmpleadosJpaController cEmp = new EmpleadosJpaController();
     ServiciosJpaController cServ = new ServiciosJpaController();
     EntregablesJpaController cEnt = new EntregablesJpaController();
+    
     List <Paquetes> listPaq = new ArrayList();
     List <Clientes> listClientes = new ArrayList();
+    List <Detalleentregables> listEntregables = new ArrayList();
     
     public List<Clientes> getClientes()
     {
@@ -51,6 +53,11 @@ public class Controlador {
     public Clientes getClienteId(int id)
     {
         return cClientes.findClientes(id);
+    }
+    
+    public List<Detalleentregables> getDetalleEntregable(int id){
+        listEntregables = cDetEnt.buscarEntregables(id);
+        return listEntregables;
     }
     
     public void editarCliente(int id, String nombre, String apellido, String direccion, String numero, String correo)

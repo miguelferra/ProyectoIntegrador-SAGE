@@ -17,10 +17,12 @@ import javax.persistence.criteria.Root;
 import Entidades.Entregables;
 import Entidades.Paquetes;
 import Entidades.Pedidos;
+import com.sun.xml.internal.ws.api.server.Module;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.criteria.CriteriaBuilder;
 
 /**
  *
@@ -219,7 +221,17 @@ public class DetalleentregablesJpaController implements Serializable {
     public Detalleentregables findDetalleentregables(DetalleentregablesPK id) {
         EntityManager em = getEntityManager();
         try {
-            return em.find(Detalleentregables.class, id);
+            return em.find(Detalleentregables.class, id);            
+        } finally {
+            em.close();
+        }
+    }
+    
+    public List<Detalleentregables> buscarEntregables(int id){
+        EntityManager em = getEntityManager();
+        try {
+            Query q = em.createNativeQuery("SELECT * FROM basedatos_sage.detalleentregables WHERE paquetes_idpaquete = "+id,Detalleentregables.class);
+            return q.getResultList();
         } finally {
             em.close();
         }

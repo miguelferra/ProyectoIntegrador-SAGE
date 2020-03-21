@@ -29,6 +29,7 @@ public class FrmNuevoCliente extends javax.swing.JFrame {
     
     public FrmNuevoCliente(int id) {
         initComponents();
+        this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         Clientes c = controlador.getClienteId(id);
         txtNombre.setText(c.getNombre());
