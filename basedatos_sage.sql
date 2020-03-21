@@ -31,15 +31,6 @@ CREATE TABLE `actividades` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `actividades`
---
-
-LOCK TABLES `actividades` WRITE;
-/*!40000 ALTER TABLE `actividades` DISABLE KEYS */;
-/*!40000 ALTER TABLE `actividades` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `clientes`
 --
 
@@ -56,16 +47,6 @@ CREATE TABLE `clientes` (
   PRIMARY KEY (`idcliente`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `clientes`
---
-
-LOCK TABLES `clientes` WRITE;
-/*!40000 ALTER TABLE `clientes` DISABLE KEYS */;
-INSERT INTO `clientes` VALUES (1,'Miguel','Ferra','5643453','miguel@gmail.com','Carolingios'),(2,'Lameda','lol','662321231','lol@gmail.com','asda');
-/*!40000 ALTER TABLE `clientes` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `detalleactividades`
@@ -90,15 +71,6 @@ CREATE TABLE `detalleactividades` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `detalleactividades`
---
-
-LOCK TABLES `detalleactividades` WRITE;
-/*!40000 ALTER TABLE `detalleactividades` DISABLE KEYS */;
-/*!40000 ALTER TABLE `detalleactividades` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `detalleentregables`
 --
 
@@ -119,15 +91,6 @@ CREATE TABLE `detalleentregables` (
   CONSTRAINT `fk_detalleentregables_pedidos1` FOREIGN KEY (`pedidos_idpedido`) REFERENCES `pedidos` (`idpedido`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `detalleentregables`
---
-
-LOCK TABLES `detalleentregables` WRITE;
-/*!40000 ALTER TABLE `detalleentregables` DISABLE KEYS */;
-/*!40000 ALTER TABLE `detalleentregables` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `detalleservicio`
@@ -152,15 +115,6 @@ CREATE TABLE `detalleservicio` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `detalleservicio`
---
-
-LOCK TABLES `detalleservicio` WRITE;
-/*!40000 ALTER TABLE `detalleservicio` DISABLE KEYS */;
-/*!40000 ALTER TABLE `detalleservicio` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `empleados`
 --
 
@@ -180,15 +134,6 @@ CREATE TABLE `empleados` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `empleados`
---
-
-LOCK TABLES `empleados` WRITE;
-/*!40000 ALTER TABLE `empleados` DISABLE KEYS */;
-/*!40000 ALTER TABLE `empleados` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `entregables`
 --
 
@@ -204,15 +149,6 @@ CREATE TABLE `entregables` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `entregables`
---
-
-LOCK TABLES `entregables` WRITE;
-/*!40000 ALTER TABLE `entregables` DISABLE KEYS */;
-/*!40000 ALTER TABLE `entregables` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `paquetes`
 --
 
@@ -223,19 +159,10 @@ CREATE TABLE `paquetes` (
   `idpaquete` int NOT NULL,
   `nombre` varchar(45) DEFAULT NULL,
   `descripcion` varchar(70) DEFAULT NULL,
+  `precio` float DEFAULT NULL,
   PRIMARY KEY (`idpaquete`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `paquetes`
---
-
-LOCK TABLES `paquetes` WRITE;
-/*!40000 ALTER TABLE `paquetes` DISABLE KEYS */;
-INSERT INTO `paquetes` VALUES (1,'(-Individual-) Sesion sencilla en estudio','Sesion fashion: Duración 30 min. Varias poses. 1 vestuario.'),(2,'(Individual) Sesion sencilla en estudio','Sesion fashion: Duración 1 hr. Varias poses. 2 vestuario.');
-/*!40000 ALTER TABLE `paquetes` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `pedidos`
@@ -262,15 +189,6 @@ CREATE TABLE `pedidos` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `pedidos`
---
-
-LOCK TABLES `pedidos` WRITE;
-/*!40000 ALTER TABLE `pedidos` DISABLE KEYS */;
-/*!40000 ALTER TABLE `pedidos` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `servicios`
 --
 
@@ -286,15 +204,6 @@ CREATE TABLE `servicios` (
   PRIMARY KEY (`idservicio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `servicios`
---
-
-LOCK TABLES `servicios` WRITE;
-/*!40000 ALTER TABLE `servicios` DISABLE KEYS */;
-/*!40000 ALTER TABLE `servicios` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -305,4 +214,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-03-20 23:15:24
+-- Dump completed on 2020-03-21  2:14:56

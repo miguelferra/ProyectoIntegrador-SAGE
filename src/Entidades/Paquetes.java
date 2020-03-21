@@ -42,6 +42,8 @@ public class Paquetes implements Serializable {
     private String nombre;
     @Column(name = "descripcion")
     private String descripcion;
+    @Column(name = "precio")
+    private double precio;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "paquetes")
     private List<Detalleentregables> detalleentregablesList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "paquetesIdpaquete")
@@ -58,6 +60,14 @@ public class Paquetes implements Serializable {
 
     public Integer getIdpaquete() {
         return idpaquete;
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(double precio) {
+        this.precio = precio;
     }
 
     public void setIdpaquete(Integer idpaquete) {
@@ -133,3 +143,4 @@ public class Paquetes implements Serializable {
     }
     
 }
+

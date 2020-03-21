@@ -43,14 +43,15 @@ public class Inicio extends javax.swing.JFrame {
             modelo2 = (new DefaultTableModel(
                     null, new String[]{
                         "id", "Nombres",
-                        "descripción"}) {
+                        "descripción","Precio"}) {
                 Class[] types = new Class[]{
+                    java.lang.String.class,
                     java.lang.String.class,
                     java.lang.String.class,
                     java.lang.String.class
                 };
                 boolean[] canEdit = new boolean[]{
-                    false, false, false
+                    false, false, false, false
                 };
 
                 @Override
@@ -88,6 +89,7 @@ public class Inicio extends javax.swing.JFrame {
                 modelo2.setValueAt(listClientes.get(i).getIdpaquete(), i, 0);
                 modelo2.setValueAt(listClientes.get(i).getNombre(), i, 1);
                 modelo2.setValueAt(listClientes.get(i).getDescripcion(), i, 2);
+                modelo2.setValueAt(listClientes.get(i).getPrecio(), i, 3);
                 
             }
             
