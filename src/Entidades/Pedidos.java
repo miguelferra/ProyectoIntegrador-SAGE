@@ -84,11 +84,13 @@ public class Pedidos implements Serializable {
         this.idpedido = idpedido;
     }
 
-    public Pedidos(Integer idpedido, Date fechaPedido, double precio, String promocion) {
+    public Pedidos(Integer idpedido, Date fechaPedido, Date fechaRequerida, double precio, String promocion, String notas) {
         this.idpedido = idpedido;
         this.fechaPedido = fechaPedido;
+        this.fechaRequerida = fechaRequerida;
         this.precio = precio;
         this.promocion = promocion;
+        this.notas = notas;
     }
 
     public Integer getIdpedido() {

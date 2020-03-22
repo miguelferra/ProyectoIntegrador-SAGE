@@ -3,10 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package sage;
+package Vista;
 
 import Controladores.Controlador;
 import Entidades.Detalleentregables;
+import Entidades.Detalleservicio;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -26,11 +27,14 @@ public class DetallePaquete extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.controlador = controlador;
         CrearModeloEntregables();
+        CrearModeloServicios();
         cargarEntregables(id);
+        cargarServicios(id);
     }
 
     
          DefaultTableModel modelo3;
+         DefaultTableModel modelo4;
     private void CrearModeloEntregables() {
         try {
             modelo3 = (new DefaultTableModel(
@@ -61,6 +65,36 @@ public class DetallePaquete extends javax.swing.JFrame {
         }
     }
     
+    private void CrearModeloServicios() {
+        try {
+            modelo4 = (new DefaultTableModel(
+                    null, new String[]{
+                        "Tipo", "Tiempo", "Paquete"}) {
+                Class[] types = new Class[]{
+                    java.lang.String.class,
+                    java.lang.String.class,
+                    java.lang.String.class
+                };
+                boolean[] canEdit = new boolean[]{
+                    false, false, false
+                };
+
+                @Override
+                public Class getColumnClass(int columnIndex) {
+                    return types[columnIndex];
+                }
+
+                @Override
+                public boolean isCellEditable(int rowIndex, int colIndex) {
+                    return canEdit[colIndex];
+                }
+            });
+            tablaServicios.setModel(modelo4);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e.toString() + "error2");
+        }
+    }
+    
     private void cargarEntregables(int id){
         try{
             System.out.println("CargarEntregables");
@@ -71,6 +105,22 @@ public class DetallePaquete extends javax.swing.JFrame {
                 modelo3.setValueAt(listaEntregables.get(i).getCantidad(), i, 0);
                 modelo3.setValueAt(listaEntregables.get(i).getEntregables().getTipo(), i, 1);
                 modelo3.setValueAt(listaEntregables.get(i).getPaquetes().getNombre(), i, 2);              
+            }
+            
+        } catch(Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    private void cargarServicios(int id){
+        try{
+            System.out.println("CargarServicios");
+            Object o[] = null;
+            List<Detalleservicio> listaServicios = controlador.getDetalleServicio(id);
+            for (int i = 0; i < listaServicios.size(); i++) {                
+                modelo4.addRow(o);
+                modelo4.setValueAt(listaServicios.get(i).getServicios().getTipo(), i, 0);
+                modelo4.setValueAt(listaServicios.get(i).getServicios().getTiempo(), i, 1);
+                modelo4.setValueAt(listaServicios.get(i).getPaquetes().getNombre(), i, 2);              
             }
             
         } catch(Exception e) {
@@ -89,6 +139,8 @@ public class DetallePaquete extends javax.swing.JFrame {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaEntregables = new javax.swing.JTable();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tablaServicios = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -110,21 +162,38 @@ public class DetallePaquete extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tablaEntregables);
 
+        tablaServicios.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane2.setViewportView(tablaServicios);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(26, 26, 26)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 691, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addGap(73, 73, 73)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane1))
+                .addContainerGap(94, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(33, 33, 33)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(40, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(41, 41, 41)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         pack();
@@ -138,6 +207,8 @@ public class DetallePaquete extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable tablaEntregables;
+    private javax.swing.JTable tablaServicios;
     // End of variables declaration//GEN-END:variables
 }

@@ -224,6 +224,16 @@ public class DetalleservicioJpaController implements Serializable {
             em.close();
         }
     }
+    
+     public List<Detalleservicio> buscarServicios(int id){
+        EntityManager em = getEntityManager();
+        try {
+            Query q = em.createNativeQuery("SELECT * FROM basedatos_sage.detalleservicio WHERE paquetes_idpaquete = "+id,Detalleservicio.class);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
 
     public int getDetalleservicioCount() {
         EntityManager em = getEntityManager();
