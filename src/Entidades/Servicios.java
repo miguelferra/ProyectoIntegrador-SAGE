@@ -6,18 +6,18 @@
 package Entidades;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -30,26 +30,24 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Servicios.findAll", query = "SELECT s FROM Servicios s")
     , @NamedQuery(name = "Servicios.findByIdservicio", query = "SELECT s FROM Servicios s WHERE s.idservicio = :idservicio")
     , @NamedQuery(name = "Servicios.findByTipo", query = "SELECT s FROM Servicios s WHERE s.tipo = :tipo")
-    , @NamedQuery(name = "Servicios.findByTiempo", query = "SELECT s FROM Servicios s WHERE s.tiempo = :tiempo")
     , @NamedQuery(name = "Servicios.findByLugar", query = "SELECT s FROM Servicios s WHERE s.lugar = :lugar")
     , @NamedQuery(name = "Servicios.findByDetalle", query = "SELECT s FROM Servicios s WHERE s.detalle = :detalle")})
 public class Servicios implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "idservicio")
     private Integer idservicio;
     @Column(name = "tipo")
     private String tipo;
-    @Column(name = "tiempo")
-    private String tiempo;
     @Column(name = "lugar")
     private String lugar;
     @Column(name = "detalle")
     private String detalle;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "servicios")
-    private List<Detalleservicio> detalleservicioList;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "servicios")
+    private Detalleservicio detalleservicio;
 
     public Servicios() {
     }
@@ -74,14 +72,6 @@ public class Servicios implements Serializable {
         this.tipo = tipo;
     }
 
-    public String getTiempo() {
-        return tiempo;
-    }
-
-    public void setTiempo(String tiempo) {
-        this.tiempo = tiempo;
-    }
-
     public String getLugar() {
         return lugar;
     }
@@ -98,13 +88,12 @@ public class Servicios implements Serializable {
         this.detalle = detalle;
     }
 
-    @XmlTransient
-    public List<Detalleservicio> getDetalleservicioList() {
-        return detalleservicioList;
+    public Detalleservicio getDetalleservicio() {
+        return detalleservicio;
     }
 
-    public void setDetalleservicioList(List<Detalleservicio> detalleservicioList) {
-        this.detalleservicioList = detalleservicioList;
+    public void setDetalleservicio(Detalleservicio detalleservicio) {
+        this.detalleservicio = detalleservicio;
     }
 
     @Override

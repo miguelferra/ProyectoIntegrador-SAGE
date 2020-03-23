@@ -8,8 +8,6 @@ package sage;
 import Datos.ClientesJpaController;
 import Datos.PaquetesJpaController;
 import Datos.PedidosJpaController;
-import Controladores.exceptions.IllegalOrphanException;
-import Controladores.exceptions.NonexistentEntityException;
 import Entidades.Clientes;
 import Entidades.Paquetes;
 import Entidades.Pedidos;

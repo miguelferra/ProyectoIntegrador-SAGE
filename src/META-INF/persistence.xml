@@ -2,16 +2,17 @@
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
   <persistence-unit name="SAGEPU" transaction-type="RESOURCE_LOCAL">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <class>Entidades.Pedidos</class>
-    <class>Entidades.Detalleactividades</class>
-    <class>Entidades.Clientes</class>
-    <class>Entidades.Detalleentregables</class>
-    <class>Entidades.Servicios</class>
-    <class>Entidades.Empleados</class>
-    <class>Entidades.Detalleservicio</class>
-    <class>Entidades.Paquetes</class>
     <class>Entidades.Actividades</class>
+    <class>Entidades.Clientes</class>
+    <class>Entidades.Detalleentregablespedido</class>
+    <class>Entidades.Paquetes</class>
+    <class>Entidades.Empleados</class>
     <class>Entidades.Entregables</class>
+    <class>Entidades.Pedidos</class>
+    <class>Entidades.Detalleentregablespaquete</class>
+    <class>Entidades.Servicios</class>
+    <class>Entidades.Detalleactividades</class>
+    <class>Entidades.Detalleservicio</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/basedatos_sage?zeroDateTimeBehavior=convertToNull"/>
       <property name="javax.persistence.jdbc.user" value="root"/>

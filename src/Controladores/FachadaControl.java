@@ -5,20 +5,19 @@
  */
 package Controladores;
 
-import Controladores.exceptions.NonexistentEntityException;
 import Datos.ActividadesJpaController;
 import Datos.ClientesJpaController;
 import Datos.DetalleactividadesJpaController;
-import Datos.DetalleentregablesJpaController;
 import Datos.DetalleservicioJpaController;
 import Datos.EmpleadosJpaController;
-import Datos.EntregablesJpaController;
 import Datos.PaquetesJpaController;
 import Datos.PedidosJpaController;
 import Datos.ServiciosJpaController;
 import Entidades.Clientes;
-import Entidades.Detalleentregables;
+import Entidades.Detalleentregablespaquete;
+import Entidades.Detalleentregablespedido;
 import Entidades.Detalleservicio;
+import Entidades.Entregables;
 import Entidades.Paquetes;
 import Entidades.Pedidos;
 import java.util.ArrayList;
@@ -40,7 +39,7 @@ public class FachadaControl implements IFachadaControl{
     private ControlPaquete controlPaquete;
     private ControlPedido controlPedido;
 
-     PedidosJpaController cPed = new PedidosJpaController();
+    PedidosJpaController cPed = new PedidosJpaController();
 
     public FachadaControl() {
         this.controlCliente = new ControlCliente();
@@ -71,6 +70,10 @@ public class FachadaControl implements IFachadaControl{
         return controlPaquete.getPaquetes();
     }
     
+    public List<Detalleentregablespaquete> getDetallePaqueteEntregable(int idPaquete){
+        return controlPaquete.getDetalle(idPaquete);
+    }
+    
     public void agregaCliente(String nombre, String apellido, String direccion, String numero, String correo){
         controlCliente.agregaCliente(nombre, apellido, direccion, numero, correo);
     }
@@ -83,13 +86,17 @@ public class FachadaControl implements IFachadaControl{
         try {
             cPed.create(ped);
         } catch (Exception ex) {
-            Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FachadaControl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    public List<Detalleentregables> getDetalleEntregable(int idPaquete){
+    public List<Detalleentregablespedido> getDetalleEntregable(int idPaquete){
         return controlEntregable.getDetalleEntregable(idPaquete);
     }
+    
+    public Entregables getEntregableId(int id){
+        return controlEntregable.getEntregableId(id);
+    } 
     
     public List<Detalleservicio> getDetalleServicio(int id){
         return controlServicio.getDetalleServicio(id);

@@ -5,18 +5,18 @@
  */
 package Datos;
 
-import Controladores.exceptions.NonexistentEntityException;
-import Controladores.exceptions.PreexistingEntityException;
+import Datos.exceptions.IllegalOrphanException;
+import Datos.exceptions.NonexistentEntityException;
+import Datos.exceptions.PreexistingEntityException;
 import Entidades.Detalleservicio;
-import Entidades.DetalleservicioPK;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import Entidades.Paquetes;
 import Entidades.Pedidos;
 import Entidades.Servicios;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -37,21 +37,25 @@ public class DetalleservicioJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Detalleservicio detalleservicio) throws PreexistingEntityException, Exception {
-        if (detalleservicio.getDetalleservicioPK() == null) {
-            detalleservicio.setDetalleservicioPK(new DetalleservicioPK());
+    public void create(Detalleservicio detalleservicio) throws IllegalOrphanException, PreexistingEntityException, Exception {
+        List<String> illegalOrphanMessages = null;
+        Servicios serviciosOrphanCheck = detalleservicio.getServicios();
+        if (serviciosOrphanCheck != null) {
+            Detalleservicio oldDetalleservicioOfServicios = serviciosOrphanCheck.getDetalleservicio();
+            if (oldDetalleservicioOfServicios != null) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("The Servicios " + serviciosOrphanCheck + " already has an item of type Detalleservicio whose servicios column cannot be null. Please make another selection for the servicios field.");
+            }
         }
-        detalleservicio.getDetalleservicioPK().setServiciosIdservicio(detalleservicio.getServicios().getIdservicio());
-        detalleservicio.getDetalleservicioPK().setPaquetesIdpaquete(detalleservicio.getPaquetes().getIdpaquete());
+        if (illegalOrphanMessages != null) {
+            throw new IllegalOrphanException(illegalOrphanMessages);
+        }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Paquetes paquetes = detalleservicio.getPaquetes();
-            if (paquetes != null) {
-                paquetes = em.getReference(paquetes.getClass(), paquetes.getIdpaquete());
-                detalleservicio.setPaquetes(paquetes);
-            }
             Pedidos pedidosIdpedido = detalleservicio.getPedidosIdpedido();
             if (pedidosIdpedido != null) {
                 pedidosIdpedido = em.getReference(pedidosIdpedido.getClass(), pedidosIdpedido.getIdpedido());
@@ -63,21 +67,17 @@ public class DetalleservicioJpaController implements Serializable {
                 detalleservicio.setServicios(servicios);
             }
             em.persist(detalleservicio);
-            if (paquetes != null) {
-                paquetes.getDetalleservicioList().add(detalleservicio);
-                paquetes = em.merge(paquetes);
-            }
             if (pedidosIdpedido != null) {
                 pedidosIdpedido.getDetalleservicioList().add(detalleservicio);
                 pedidosIdpedido = em.merge(pedidosIdpedido);
             }
             if (servicios != null) {
-                servicios.getDetalleservicioList().add(detalleservicio);
+                servicios.setDetalleservicio(detalleservicio);
                 servicios = em.merge(servicios);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
-            if (findDetalleservicio(detalleservicio.getDetalleservicioPK()) != null) {
+            if (findDetalleservicio(detalleservicio.getServiciosIdservicio()) != null) {
                 throw new PreexistingEntityException("Detalleservicio " + detalleservicio + " already exists.", ex);
             }
             throw ex;
@@ -88,23 +88,28 @@ public class DetalleservicioJpaController implements Serializable {
         }
     }
 
-    public void edit(Detalleservicio detalleservicio) throws NonexistentEntityException, Exception {
-        detalleservicio.getDetalleservicioPK().setServiciosIdservicio(detalleservicio.getServicios().getIdservicio());
-        detalleservicio.getDetalleservicioPK().setPaquetesIdpaquete(detalleservicio.getPaquetes().getIdpaquete());
+    public void edit(Detalleservicio detalleservicio) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Detalleservicio persistentDetalleservicio = em.find(Detalleservicio.class, detalleservicio.getDetalleservicioPK());
-            Paquetes paquetesOld = persistentDetalleservicio.getPaquetes();
-            Paquetes paquetesNew = detalleservicio.getPaquetes();
+            Detalleservicio persistentDetalleservicio = em.find(Detalleservicio.class, detalleservicio.getServiciosIdservicio());
             Pedidos pedidosIdpedidoOld = persistentDetalleservicio.getPedidosIdpedido();
             Pedidos pedidosIdpedidoNew = detalleservicio.getPedidosIdpedido();
             Servicios serviciosOld = persistentDetalleservicio.getServicios();
             Servicios serviciosNew = detalleservicio.getServicios();
-            if (paquetesNew != null) {
-                paquetesNew = em.getReference(paquetesNew.getClass(), paquetesNew.getIdpaquete());
-                detalleservicio.setPaquetes(paquetesNew);
+            List<String> illegalOrphanMessages = null;
+            if (serviciosNew != null && !serviciosNew.equals(serviciosOld)) {
+                Detalleservicio oldDetalleservicioOfServicios = serviciosNew.getDetalleservicio();
+                if (oldDetalleservicioOfServicios != null) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("The Servicios " + serviciosNew + " already has an item of type Detalleservicio whose servicios column cannot be null. Please make another selection for the servicios field.");
+                }
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
             }
             if (pedidosIdpedidoNew != null) {
                 pedidosIdpedidoNew = em.getReference(pedidosIdpedidoNew.getClass(), pedidosIdpedidoNew.getIdpedido());
@@ -115,14 +120,6 @@ public class DetalleservicioJpaController implements Serializable {
                 detalleservicio.setServicios(serviciosNew);
             }
             detalleservicio = em.merge(detalleservicio);
-            if (paquetesOld != null && !paquetesOld.equals(paquetesNew)) {
-                paquetesOld.getDetalleservicioList().remove(detalleservicio);
-                paquetesOld = em.merge(paquetesOld);
-            }
-            if (paquetesNew != null && !paquetesNew.equals(paquetesOld)) {
-                paquetesNew.getDetalleservicioList().add(detalleservicio);
-                paquetesNew = em.merge(paquetesNew);
-            }
             if (pedidosIdpedidoOld != null && !pedidosIdpedidoOld.equals(pedidosIdpedidoNew)) {
                 pedidosIdpedidoOld.getDetalleservicioList().remove(detalleservicio);
                 pedidosIdpedidoOld = em.merge(pedidosIdpedidoOld);
@@ -132,18 +129,18 @@ public class DetalleservicioJpaController implements Serializable {
                 pedidosIdpedidoNew = em.merge(pedidosIdpedidoNew);
             }
             if (serviciosOld != null && !serviciosOld.equals(serviciosNew)) {
-                serviciosOld.getDetalleservicioList().remove(detalleservicio);
+                serviciosOld.setDetalleservicio(null);
                 serviciosOld = em.merge(serviciosOld);
             }
             if (serviciosNew != null && !serviciosNew.equals(serviciosOld)) {
-                serviciosNew.getDetalleservicioList().add(detalleservicio);
+                serviciosNew.setDetalleservicio(detalleservicio);
                 serviciosNew = em.merge(serviciosNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                DetalleservicioPK id = detalleservicio.getDetalleservicioPK();
+                Integer id = detalleservicio.getServiciosIdservicio();
                 if (findDetalleservicio(id) == null) {
                     throw new NonexistentEntityException("The detalleservicio with id " + id + " no longer exists.");
                 }
@@ -156,7 +153,7 @@ public class DetalleservicioJpaController implements Serializable {
         }
     }
 
-    public void destroy(DetalleservicioPK id) throws NonexistentEntityException {
+    public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -164,14 +161,9 @@ public class DetalleservicioJpaController implements Serializable {
             Detalleservicio detalleservicio;
             try {
                 detalleservicio = em.getReference(Detalleservicio.class, id);
-                detalleservicio.getDetalleservicioPK();
+                detalleservicio.getServiciosIdservicio();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The detalleservicio with id " + id + " no longer exists.", enfe);
-            }
-            Paquetes paquetes = detalleservicio.getPaquetes();
-            if (paquetes != null) {
-                paquetes.getDetalleservicioList().remove(detalleservicio);
-                paquetes = em.merge(paquetes);
             }
             Pedidos pedidosIdpedido = detalleservicio.getPedidosIdpedido();
             if (pedidosIdpedido != null) {
@@ -180,7 +172,7 @@ public class DetalleservicioJpaController implements Serializable {
             }
             Servicios servicios = detalleservicio.getServicios();
             if (servicios != null) {
-                servicios.getDetalleservicioList().remove(detalleservicio);
+                servicios.setDetalleservicio(null);
                 servicios = em.merge(servicios);
             }
             em.remove(detalleservicio);
@@ -216,7 +208,7 @@ public class DetalleservicioJpaController implements Serializable {
         }
     }
 
-    public Detalleservicio findDetalleservicio(DetalleservicioPK id) {
+    public Detalleservicio findDetalleservicio(Integer id) {
         EntityManager em = getEntityManager();
         try {
             return em.find(Detalleservicio.class, id);
@@ -225,10 +217,10 @@ public class DetalleservicioJpaController implements Serializable {
         }
     }
     
-     public List<Detalleservicio> buscarServicios(int id){
+    public List<Detalleservicio> buscarServicios(int id){
         EntityManager em = getEntityManager();
         try {
-            Query q = em.createNativeQuery("SELECT * FROM basedatos_sage.detalleservicio WHERE paquetes_idpaquete = "+id,Detalleservicio.class);
+            Query q = em.createNativeQuery("SELECT * FROM basedatos_sage.detalleservicio WHERE pedidos_idpedido = "+id,Detalleservicio.class);
             return q.getResultList();
         } finally {
             em.close();

@@ -5,12 +5,18 @@
  */
 package Datos;
 
+import Entidades.Paquetes;
+import java.util.List;
+
 /**
  *
  * @author ferra
  */
 public interface IFachadaDatos {
     
+    public Paquetes getPaqueteId(int id);
+   
+     public List<Paquetes> getPaquetes();
     
     
 }

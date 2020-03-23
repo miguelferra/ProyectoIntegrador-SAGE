@@ -5,9 +5,8 @@
  */
 package Datos;
 
-import Controladores.exceptions.IllegalOrphanException;
-import Controladores.exceptions.NonexistentEntityException;
-import Controladores.exceptions.PreexistingEntityException;
+import Datos.exceptions.IllegalOrphanException;
+import Datos.exceptions.NonexistentEntityException;
 import Entidades.Actividades;
 import java.io.Serializable;
 import javax.persistence.Query;
@@ -28,7 +27,8 @@ import javax.persistence.Persistence;
 public class ActividadesJpaController implements Serializable {
 
     public ActividadesJpaController() {
-        this.emf = Persistence.createEntityManagerFactory("SAGEPU");
+         this.emf = Persistence.createEntityManagerFactory("SAGEPU");
+
     }
     private EntityManagerFactory emf = null;
 
@@ -36,7 +36,7 @@ public class ActividadesJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Actividades actividades) throws PreexistingEntityException, Exception {
+    public void create(Actividades actividades) {
         if (actividades.getDetalleactividadesList() == null) {
             actividades.setDetalleactividadesList(new ArrayList<Detalleactividades>());
         }
@@ -61,11 +61,6 @@ public class ActividadesJpaController implements Serializable {
                 }
             }
             em.getTransaction().commit();
-        } catch (Exception ex) {
-            if (findActividades(actividades.getIdactividad()) != null) {
-                throw new PreexistingEntityException("Actividades " + actividades + " already exists.", ex);
-            }
-            throw ex;
         } finally {
             if (em != null) {
                 em.close();

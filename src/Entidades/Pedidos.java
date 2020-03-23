@@ -64,8 +64,6 @@ public class Pedidos implements Serializable {
     private String promocion;
     @Column(name = "notas")
     private String notas;
-    @OneToMany(mappedBy = "pedidosIdpedido")
-    private List<Detalleentregables> detalleentregablesList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "pedidos")
     private List<Detalleactividades> detalleactividadesList;
     @JoinColumn(name = "clientes_idcliente", referencedColumnName = "idcliente")
@@ -76,6 +74,8 @@ public class Pedidos implements Serializable {
     private Paquetes paquetesIdpaquete;
     @OneToMany(mappedBy = "pedidosIdpedido")
     private List<Detalleservicio> detalleservicioList;
+    @OneToMany(mappedBy = "pedidosIdpedido")
+    private List<Detalleentregablespedido> detalleentregablespedidoList;
 
     public Pedidos() {
     }
@@ -142,15 +142,6 @@ public class Pedidos implements Serializable {
     }
 
     @XmlTransient
-    public List<Detalleentregables> getDetalleentregablesList() {
-        return detalleentregablesList;
-    }
-
-    public void setDetalleentregablesList(List<Detalleentregables> detalleentregablesList) {
-        this.detalleentregablesList = detalleentregablesList;
-    }
-
-    @XmlTransient
     public List<Detalleactividades> getDetalleactividadesList() {
         return detalleactividadesList;
     }
@@ -182,6 +173,15 @@ public class Pedidos implements Serializable {
 
     public void setDetalleservicioList(List<Detalleservicio> detalleservicioList) {
         this.detalleservicioList = detalleservicioList;
+    }
+
+    @XmlTransient
+    public List<Detalleentregablespedido> getDetalleentregablespedidoList() {
+        return detalleentregablespedidoList;
+    }
+
+    public void setDetalleentregablespedidoList(List<Detalleentregablespedido> detalleentregablespedidoList) {
+        this.detalleentregablespedidoList = detalleentregablespedidoList;
     }
 
     @Override

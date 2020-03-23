@@ -6,7 +6,7 @@
 package Vista;
 
 import Controladores.IFachadaControl;
-import Entidades.Detalleentregables;
+import Entidades.Detalleentregablespaquete;
 import Entidades.Detalleservicio;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -39,7 +39,7 @@ public class DetallePaquete extends javax.swing.JFrame {
         try {
             modelo3 = (new DefaultTableModel(
                     null, new String[]{
-                        "cantidad", "Entregables", "Paquete"}) {
+                        "Cantidad", "Entregable", "Paquete"}) {
                 Class[] types = new Class[]{
                     java.lang.String.class,
                     java.lang.String.class,
@@ -96,36 +96,37 @@ public class DetallePaquete extends javax.swing.JFrame {
     }
     
     private void cargarEntregables(int id){
-        try{
+//        try{
             System.out.println("CargarEntregables");
             Object o[] = null;
-            List<Detalleentregables> listaEntregables = fachadaControl.getDetalleEntregable(id);
+            List<Detalleentregablespaquete> listaEntregables = fachadaControl.getDetallePaqueteEntregable(id);
             for (int i = 0; i < listaEntregables.size(); i++) {                
                 modelo3.addRow(o);
-                modelo3.setValueAt(listaEntregables.get(i).getCantidad(), i, 0);
-                modelo3.setValueAt(listaEntregables.get(i).getEntregables().getTipo(), i, 1);
-                modelo3.setValueAt(listaEntregables.get(i).getPaquetes().getNombre(), i, 2);              
+                modelo3.setValueAt(listaEntregables.get(i).getCantidadEntregable(), i, 0);
+                modelo3.setValueAt(fachadaControl.getEntregableId(listaEntregables.get(i).getEntregablesIdentregable()).getTipo(), i, 1);
+                modelo3.setValueAt(listaEntregables.get(i).getPaquetesIdpaquete().getNombre(), i, 2);    
+                
             }
             
-        } catch(Exception e) {
-            System.out.println(e.getMessage());
-        }
+//        } catch(Exception e) {
+//            System.out.println(e.getMessage());
+//        }
     }
     private void cargarServicios(int id){
-        try{
-            System.out.println("CargarServicios");
-            Object o[] = null;
-            List<Detalleservicio> listaServicios = fachadaControl.getDetalleServicio(id);
-            for (int i = 0; i < listaServicios.size(); i++) {                
-                modelo4.addRow(o);
-                modelo4.setValueAt(listaServicios.get(i).getServicios().getTipo(), i, 0);
-                modelo4.setValueAt(listaServicios.get(i).getServicios().getTiempo(), i, 1);
-                modelo4.setValueAt(listaServicios.get(i).getPaquetes().getNombre(), i, 2);              
-            }
-            
-        } catch(Exception e) {
-            System.out.println(e.getMessage());
-        }
+//        try{
+//            System.out.println("CargarServicios");
+//            Object o[] = null;
+//            List<Detalleservicio> listaServicios = fachadaControl.getDetalleServicio(id);
+//            for (int i = 0; i < listaServicios.size(); i++) {                
+//                modelo4.addRow(o);
+//                modelo4.setValueAt(listaServicios.get(i).getServicios().getTipo(), i, 0);
+//                modelo4.setValueAt(listaServicios.get(i).getServicios().getLugar(), i, 1);
+//                modelo4.setValueAt(listaServicios.get(i).getPedidosIdpedido(), i, 2);              
+//            }
+//            
+//        } catch(Exception e) {
+//            System.out.println(e.getMessage());
+//        }
     }
     
     /**
@@ -141,6 +142,9 @@ public class DetallePaquete extends javax.swing.JFrame {
         tablaEntregables = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
         tablaServicios = new javax.swing.JTable();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -175,6 +179,15 @@ public class DetallePaquete extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(tablaServicios);
 
+        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Fotos 5x7", "Item 2", "Item 3", "Item 4", "Item 5", "as", "as", "d", "ad", "asd", "asd", "d", "as", "dsa", "d", "as", "dsa", "d", "as" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane3.setViewportView(jList1);
+
+        jButton1.setText("+");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -184,16 +197,30 @@ public class DetallePaquete extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane2)
                     .addComponent(jScrollPane1))
-                .addContainerGap(94, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(42, 42, 42)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(52, 52, 52))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(41, 41, 41)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(36, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1)
+                        .addGap(200, 200, 200))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(91, 91, 91))
         );
 
         pack();
@@ -206,8 +233,11 @@ public class DetallePaquete extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JList<String> jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable tablaEntregables;
     private javax.swing.JTable tablaServicios;
     // End of variables declaration//GEN-END:variables

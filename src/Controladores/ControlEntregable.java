@@ -5,9 +5,11 @@
  */
 package Controladores;
 
-import Datos.DetalleentregablesJpaController;
+
+import Datos.DetalleentregablespedidoJpaController;
 import Datos.EntregablesJpaController;
-import Entidades.Detalleentregables;
+import Entidades.Detalleentregablespedido;
+import Entidades.Entregables;
 import java.util.List;
 
 /**
@@ -16,15 +18,18 @@ import java.util.List;
  */
 public class ControlEntregable {
 
-     DetalleentregablesJpaController cDetEnt;
+     DetalleentregablespedidoJpaController cDetEnt;
      EntregablesJpaController cEnt;
      
     public ControlEntregable() {
-        cDetEnt = new DetalleentregablesJpaController();
+        cDetEnt = new DetalleentregablespedidoJpaController();
         cEnt = new EntregablesJpaController();
     }
     
-    public List<Detalleentregables> getDetalleEntregable(int idPaquete){
+    public Entregables getEntregableId(int id){
+        return cEnt.findEntregables(id);
+    }
+    public List<Detalleentregablespedido> getDetalleEntregable(int idPaquete){
         return cDetEnt.buscarEntregables(idPaquete); 
     }
     

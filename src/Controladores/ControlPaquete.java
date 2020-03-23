@@ -5,8 +5,12 @@
  */
 package Controladores;
 
+import Datos.DetalleentregablespaqueteJpaController;
+import Datos.FachadaDatos;
+import Datos.IFachadaDatos;
 import Datos.PaquetesJpaController;
 import Entidades.Clientes;
+import Entidades.Detalleentregablespaquete;
 import Entidades.Paquetes;
 import java.util.List;
 
@@ -16,18 +20,26 @@ import java.util.List;
  */
 public class ControlPaquete {
 
+    DetalleentregablespaqueteJpaController controlDetallePaquete;
     PaquetesJpaController cPaq;
+    IFachadaDatos fachadaDatos;
     
     public ControlPaquete() {
+        this.fachadaDatos = new FachadaDatos();
         cPaq = new PaquetesJpaController();
+        controlDetallePaquete = new DetalleentregablespaqueteJpaController();
     }
     
     public Paquetes getPaqueteId(int id){
-        return cPaq.findPaquetes(id);
+        return fachadaDatos.getPaqueteId(id);
     }
    
      public List<Paquetes> getPaquetes(){
-        return cPaq.findPaquetesEntities();
+        return fachadaDatos.getPaquetes();
+    }
+    
+    public List<Detalleentregablespaquete> getDetalle(int idPaquete){
+        return controlDetallePaquete.buscarEntregables(idPaquete); 
     }
     
     

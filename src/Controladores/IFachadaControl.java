@@ -6,8 +6,10 @@
 package Controladores;
 
 import Entidades.Clientes;
-import Entidades.Detalleentregables;
+import Entidades.Detalleentregablespaquete;
+import Entidades.Detalleentregablespedido;
 import Entidades.Detalleservicio;
+import Entidades.Entregables;
 import Entidades.Paquetes;
 import java.util.Calendar;
 import java.util.Date;
@@ -30,13 +32,17 @@ public interface IFachadaControl {
     
     public Clientes getClienteId(int id);
 
-    public List<Detalleentregables> getDetalleEntregable(int id);
+    public List<Detalleentregablespedido> getDetalleEntregable(int id);
 
     public List<Detalleservicio> getDetalleServicio(int id);
     
     public Clientes getClienteNombre(String nombre, String apellido);
     
     public void editarCliente(int id, String nombre, String apellido, String direccion, String numero, String correo);
+    
+    public List<Detalleentregablespaquete> getDetallePaqueteEntregable(int idPaquete);
+    
+    public Entregables getEntregableId(int id);
     
     
 }

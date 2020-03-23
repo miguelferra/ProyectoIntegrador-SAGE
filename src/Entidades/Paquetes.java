@@ -11,6 +11,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -30,11 +32,13 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Paquetes.findAll", query = "SELECT p FROM Paquetes p")
     , @NamedQuery(name = "Paquetes.findByIdpaquete", query = "SELECT p FROM Paquetes p WHERE p.idpaquete = :idpaquete")
     , @NamedQuery(name = "Paquetes.findByNombre", query = "SELECT p FROM Paquetes p WHERE p.nombre = :nombre")
-    , @NamedQuery(name = "Paquetes.findByDescripcion", query = "SELECT p FROM Paquetes p WHERE p.descripcion = :descripcion")})
+    , @NamedQuery(name = "Paquetes.findByDescripcion", query = "SELECT p FROM Paquetes p WHERE p.descripcion = :descripcion")
+    , @NamedQuery(name = "Paquetes.findByPrecio", query = "SELECT p FROM Paquetes p WHERE p.precio = :precio")})
 public class Paquetes implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "idpaquete")
     private Integer idpaquete;
@@ -42,14 +46,13 @@ public class Paquetes implements Serializable {
     private String nombre;
     @Column(name = "descripcion")
     private String descripcion;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "precio")
-    private double precio;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "paquetes")
-    private List<Detalleentregables> detalleentregablesList;
+    private Float precio;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "paquetesIdpaquete")
     private List<Pedidos> pedidosList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "paquetes")
-    private List<Detalleservicio> detalleservicioList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "paquetesIdpaquete")
+    private List<Detalleentregablespaquete> detalleentregablespaqueteList;
 
     public Paquetes() {
     }
@@ -60,14 +63,6 @@ public class Paquetes implements Serializable {
 
     public Integer getIdpaquete() {
         return idpaquete;
-    }
-
-    public double getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(double precio) {
-        this.precio = precio;
     }
 
     public void setIdpaquete(Integer idpaquete) {
@@ -90,13 +85,12 @@ public class Paquetes implements Serializable {
         this.descripcion = descripcion;
     }
 
-    @XmlTransient
-    public List<Detalleentregables> getDetalleentregablesList() {
-        return detalleentregablesList;
+    public Float getPrecio() {
+        return precio;
     }
 
-    public void setDetalleentregablesList(List<Detalleentregables> detalleentregablesList) {
-        this.detalleentregablesList = detalleentregablesList;
+    public void setPrecio(Float precio) {
+        this.precio = precio;
     }
 
     @XmlTransient
@@ -109,12 +103,12 @@ public class Paquetes implements Serializable {
     }
 
     @XmlTransient
-    public List<Detalleservicio> getDetalleservicioList() {
-        return detalleservicioList;
+    public List<Detalleentregablespaquete> getDetalleentregablespaqueteList() {
+        return detalleentregablespaqueteList;
     }
 
-    public void setDetalleservicioList(List<Detalleservicio> detalleservicioList) {
-        this.detalleservicioList = detalleservicioList;
+    public void setDetalleentregablespaqueteList(List<Detalleentregablespaquete> detalleentregablespaqueteList) {
+        this.detalleentregablespaqueteList = detalleentregablespaqueteList;
     }
 
     @Override
@@ -143,4 +137,3 @@ public class Paquetes implements Serializable {
     }
     
 }
-

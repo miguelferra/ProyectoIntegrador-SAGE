@@ -5,8 +5,8 @@
  */
 package Controladores;
 
-import Controladores.exceptions.NonexistentEntityException;
 import Datos.ClientesJpaController;
+import Datos.exceptions.NonexistentEntityException;
 import Entidades.Clientes;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +44,7 @@ public class ControlCliente {
         try {
             cClientes.create(new Clientes(0,nombre,apellido, numero,correo,direccion));
         } catch (Exception ex) {
-            Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FachadaControl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -58,9 +58,9 @@ public class ControlCliente {
         try {
             cClientes.edit(c);
         } catch (NonexistentEntityException ex) {
-            Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FachadaControl.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
-            Logger.getLogger(Controlador.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FachadaControl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

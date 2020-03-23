@@ -5,8 +5,8 @@
  */
 package Datos;
 
-import Controladores.exceptions.NonexistentEntityException;
-import Controladores.exceptions.PreexistingEntityException;
+import Datos.exceptions.NonexistentEntityException;
+import Datos.exceptions.PreexistingEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;

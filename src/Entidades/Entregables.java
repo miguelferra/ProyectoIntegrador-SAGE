@@ -6,18 +6,18 @@
 package Entidades;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -35,28 +35,29 @@ public class Entregables implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "identregable")
-    private String identregable;
+    private Integer identregable;
     @Column(name = "tipo")
     private String tipo;
     @Column(name = "tama\u00f1o")
     private String tamaño;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "entregables")
-    private List<Detalleentregables> detalleentregablesList;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "entregables")
+    private Detalleentregablespedido detalleentregablespedido;
 
     public Entregables() {
     }
 
-    public Entregables(String identregable) {
+    public Entregables(Integer identregable) {
         this.identregable = identregable;
     }
 
-    public String getIdentregable() {
+    public Integer getIdentregable() {
         return identregable;
     }
 
-    public void setIdentregable(String identregable) {
+    public void setIdentregable(Integer identregable) {
         this.identregable = identregable;
     }
 
@@ -76,13 +77,12 @@ public class Entregables implements Serializable {
         this.tamaño = tamaño;
     }
 
-    @XmlTransient
-    public List<Detalleentregables> getDetalleentregablesList() {
-        return detalleentregablesList;
+    public Detalleentregablespedido getDetalleentregablespedido() {
+        return detalleentregablespedido;
     }
 
-    public void setDetalleentregablesList(List<Detalleentregables> detalleentregablesList) {
-        this.detalleentregablesList = detalleentregablesList;
+    public void setDetalleentregablespedido(Detalleentregablespedido detalleentregablespedido) {
+        this.detalleentregablespedido = detalleentregablespedido;
     }
 
     @Override

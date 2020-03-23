@@ -5,9 +5,8 @@
  */
 package Datos;
 
-import Controladores.exceptions.IllegalOrphanException;
-import Controladores.exceptions.NonexistentEntityException;
-import Controladores.exceptions.PreexistingEntityException;
+import Datos.exceptions.IllegalOrphanException;
+import Datos.exceptions.NonexistentEntityException;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -36,36 +35,27 @@ public class ServiciosJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Servicios servicios) throws PreexistingEntityException, Exception {
-        if (servicios.getDetalleservicioList() == null) {
-            servicios.setDetalleservicioList(new ArrayList<Detalleservicio>());
-        }
+    public void create(Servicios servicios) {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<Detalleservicio> attachedDetalleservicioList = new ArrayList<Detalleservicio>();
-            for (Detalleservicio detalleservicioListDetalleservicioToAttach : servicios.getDetalleservicioList()) {
-                detalleservicioListDetalleservicioToAttach = em.getReference(detalleservicioListDetalleservicioToAttach.getClass(), detalleservicioListDetalleservicioToAttach.getDetalleservicioPK());
-                attachedDetalleservicioList.add(detalleservicioListDetalleservicioToAttach);
+            Detalleservicio detalleservicio = servicios.getDetalleservicio();
+            if (detalleservicio != null) {
+                detalleservicio = em.getReference(detalleservicio.getClass(), detalleservicio.getServiciosIdservicio());
+                servicios.setDetalleservicio(detalleservicio);
             }
-            servicios.setDetalleservicioList(attachedDetalleservicioList);
             em.persist(servicios);
-            for (Detalleservicio detalleservicioListDetalleservicio : servicios.getDetalleservicioList()) {
-                Servicios oldServiciosOfDetalleservicioListDetalleservicio = detalleservicioListDetalleservicio.getServicios();
-                detalleservicioListDetalleservicio.setServicios(servicios);
-                detalleservicioListDetalleservicio = em.merge(detalleservicioListDetalleservicio);
-                if (oldServiciosOfDetalleservicioListDetalleservicio != null) {
-                    oldServiciosOfDetalleservicioListDetalleservicio.getDetalleservicioList().remove(detalleservicioListDetalleservicio);
-                    oldServiciosOfDetalleservicioListDetalleservicio = em.merge(oldServiciosOfDetalleservicioListDetalleservicio);
+            if (detalleservicio != null) {
+                Servicios oldServiciosOfDetalleservicio = detalleservicio.getServicios();
+                if (oldServiciosOfDetalleservicio != null) {
+                    oldServiciosOfDetalleservicio.setDetalleservicio(null);
+                    oldServiciosOfDetalleservicio = em.merge(oldServiciosOfDetalleservicio);
                 }
+                detalleservicio.setServicios(servicios);
+                detalleservicio = em.merge(detalleservicio);
             }
             em.getTransaction().commit();
-        } catch (Exception ex) {
-            if (findServicios(servicios.getIdservicio()) != null) {
-                throw new PreexistingEntityException("Servicios " + servicios + " already exists.", ex);
-            }
-            throw ex;
         } finally {
             if (em != null) {
                 em.close();
@@ -79,38 +69,31 @@ public class ServiciosJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Servicios persistentServicios = em.find(Servicios.class, servicios.getIdservicio());
-            List<Detalleservicio> detalleservicioListOld = persistentServicios.getDetalleservicioList();
-            List<Detalleservicio> detalleservicioListNew = servicios.getDetalleservicioList();
+            Detalleservicio detalleservicioOld = persistentServicios.getDetalleservicio();
+            Detalleservicio detalleservicioNew = servicios.getDetalleservicio();
             List<String> illegalOrphanMessages = null;
-            for (Detalleservicio detalleservicioListOldDetalleservicio : detalleservicioListOld) {
-                if (!detalleservicioListNew.contains(detalleservicioListOldDetalleservicio)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain Detalleservicio " + detalleservicioListOldDetalleservicio + " since its servicios field is not nullable.");
+            if (detalleservicioOld != null && !detalleservicioOld.equals(detalleservicioNew)) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
                 }
+                illegalOrphanMessages.add("You must retain Detalleservicio " + detalleservicioOld + " since its servicios field is not nullable.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            List<Detalleservicio> attachedDetalleservicioListNew = new ArrayList<Detalleservicio>();
-            for (Detalleservicio detalleservicioListNewDetalleservicioToAttach : detalleservicioListNew) {
-                detalleservicioListNewDetalleservicioToAttach = em.getReference(detalleservicioListNewDetalleservicioToAttach.getClass(), detalleservicioListNewDetalleservicioToAttach.getDetalleservicioPK());
-                attachedDetalleservicioListNew.add(detalleservicioListNewDetalleservicioToAttach);
+            if (detalleservicioNew != null) {
+                detalleservicioNew = em.getReference(detalleservicioNew.getClass(), detalleservicioNew.getServiciosIdservicio());
+                servicios.setDetalleservicio(detalleservicioNew);
             }
-            detalleservicioListNew = attachedDetalleservicioListNew;
-            servicios.setDetalleservicioList(detalleservicioListNew);
             servicios = em.merge(servicios);
-            for (Detalleservicio detalleservicioListNewDetalleservicio : detalleservicioListNew) {
-                if (!detalleservicioListOld.contains(detalleservicioListNewDetalleservicio)) {
-                    Servicios oldServiciosOfDetalleservicioListNewDetalleservicio = detalleservicioListNewDetalleservicio.getServicios();
-                    detalleservicioListNewDetalleservicio.setServicios(servicios);
-                    detalleservicioListNewDetalleservicio = em.merge(detalleservicioListNewDetalleservicio);
-                    if (oldServiciosOfDetalleservicioListNewDetalleservicio != null && !oldServiciosOfDetalleservicioListNewDetalleservicio.equals(servicios)) {
-                        oldServiciosOfDetalleservicioListNewDetalleservicio.getDetalleservicioList().remove(detalleservicioListNewDetalleservicio);
-                        oldServiciosOfDetalleservicioListNewDetalleservicio = em.merge(oldServiciosOfDetalleservicioListNewDetalleservicio);
-                    }
+            if (detalleservicioNew != null && !detalleservicioNew.equals(detalleservicioOld)) {
+                Servicios oldServiciosOfDetalleservicio = detalleservicioNew.getServicios();
+                if (oldServiciosOfDetalleservicio != null) {
+                    oldServiciosOfDetalleservicio.setDetalleservicio(null);
+                    oldServiciosOfDetalleservicio = em.merge(oldServiciosOfDetalleservicio);
                 }
+                detalleservicioNew.setServicios(servicios);
+                detalleservicioNew = em.merge(detalleservicioNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -142,12 +125,12 @@ public class ServiciosJpaController implements Serializable {
                 throw new NonexistentEntityException("The servicios with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<Detalleservicio> detalleservicioListOrphanCheck = servicios.getDetalleservicioList();
-            for (Detalleservicio detalleservicioListOrphanCheckDetalleservicio : detalleservicioListOrphanCheck) {
+            Detalleservicio detalleservicioOrphanCheck = servicios.getDetalleservicio();
+            if (detalleservicioOrphanCheck != null) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Servicios (" + servicios + ") cannot be destroyed since the Detalleservicio " + detalleservicioListOrphanCheckDetalleservicio + " in its detalleservicioList field has a non-nullable servicios field.");
+                illegalOrphanMessages.add("This Servicios (" + servicios + ") cannot be destroyed since the Detalleservicio " + detalleservicioOrphanCheck + " in its detalleservicio field has a non-nullable servicios field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

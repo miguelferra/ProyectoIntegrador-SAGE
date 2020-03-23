@@ -7,13 +7,15 @@ package Entidades;
 
 import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -28,47 +30,44 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Detalleservicio.findAll", query = "SELECT d FROM Detalleservicio d")
+    , @NamedQuery(name = "Detalleservicio.findByTiempo", query = "SELECT d FROM Detalleservicio d WHERE d.tiempo = :tiempo")
     , @NamedQuery(name = "Detalleservicio.findByDireccion", query = "SELECT d FROM Detalleservicio d WHERE d.direccion = :direccion")
     , @NamedQuery(name = "Detalleservicio.findByFecha", query = "SELECT d FROM Detalleservicio d WHERE d.fecha = :fecha")
-    , @NamedQuery(name = "Detalleservicio.findByPaquetesIdpaquete", query = "SELECT d FROM Detalleservicio d WHERE d.detalleservicioPK.paquetesIdpaquete = :paquetesIdpaquete")
-    , @NamedQuery(name = "Detalleservicio.findByServiciosIdservicio", query = "SELECT d FROM Detalleservicio d WHERE d.detalleservicioPK.serviciosIdservicio = :serviciosIdservicio")})
+    , @NamedQuery(name = "Detalleservicio.findByServiciosIdservicio", query = "SELECT d FROM Detalleservicio d WHERE d.serviciosIdservicio = :serviciosIdservicio")})
 public class Detalleservicio implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @EmbeddedId
-    protected DetalleservicioPK detalleservicioPK;
+    @Column(name = "tiempo")
+    private String tiempo;
     @Column(name = "direccion")
     private String direccion;
     @Column(name = "fecha")
     @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
-    @JoinColumn(name = "paquetes_idpaquete", referencedColumnName = "idpaquete", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Paquetes paquetes;
+    @Id
+    @Basic(optional = false)
+    @Column(name = "servicios_idservicio")
+    private Integer serviciosIdservicio;
     @JoinColumn(name = "pedidos_idpedido", referencedColumnName = "idpedido")
     @ManyToOne
     private Pedidos pedidosIdpedido;
     @JoinColumn(name = "servicios_idservicio", referencedColumnName = "idservicio", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
+    @OneToOne(optional = false)
     private Servicios servicios;
 
     public Detalleservicio() {
     }
 
-    public Detalleservicio(DetalleservicioPK detalleservicioPK) {
-        this.detalleservicioPK = detalleservicioPK;
+    public Detalleservicio(Integer serviciosIdservicio) {
+        this.serviciosIdservicio = serviciosIdservicio;
     }
 
-    public Detalleservicio(int paquetesIdpaquete, int serviciosIdservicio) {
-        this.detalleservicioPK = new DetalleservicioPK(paquetesIdpaquete, serviciosIdservicio);
+    public String getTiempo() {
+        return tiempo;
     }
 
-    public DetalleservicioPK getDetalleservicioPK() {
-        return detalleservicioPK;
-    }
-
-    public void setDetalleservicioPK(DetalleservicioPK detalleservicioPK) {
-        this.detalleservicioPK = detalleservicioPK;
+    public void setTiempo(String tiempo) {
+        this.tiempo = tiempo;
     }
 
     public String getDireccion() {
@@ -87,12 +86,12 @@ public class Detalleservicio implements Serializable {
         this.fecha = fecha;
     }
 
-    public Paquetes getPaquetes() {
-        return paquetes;
+    public Integer getServiciosIdservicio() {
+        return serviciosIdservicio;
     }
 
-    public void setPaquetes(Paquetes paquetes) {
-        this.paquetes = paquetes;
+    public void setServiciosIdservicio(Integer serviciosIdservicio) {
+        this.serviciosIdservicio = serviciosIdservicio;
     }
 
     public Pedidos getPedidosIdpedido() {
@@ -114,7 +113,7 @@ public class Detalleservicio implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (detalleservicioPK != null ? detalleservicioPK.hashCode() : 0);
+        hash += (serviciosIdservicio != null ? serviciosIdservicio.hashCode() : 0);
         return hash;
     }
 
@@ -125,7 +124,7 @@ public class Detalleservicio implements Serializable {
             return false;
         }
         Detalleservicio other = (Detalleservicio) object;
-        if ((this.detalleservicioPK == null && other.detalleservicioPK != null) || (this.detalleservicioPK != null && !this.detalleservicioPK.equals(other.detalleservicioPK))) {
+        if ((this.serviciosIdservicio == null && other.serviciosIdservicio != null) || (this.serviciosIdservicio != null && !this.serviciosIdservicio.equals(other.serviciosIdservicio))) {
             return false;
         }
         return true;
@@ -133,7 +132,7 @@ public class Detalleservicio implements Serializable {
 
     @Override
     public String toString() {
-        return "Entidades.Detalleservicio[ detalleservicioPK=" + detalleservicioPK + " ]";
+        return "Entidades.Detalleservicio[ serviciosIdservicio=" + serviciosIdservicio + " ]";
     }
     
 }
