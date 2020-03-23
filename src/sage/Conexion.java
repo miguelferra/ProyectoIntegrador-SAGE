@@ -5,9 +5,9 @@
  */
 package sage;
 
-import Controladores.ClientesJpaController;
-import Controladores.PaquetesJpaController;
-import Controladores.PedidosJpaController;
+import Datos.ClientesJpaController;
+import Datos.PaquetesJpaController;
+import Datos.PedidosJpaController;
 import Controladores.exceptions.IllegalOrphanException;
 import Controladores.exceptions.NonexistentEntityException;
 import Entidades.Clientes;

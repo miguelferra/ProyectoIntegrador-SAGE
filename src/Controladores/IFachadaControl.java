@@ -1,0 +1,42 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Controladores;
+
+import Entidades.Clientes;
+import Entidades.Detalleentregables;
+import Entidades.Detalleservicio;
+import Entidades.Paquetes;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+/**
+ *
+ * @author ferra
+ */
+public interface IFachadaControl {
+    
+    
+    public List<Clientes> getClientes();
+    
+    public List<Paquetes> getPaquetes();
+    
+    public void agregaCliente(String nombre, String apellido, String direccion, String numero, String correo);
+
+    public void registrarPedido(float precio,String promocion,String notas,int idCliente,int idPaquete);
+    
+    public Clientes getClienteId(int id);
+
+    public List<Detalleentregables> getDetalleEntregable(int id);
+
+    public List<Detalleservicio> getDetalleServicio(int id);
+    
+    public Clientes getClienteNombre(String nombre, String apellido);
+    
+    public void editarCliente(int id, String nombre, String apellido, String direccion, String numero, String correo);
+    
+    
+}

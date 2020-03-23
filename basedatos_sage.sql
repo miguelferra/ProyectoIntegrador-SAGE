@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `actividades`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `actividades` (
-  `idactividad` int NOT NULL,
+  `idactividad` int NOT NULL AUTO_INCREMENT,
   `detalle` varchar(60) DEFAULT NULL,
   `estado` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`idactividad`)
@@ -71,24 +71,45 @@ CREATE TABLE `detalleactividades` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `detalleentregables`
+-- Table structure for table `detalleentregablespaquete`
 --
 
-DROP TABLE IF EXISTS `detalleentregables`;
+DROP TABLE IF EXISTS `detalleentregablespaquete`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `detalleentregables` (
+CREATE TABLE `detalleentregablespaquete` (
+  `tiempoServicio` varchar(10) DEFAULT NULL,
+  `cantidadEntregable` int DEFAULT NULL,
+  `fecha` varchar(45) DEFAULT NULL,
+  `paquetes_idpaquete` int NOT NULL,
+  `servicios_idservicio` int NOT NULL,
+  `entregables_identregable` int NOT NULL,
+  PRIMARY KEY (`paquetes_idpaquete`,`servicios_idservicio`,`entregables_identregable`),
+  KEY `fk_detalleentregablesPaquete_paquetes1_idx` (`paquetes_idpaquete`),
+  KEY `fk_detalleentregablesPaquete_servicios1_idx` (`servicios_idservicio`),
+  KEY `fk_detalleentregablesPaquete_entregables1_idx` (`entregables_identregable`),
+  CONSTRAINT `fk_detalleentregablesPaquete_entregables1` FOREIGN KEY (`entregables_identregable`) REFERENCES `entregables` (`identregable`),
+  CONSTRAINT `fk_detalleentregablesPaquete_paquetes1` FOREIGN KEY (`paquetes_idpaquete`) REFERENCES `paquetes` (`idpaquete`),
+  CONSTRAINT `fk_detalleentregablesPaquete_servicios1` FOREIGN KEY (`servicios_idservicio`) REFERENCES `servicios` (`idservicio`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `detalleentregablespedido`
+--
+
+DROP TABLE IF EXISTS `detalleentregablespedido`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `detalleentregablespedido` (
   `cantidad` int DEFAULT NULL,
   `fecha` datetime DEFAULT NULL,
   `pedidos_idpedido` int DEFAULT NULL,
-  `entregables_identregable` varchar(15) NOT NULL,
-  `paquetes_idpaquete` int NOT NULL,
-  PRIMARY KEY (`entregables_identregable`,`paquetes_idpaquete`),
+  `entregables_identregable` int NOT NULL,
+  PRIMARY KEY (`entregables_identregable`),
   KEY `fk_detalleentregables_pedidos1_idx` (`pedidos_idpedido`),
-  KEY `fk_detalleentregables_paquetes1_idx` (`paquetes_idpaquete`),
-  CONSTRAINT `fk_detalleentregables_entregables1` FOREIGN KEY (`entregables_identregable`) REFERENCES `entregables` (`identregable`),
-  CONSTRAINT `fk_detalleentregables_paquetes1` FOREIGN KEY (`paquetes_idpaquete`) REFERENCES `paquetes` (`idpaquete`),
-  CONSTRAINT `fk_detalleentregables_pedidos1` FOREIGN KEY (`pedidos_idpedido`) REFERENCES `pedidos` (`idpedido`)
+  CONSTRAINT `fk_detalleentregables_pedidos1` FOREIGN KEY (`pedidos_idpedido`) REFERENCES `pedidos` (`idpedido`),
+  CONSTRAINT `fk_detalleentregablesPedido_entregables1` FOREIGN KEY (`entregables_identregable`) REFERENCES `entregables` (`identregable`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -100,15 +121,14 @@ DROP TABLE IF EXISTS `detalleservicio`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `detalleservicio` (
+  `tiempo` varchar(10) DEFAULT NULL,
   `direccion` varchar(45) DEFAULT NULL,
   `fecha` datetime DEFAULT NULL,
   `pedidos_idpedido` int DEFAULT NULL,
-  `paquetes_idpaquete` int NOT NULL,
   `servicios_idservicio` int NOT NULL,
-  PRIMARY KEY (`paquetes_idpaquete`,`servicios_idservicio`),
+  PRIMARY KEY (`servicios_idservicio`),
   KEY `fk_detalleservicio_pedidos1_idx` (`pedidos_idpedido`),
   KEY `fk_detalleservicio_servicios1_idx` (`servicios_idservicio`),
-  CONSTRAINT `fk_detalleservicio_paquetes1` FOREIGN KEY (`paquetes_idpaquete`) REFERENCES `paquetes` (`idpaquete`),
   CONSTRAINT `fk_detalleservicio_pedidos1` FOREIGN KEY (`pedidos_idpedido`) REFERENCES `pedidos` (`idpedido`),
   CONSTRAINT `fk_detalleservicio_servicios1` FOREIGN KEY (`servicios_idservicio`) REFERENCES `servicios` (`idservicio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -141,7 +161,7 @@ DROP TABLE IF EXISTS `entregables`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `entregables` (
-  `identregable` varchar(15) NOT NULL,
+  `identregable` int NOT NULL AUTO_INCREMENT,
   `tipo` varchar(45) DEFAULT NULL,
   `tamaño` varchar(15) DEFAULT NULL,
   PRIMARY KEY (`identregable`)
@@ -156,7 +176,7 @@ DROP TABLE IF EXISTS `paquetes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `paquetes` (
-  `idpaquete` int NOT NULL,
+  `idpaquete` int NOT NULL AUTO_INCREMENT,
   `nombre` varchar(45) DEFAULT NULL,
   `descripcion` varchar(70) DEFAULT NULL,
   `precio` float DEFAULT NULL,
@@ -185,7 +205,7 @@ CREATE TABLE `pedidos` (
   KEY `fk_pedidos_clientes1_idx` (`clientes_idcliente`),
   CONSTRAINT `fk_pedidos_clientes1` FOREIGN KEY (`clientes_idcliente`) REFERENCES `clientes` (`idcliente`),
   CONSTRAINT `fk_pedidos_paquetes1` FOREIGN KEY (`paquetes_idpaquete`) REFERENCES `paquetes` (`idpaquete`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -196,11 +216,10 @@ DROP TABLE IF EXISTS `servicios`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `servicios` (
-  `idservicio` int NOT NULL,
-  `tipo` varchar(10) DEFAULT NULL,
-  `tiempo` varchar(5) DEFAULT NULL,
+  `idservicio` int NOT NULL AUTO_INCREMENT,
+  `tipo` varchar(25) DEFAULT NULL,
   `lugar` varchar(45) DEFAULT NULL,
-  `detalle` varchar(35) DEFAULT NULL,
+  `detalle` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idservicio`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -214,4 +233,4 @@ CREATE TABLE `servicios` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-03-21  2:14:56
+-- Dump completed on 2020-03-22 19:22:27

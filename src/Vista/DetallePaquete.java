@@ -5,7 +5,7 @@
  */
 package Vista;
 
-import Controladores.Controlador;
+import Controladores.IFachadaControl;
 import Entidades.Detalleentregables;
 import Entidades.Detalleservicio;
 import java.util.List;
@@ -18,14 +18,14 @@ import javax.swing.table.DefaultTableModel;
  */
 public class DetallePaquete extends javax.swing.JFrame {
 
-    Controlador controlador;
+    IFachadaControl fachadaControl;
     /**
      * Creates new form DetallePaquete
      */
-    public DetallePaquete(Controlador controlador,int id) {
+    public DetallePaquete(IFachadaControl fachadaControl,int id) {
         initComponents();
         this.setLocationRelativeTo(null);
-        this.controlador = controlador;
+        this.fachadaControl = fachadaControl;
         CrearModeloEntregables();
         CrearModeloServicios();
         cargarEntregables(id);
@@ -99,7 +99,7 @@ public class DetallePaquete extends javax.swing.JFrame {
         try{
             System.out.println("CargarEntregables");
             Object o[] = null;
-            List<Detalleentregables> listaEntregables = controlador.getDetalleEntregable(id);
+            List<Detalleentregables> listaEntregables = fachadaControl.getDetalleEntregable(id);
             for (int i = 0; i < listaEntregables.size(); i++) {                
                 modelo3.addRow(o);
                 modelo3.setValueAt(listaEntregables.get(i).getCantidad(), i, 0);
@@ -115,7 +115,7 @@ public class DetallePaquete extends javax.swing.JFrame {
         try{
             System.out.println("CargarServicios");
             Object o[] = null;
-            List<Detalleservicio> listaServicios = controlador.getDetalleServicio(id);
+            List<Detalleservicio> listaServicios = fachadaControl.getDetalleServicio(id);
             for (int i = 0; i < listaServicios.size(); i++) {                
                 modelo4.addRow(o);
                 modelo4.setValueAt(listaServicios.get(i).getServicios().getTipo(), i, 0);

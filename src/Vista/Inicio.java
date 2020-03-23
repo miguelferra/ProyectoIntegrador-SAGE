@@ -6,6 +6,8 @@
 package Vista;
 
 import Controladores.Controlador;
+import Controladores.FabricaControl;
+import Controladores.IFachadaControl;
 import Entidades.Clientes;
 import Entidades.Detalleentregables;
 import Entidades.Paquetes;
@@ -26,25 +28,29 @@ import javax.swing.table.DefaultTableModel;
 public class Inicio extends javax.swing.JFrame {
 
     Controlador controlador = new Controlador();
+    IFachadaControl fachadaControl;
     private PanelPaquete paquete = new PanelPaquete();
+    Clientes cliente;
     int row;
     int num = 0;
-    /**
-     * Creates new form Inicio
-     */
+
+    
     public Inicio() {
         initComponents();
         this.setLocationRelativeTo(null);
+        fachadaControl = FabricaControl.getFachadaDeControl();
         panelPaquetes.setLayout(new GridLayout(2, 3,10,10));
         panelPaquetes.add(new PanelPaquete());
         panelPaquetes.add(new PanelPaquete());
         panelPaquetes.add(new PanelPaquete());
-        panelPaquetes.add(new PanelPaquete());panelPaquetes.add(new PanelPaquete());panelPaquetes.add(new PanelPaquete());
+        panelPaquetes.add(new PanelPaquete());
+        panelPaquetes.add(new PanelPaquete());
+        panelPaquetes.add(new PanelPaquete());
         this.setExtendedState(this.MAXIMIZED_BOTH); 
         CrearModelo2();
         cargarPaquetes();
         comboClientes.removeAllItems();
-        cargarClientes();
+//        cargarClientes();
     }
 
     DefaultTableModel modelo2;
@@ -81,19 +87,19 @@ public class Inicio extends javax.swing.JFrame {
         }
     }
    
-    private void cargarClientes()
-    {
-        List<Clientes> listClientes = controlador.getClientes();
-        for (int i = 0; i < listClientes.size(); i++) {
-            comboClientes.addItem(listClientes.get(i).getNombre()+", "+listClientes.get(i).getApellido()+","+listClientes.get(i).getIdcliente());            
-        }
-    }
+//    private void cargarClientes()
+//    {
+//        List<Clientes> listClientes = controlador.getClientes();
+//        for (int i = 0; i < listClientes.size(); i++) {
+//            comboClientes.addItem(listClientes.get(i).getNombre()+", "+listClientes.get(i).getApellido()+","+listClientes.get(i).getIdcliente());            
+//        }
+//    }
     
     private void cargarPaquetes(){
         try{
             System.out.println("CargarInformacion");
             Object o[] = null;
-            List<Paquetes> listClientes = controlador.getPaquetes();
+            List<Paquetes> listClientes = fachadaControl.getPaquetes();
             for (int i = 0; i < listClientes.size(); i++) {
                 modelo2.addRow(o);
                 modelo2.setValueAt(listClientes.get(i).getIdpaquete(), i, 0);
@@ -119,7 +125,7 @@ public class Inicio extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         nuevoCliente = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        actualizarClientes = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabla2 = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
@@ -128,6 +134,7 @@ public class Inicio extends javax.swing.JFrame {
         panelPaquetes = new javax.swing.JPanel();
         regisrarPedido = new javax.swing.JButton();
         campoPrecio = new javax.swing.JTextField();
+        jTextField1 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -166,6 +173,7 @@ public class Inicio extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setBackground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Actualizar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -173,10 +181,11 @@ public class Inicio extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("⟳");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        actualizarClientes.setBackground(new java.awt.Color(255, 255, 255));
+        actualizarClientes.setText("⟳");
+        actualizarClientes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                actualizarClientesActionPerformed(evt);
             }
         });
 
@@ -202,6 +211,7 @@ public class Inicio extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Cliente:");
 
+        jButton3.setBackground(new java.awt.Color(255, 255, 255));
         jButton3.setText("Buscar");
 
         jScrollPane2.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -229,6 +239,13 @@ public class Inicio extends javax.swing.JFrame {
 
         campoPrecio.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
 
+        jTextField1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTextField1KeyTyped(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -248,21 +265,26 @@ public class Inicio extends javax.swing.JFrame {
                                         .addComponent(jLabel1)
                                         .addGap(18, 18, 18)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(comboClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(nuevoCliente))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(jButton2)
+                                                .addComponent(nuevoCliente)
+                                                .addGap(22, 22, 22)
+                                                .addComponent(actualizarClientes)
                                                 .addGap(9, 9, 9)
                                                 .addComponent(jButton1))
-                                            .addComponent(jButton3)))
+                                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(98, 98, 98)))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 781, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 459, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 781, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(62, 62, 62)
+                                .addComponent(comboClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton3)))
+                        .addGap(0, 424, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -278,13 +300,15 @@ public class Inicio extends javax.swing.JFrame {
                         .addGap(38, 38, 38)
                         .addComponent(jLabel1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(52, 52, 52)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(comboClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton3))))
+                        .addGap(50, 50, 50)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(comboClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jButton3))
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton2)
+                    .addComponent(actualizarClientes)
                     .addComponent(jButton1)
                     .addComponent(nuevoCliente))
                 .addGap(144, 144, 144)
@@ -319,26 +343,25 @@ public class Inicio extends javax.swing.JFrame {
     private void tabla2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabla2MouseClicked
         if (evt.getClickCount() == 2) {
             row = tabla2.rowAtPoint(evt.getPoint());
-            new DetallePaquete(controlador,Integer.parseInt(tabla2.getValueAt(row, 0).toString())).setVisible(true);
+            new DetallePaquete(fachadaControl,Integer.parseInt(tabla2.getValueAt(row, 0).toString())).setVisible(true);
             campoPrecio.setText(tabla2.getValueAt(row, 3).toString());
         }
     }//GEN-LAST:event_tabla2MouseClicked
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void actualizarClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actualizarClientesActionPerformed
         // TODO add your handling code here:
         comboClientes.removeAllItems();
-        cargarClientes();
-    }//GEN-LAST:event_jButton2ActionPerformed
+//        cargarClientes();
+    }//GEN-LAST:event_actualizarClientesActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
         String[] x = comboClientes.getSelectedItem().toString().split(",");
         new FrmNuevoCliente(Integer.parseInt(x[2])).setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void nuevoClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoClienteActionPerformed
         // TODO add your handling code here:
-        new FrmNuevoCliente().setVisible(true);
+        new FrmNuevoCliente(fachadaControl).setVisible(true);
     }//GEN-LAST:event_nuevoClienteActionPerformed
 
     private void comboClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboClientesActionPerformed
@@ -348,8 +371,21 @@ public class Inicio extends javax.swing.JFrame {
     private void regisrarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regisrarPedidoActionPerformed
         // TODO add your handling code here:
         String[] x = comboClientes.getSelectedItem().toString().split(",");
-        controlador.registrarPedido(Float.parseFloat(campoPrecio.getText()), "", "", Integer.parseInt(x[2]),Integer.parseInt(tabla2.getValueAt(row, 0).toString()));
+        fachadaControl.registrarPedido(Float.parseFloat(campoPrecio.getText()), "", "",Integer.parseInt(x[2]),Integer.parseInt(tabla2.getValueAt(row, 0).toString()) );
     }//GEN-LAST:event_regisrarPedidoActionPerformed
+
+    private void jTextField1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyTyped
+        // TODO add your handling code here:     
+        String[] splited = jTextField1.getText().split(" ");
+        try {
+            cliente = new Clientes();
+            cliente = fachadaControl.getClienteNombre(splited[0], splited[1]);
+            comboClientes.addItem(cliente.getNombre()+" "+cliente.getApellido());
+        } catch (Exception e) {
+            System.out.println("No existe");
+        }
+        
+    }//GEN-LAST:event_jTextField1KeyTyped
 
     
     /**
@@ -388,10 +424,10 @@ public class Inicio extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton actualizarClientes;
     private javax.swing.JTextField campoPrecio;
     private javax.swing.JComboBox<String> comboClientes;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -399,6 +435,7 @@ public class Inicio extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JButton nuevoCliente;
     private javax.swing.JPanel panelPaquetes;
     private javax.swing.JButton regisrarPedido;

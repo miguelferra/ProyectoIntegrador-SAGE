@@ -5,6 +5,16 @@
  */
 package Controladores;
 
+import Datos.DetalleactividadesJpaController;
+import Datos.EmpleadosJpaController;
+import Datos.ActividadesJpaController;
+import Datos.ClientesJpaController;
+import Datos.DetalleservicioJpaController;
+import Datos.PaquetesJpaController;
+import Datos.PedidosJpaController;
+import Datos.ServiciosJpaController;
+import Datos.EntregablesJpaController;
+import Datos.DetalleentregablesJpaController;
 import Controladores.exceptions.NonexistentEntityException;
 import Entidades.*;
 import java.util.ArrayList;
@@ -77,6 +87,10 @@ public class Controlador {
     public List<Detalleservicio> getDetalleServicio(int id){
         listServicios = cDetServ.buscarServicios(id);
         return listServicios;
+    }
+    
+    public Clientes getClienteNombre(String nombre, String apellido){
+        return cClientes.buscarClienteNombre(nombre, apellido);
     }
     
     public void editarCliente(int id, String nombre, String apellido, String direccion, String numero, String correo)

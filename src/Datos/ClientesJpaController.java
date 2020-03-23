@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Controladores;
+package Datos;
 
 import Controladores.exceptions.IllegalOrphanException;
 import Controladores.exceptions.NonexistentEntityException;
 import Entidades.Clientes;
+import Entidades.Detalleentregables;
 import java.io.Serializable;
 import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
@@ -183,6 +184,17 @@ public class ClientesJpaController implements Serializable {
         EntityManager em = getEntityManager();
         try {
             return em.find(Clientes.class, id);
+        } finally {
+            em.close();
+        }
+    }
+    
+    public Clientes buscarClienteNombre(String nombre, String apellido){
+        EntityManager em = getEntityManager();
+
+        try {
+            Query q = em.createNativeQuery("SELECT * FROM basedatos_sage.clientes WHERE nombre = "+ "'"+nombre+"'"+ "AND apellido = "+ "'"+apellido + "'",Clientes.class);
+            return (Clientes) q.getSingleResult();
         } finally {
             em.close();
         }

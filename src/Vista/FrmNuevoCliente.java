@@ -5,7 +5,7 @@
  */
 package Vista;
 
-import Controladores.Controlador;
+import Controladores.IFachadaControl;
 import Entidades.Clientes;
 import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
@@ -15,15 +15,16 @@ import javax.swing.WindowConstants;
  * @author Mauriciowi100
  */
 public class FrmNuevoCliente extends javax.swing.JFrame {
-    Controlador controlador = new Controlador();
     int id;
+    IFachadaControl fachadaControl;
 
     /**
      * Creates new form FrmNuevoCliente
      */
-    public FrmNuevoCliente() {
+    public FrmNuevoCliente(IFachadaControl fachadaControl) {
         initComponents();
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        this.fachadaControl = fachadaControl;
         
     }
     
@@ -31,7 +32,7 @@ public class FrmNuevoCliente extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        Clientes c = controlador.getClienteId(id);
+        Clientes c = fachadaControl.getClienteId(id);
         txtNombre.setText(c.getNombre());
         txtApellido.setText(c.getApellido());
         txtCorreo.setText(c.getEmail());
@@ -162,7 +163,7 @@ public class FrmNuevoCliente extends javax.swing.JFrame {
         if(txtTel.getText().equalsIgnoreCase("")){ JOptionPane.showMessageDialog(this,"El teléfono no puede ir vacío"); return;}
         if(txtDireccion.getText().equalsIgnoreCase("")){ JOptionPane.showMessageDialog(this,"La dirección no puede ir vacía"); return;}
         try{
-            controlador.editarCliente(id, txtNombre.getText(), txtApellido.getText(), txtDireccion.getText(), txtTel.getText(), txtCorreo.getText());
+           fachadaControl.editarCliente(id, txtNombre.getText(), txtApellido.getText(), txtDireccion.getText(), txtTel.getText(), txtCorreo.getText());
         }
         catch(Exception e)
         {
@@ -181,7 +182,7 @@ public class FrmNuevoCliente extends javax.swing.JFrame {
         if(txtTel.getText().equalsIgnoreCase("")){ JOptionPane.showMessageDialog(this,"El teléfono no puede ir vacío"); return;}
         if(txtDireccion.getText().equalsIgnoreCase("")){ JOptionPane.showMessageDialog(this,"La dirección no puede ir vacía"); return;}
         try{
-            controlador.agregaCliente(txtNombre.getText(), txtApellido.getText(), txtDireccion.getText(), txtTel.getText(), txtCorreo.getText());
+            fachadaControl.agregaCliente(txtNombre.getText(), txtApellido.getText(), txtDireccion.getText(), txtTel.getText(), txtCorreo.getText());
         }
         catch(Exception e)
         {
