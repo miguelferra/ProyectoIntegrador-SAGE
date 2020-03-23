@@ -20,6 +20,7 @@ import Entidades.Detalleservicio;
 import Entidades.Entregables;
 import Entidades.Paquetes;
 import Entidades.Pedidos;
+import Entidades.Servicios;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -71,8 +72,11 @@ public class FachadaControl implements IFachadaControl{
     }
     
     public List<Detalleentregablespaquete> getDetallePaqueteEntregable(int idPaquete){
-        return controlPaquete.getDetalle(idPaquete);
+        return controlPaquete.getDetalleEntregable(idPaquete);
     }
+     public List<Detalleentregablespaquete> getDetallePaqueteServicio(int idPaquete){
+         return controlPaquete.getDetalleServicio(idPaquete);
+     }
     
     public void agregaCliente(String nombre, String apellido, String direccion, String numero, String correo){
         controlCliente.agregaCliente(nombre, apellido, direccion, numero, correo);
@@ -94,12 +98,25 @@ public class FachadaControl implements IFachadaControl{
         return controlEntregable.getDetalleEntregable(idPaquete);
     }
     
+    public List<Entregables> getEntregables(){
+        return controlEntregable.getEntregables();
+    }
+    
     public Entregables getEntregableId(int id){
         return controlEntregable.getEntregableId(id);
     } 
     
     public List<Detalleservicio> getDetalleServicio(int id){
         return controlServicio.getDetalleServicio(id);
+    }
+
+    @Override
+    public Servicios getServiciosId(int id) {
+        return controlServicio.getServicioId(id);
+    }
+    
+    public List<Servicios> getServicios(){
+        return controlServicio.getServicios();
     }
     
    

@@ -162,6 +162,16 @@ public class DetalleentregablespaqueteJpaController implements Serializable {
             em.close();
         }
     }
+    
+    public List<Detalleentregablespaquete> buscarServicios(int id){
+        EntityManager em = getEntityManager();
+        try {
+            Query q = em.createNativeQuery("SELECT * FROM basedatos_sage.detalleentregablespaquete WHERE paquetes_idpaquete =  "+id+" AND servicios_idservicio IS NOT NULL",Detalleentregablespaquete.class);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
 
     public int getDetalleentregablespaqueteCount() {
         EntityManager em = getEntityManager();

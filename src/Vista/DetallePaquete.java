@@ -8,7 +8,10 @@ package Vista;
 import Controladores.IFachadaControl;
 import Entidades.Detalleentregablespaquete;
 import Entidades.Detalleservicio;
+import Entidades.Entregables;
+import Entidades.Servicios;
 import java.util.List;
+import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -30,6 +33,8 @@ public class DetallePaquete extends javax.swing.JFrame {
         CrearModeloServicios();
         cargarEntregables(id);
         cargarServicios(id);
+        cargarListaEntregables();
+        cargarListaServicios();
     }
 
     
@@ -95,38 +100,67 @@ public class DetallePaquete extends javax.swing.JFrame {
         }
     }
     
-    private void cargarEntregables(int id){
-//        try{
+    private void cargarEntregables(int id) {
+        try {
             System.out.println("CargarEntregables");
             Object o[] = null;
             List<Detalleentregablespaquete> listaEntregables = fachadaControl.getDetallePaqueteEntregable(id);
-            for (int i = 0; i < listaEntregables.size(); i++) {                
+            for (int i = 0; i < listaEntregables.size(); i++) {
                 modelo3.addRow(o);
                 modelo3.setValueAt(listaEntregables.get(i).getCantidadEntregable(), i, 0);
                 modelo3.setValueAt(fachadaControl.getEntregableId(listaEntregables.get(i).getEntregablesIdentregable()).getTipo(), i, 1);
-                modelo3.setValueAt(listaEntregables.get(i).getPaquetesIdpaquete().getNombre(), i, 2);    
-                
+                modelo3.setValueAt(listaEntregables.get(i).getPaquetesIdpaquete().getNombre(), i, 2);
+
             }
-            
-//        } catch(Exception e) {
-//            System.out.println(e.getMessage());
-//        }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
     private void cargarServicios(int id){
-//        try{
-//            System.out.println("CargarServicios");
-//            Object o[] = null;
-//            List<Detalleservicio> listaServicios = fachadaControl.getDetalleServicio(id);
-//            for (int i = 0; i < listaServicios.size(); i++) {                
-//                modelo4.addRow(o);
-//                modelo4.setValueAt(listaServicios.get(i).getServicios().getTipo(), i, 0);
-//                modelo4.setValueAt(listaServicios.get(i).getServicios().getLugar(), i, 1);
-//                modelo4.setValueAt(listaServicios.get(i).getPedidosIdpedido(), i, 2);              
-//            }
-//            
-//        } catch(Exception e) {
-//            System.out.println(e.getMessage());
-//        }
+        try {
+            System.out.println("CargarServicios");
+            Object o[] = null;
+            List<Detalleentregablespaquete> listaEntregables = fachadaControl.getDetallePaqueteServicio(id);
+            for (int i = 0; i < listaEntregables.size(); i++) {
+                modelo4.addRow(o);
+                modelo4.setValueAt(listaEntregables.get(i).getTiempoServicio(), i, 0);
+                modelo4.setValueAt(fachadaControl.getServiciosId(listaEntregables.get(i).getServiciosIdservicio()).getTipo(), i, 1);
+                modelo4.setValueAt(listaEntregables.get(i).getPaquetesIdpaquete().getNombre(), i, 2);
+
+            } 
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    private void cargarListaEntregables(){
+        try {
+            System.out.println("CargarListaEntregables");
+            DefaultListModel modelo = new DefaultListModel();
+            Object o[] = null;
+            List<Entregables> listaEntregables = fachadaControl.getEntregables();
+            for (int i = 0; i < listaEntregables.size(); i++) {
+                modelo.addElement(listaEntregables.get(i).getTipo());
+            }
+            listE.setModel(modelo);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    public void cargarListaServicios(){
+        try {
+            System.out.println("CargarListaEntregables");
+            DefaultListModel modelo = new DefaultListModel();
+            Object o[] = null;
+            List<Servicios> listaServicios = fachadaControl.getServicios();
+            for (int i = 0; i < listaServicios.size(); i++) {
+                modelo.addElement(listaServicios.get(i).getTipo());
+            }
+            listS.setModel(modelo);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
     
     /**
@@ -143,8 +177,10 @@ public class DetallePaquete extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         tablaServicios = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        listE = new javax.swing.JList<>();
         jButton1 = new javax.swing.JButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        listS = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -179,14 +215,11 @@ public class DetallePaquete extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(tablaServicios);
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Fotos 5x7", "Item 2", "Item 3", "Item 4", "Item 5", "as", "as", "d", "ad", "asd", "asd", "d", "as", "dsa", "d", "as", "dsa", "d", "as" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane3.setViewportView(jList1);
+        jScrollPane3.setViewportView(listE);
 
         jButton1.setText("+");
+
+        jScrollPane4.setViewportView(listS);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -197,30 +230,33 @@ public class DetallePaquete extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane2)
                     .addComponent(jScrollPane1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
                 .addComponent(jButton1)
-                .addGap(42, 42, 42)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(32, 32, 32)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane4)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE))
                 .addGap(52, 52, 52))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(41, 41, 41)
+                .addContainerGap(56, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(36, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1)
-                        .addGap(200, 200, 200))))
+                .addGap(34, 34, 34)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(87, 87, 87))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 186, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(91, 91, 91))
+                .addGap(76, 76, 76)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(87, 87, 87))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(171, 171, 171))))
         );
 
         pack();
@@ -234,10 +270,12 @@ public class DetallePaquete extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JList<String> jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JList<String> listE;
+    private javax.swing.JList<String> listS;
     private javax.swing.JTable tablaEntregables;
     private javax.swing.JTable tablaServicios;
     // End of variables declaration//GEN-END:variables

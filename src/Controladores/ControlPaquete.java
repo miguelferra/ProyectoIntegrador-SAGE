@@ -38,8 +38,12 @@ public class ControlPaquete {
         return fachadaDatos.getPaquetes();
     }
     
-    public List<Detalleentregablespaquete> getDetalle(int idPaquete){
+    public List<Detalleentregablespaquete> getDetalleEntregable(int idPaquete){
         return controlDetallePaquete.buscarEntregables(idPaquete); 
+    }
+    
+    public List<Detalleentregablespaquete> getDetalleServicio(int idPaquete){
+        return controlDetallePaquete.buscarServicios(idPaquete); 
     }
     
     

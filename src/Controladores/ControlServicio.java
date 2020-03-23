@@ -8,6 +8,7 @@ package Controladores;
 import Datos.DetalleservicioJpaController;
 import Datos.ServiciosJpaController;
 import Entidades.Detalleservicio;
+import Entidades.Servicios;
 import java.util.List;
 
 /**
@@ -26,6 +27,14 @@ public class ControlServicio {
     
     public List<Detalleservicio> getDetalleServicio(int id){
         return cDetServ.buscarServicios(id);
+    }
+    
+    public Servicios getServicioId(int id){
+        return cServ.findServicios(id);
+    }
+    
+    public List<Servicios> getServicios(){
+        return cServ.findServiciosEntities();
     }
     
 }

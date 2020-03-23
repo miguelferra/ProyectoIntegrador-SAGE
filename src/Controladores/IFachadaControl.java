@@ -11,6 +11,7 @@ import Entidades.Detalleentregablespedido;
 import Entidades.Detalleservicio;
 import Entidades.Entregables;
 import Entidades.Paquetes;
+import Entidades.Servicios;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -42,7 +43,15 @@ public interface IFachadaControl {
     
     public List<Detalleentregablespaquete> getDetallePaqueteEntregable(int idPaquete);
     
+    public List<Detalleentregablespaquete> getDetallePaqueteServicio(int idPaquete);
+    
     public Entregables getEntregableId(int id);
+    
+    public List<Entregables> getEntregables();
+    
+    public List<Servicios> getServicios();
+    
+    public Servicios getServiciosId(int id);
     
     
 }
