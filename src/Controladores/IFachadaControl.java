@@ -53,5 +53,7 @@ public interface IFachadaControl {
     
     public Servicios getServiciosId(int id);
     
+    public Paquetes getPaqueteId(int id);
+    
     
 }

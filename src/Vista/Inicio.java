@@ -41,7 +41,6 @@ public class Inicio extends javax.swing.JFrame {
         cargarPaquetes();
         comboClientes.removeAllItems();
         diseñoTabla();
-//        cargarClientes();
     }
 
     DefaultTableModel modelo2;
@@ -90,14 +89,6 @@ public class Inicio extends javax.swing.JFrame {
         }
     }
    
-//    private void cargarClientes()
-//    {
-//        List<Clientes> listClientes = controlador.getClientes();
-//        for (int i = 0; i < listClientes.size(); i++) {
-//            comboClientes.addItem(listClientes.get(i).getNombre()+", "+listClientes.get(i).getApellido()+","+listClientes.get(i).getIdcliente());            
-//        }
-//    }
-    
     private void cargarPaquetes(){
         try{
             System.out.println("CargarInformacion");
@@ -188,7 +179,7 @@ public class Inicio extends javax.swing.JFrame {
 
         jButton1.setBackground(new java.awt.Color(255, 255, 255));
         jButton1.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
-        jButton1.setText("Actualizar");
+        jButton1.setText("Actualizar Cliente");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -273,29 +264,31 @@ public class Inicio extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(comboClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(comboClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(actualizarClientes))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(44, 44, 44)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton1)
-                                    .addComponent(nuevoCliente)))))
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(44, 44, 44)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(nuevoCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap())
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(119, 119, 119)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addContainerGap(1614, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 900, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 440, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(campoPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel4)
                                     .addComponent(jLabel5)
                                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(regisrarPedido))))))
-                .addGap(261, 261, 261))
+                                    .addComponent(regisrarPedido))
+                                .addGap(180, 180, 180))))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -306,19 +299,22 @@ public class Inicio extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(nuevoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(comboClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(actualizarClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(1, 1, 1)
-                .addComponent(jButton1)
-                .addGap(87, 87, 87)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(comboClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(actualizarClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(8, 8, 8)
+                        .addComponent(jButton1)))
+                .addGap(117, 117, 117)
                 .addComponent(jLabel2)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(32, 32, 32)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 530, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(241, Short.MAX_VALUE))
+                        .addContainerGap(243, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel5)
@@ -328,9 +324,9 @@ public class Inicio extends javax.swing.JFrame {
                         .addComponent(jLabel4)
                         .addGap(18, 18, 18)
                         .addComponent(campoPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(47, 47, 47)
+                        .addGap(104, 104, 104)
                         .addComponent(regisrarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(167, 167, 167))))
+                        .addGap(123, 123, 123))))
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -365,8 +361,8 @@ public class Inicio extends javax.swing.JFrame {
     }//GEN-LAST:event_actualizarClientesActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String[] x = comboClientes.getSelectedItem().toString().split(",");
-        new FrmNuevoCliente(Integer.parseInt(x[2])).setVisible(true);
+
+        new FrmNuevoCliente(cliente.getIdcliente()).setVisible(true);      
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void nuevoClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoClienteActionPerformed
@@ -381,10 +377,10 @@ public class Inicio extends javax.swing.JFrame {
     private void regisrarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regisrarPedidoActionPerformed
         // TODO add your handling code here:
         try {
-            String[] x = comboClientes.getSelectedItem().toString().split(",");
-            fachadaControl.registrarPedido(Float.parseFloat(campoPrecio.getText()), "", "", Integer.parseInt(x[2]), Integer.parseInt(tablaPaquetes.getValueAt(row, 0).toString()));
+            fachadaControl.registrarPedido(fachadaControl.getPaqueteId(row+1).getPrecio(), "", "",cliente.getIdcliente(),fachadaControl.getPaqueteId(row+1).getIdpaquete());
+            JOptionPane.showMessageDialog(this, "Pedido Registrado");
         } catch (Exception e) {
-            System.out.println("Seleccione un cliente");
+            System.out.println("Seleccione un cliente y un paquete");
         }
     }//GEN-LAST:event_regisrarPedidoActionPerformed
 
@@ -396,7 +392,7 @@ public class Inicio extends javax.swing.JFrame {
             cliente = fachadaControl.getClienteNombre(splited[0], splited[1]);
             comboClientes.addItem(cliente.getNombre()+" "+cliente.getApellido());
         } catch (Exception e) {
-            System.out.println("No existe");
+            System.out.println("No existe el cliente");
         }
         
     }//GEN-LAST:event_jTextField1KeyTyped

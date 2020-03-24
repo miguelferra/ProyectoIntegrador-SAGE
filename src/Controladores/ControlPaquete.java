@@ -6,8 +6,6 @@
 package Controladores;
 
 import Datos.DetalleentregablespaqueteJpaController;
-import Datos.FachadaDatos;
-import Datos.IFachadaDatos;
 import Datos.PaquetesJpaController;
 import Entidades.Clientes;
 import Entidades.Detalleentregablespaquete;
@@ -22,29 +20,27 @@ public class ControlPaquete {
 
     DetalleentregablespaqueteJpaController controlDetallePaquete;
     PaquetesJpaController cPaq;
-    IFachadaDatos fachadaDatos;
     
     public ControlPaquete() {
-        this.fachadaDatos = new FachadaDatos();
         cPaq = new PaquetesJpaController();
         controlDetallePaquete = new DetalleentregablespaqueteJpaController();
-    }
-    
-    public Paquetes getPaqueteId(int id){
-        return fachadaDatos.getPaqueteId(id);
-    }
-   
-     public List<Paquetes> getPaquetes(){
-        return fachadaDatos.getPaquetes();
     }
     
     public List<Detalleentregablespaquete> getDetalleEntregable(int idPaquete){
         return controlDetallePaquete.buscarEntregables(idPaquete); 
     }
     
+    
     public List<Detalleentregablespaquete> getDetalleServicio(int idPaquete){
         return controlDetallePaquete.buscarServicios(idPaquete); 
     }
     
+    public Paquetes getPaqueteId(int id){
+        return cPaq.findPaquetes(id);
+    }
+   
+     public List<Paquetes> getPaquetes(){
+        return cPaq.findPaquetesEntities();
+    }
     
 }

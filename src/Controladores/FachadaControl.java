@@ -71,6 +71,9 @@ public class FachadaControl implements IFachadaControl{
         return controlPaquete.getPaquetes();
     }
     
+    public Paquetes getPaqueteId(int id){
+        return controlPaquete.getPaqueteId(id);
+    }
     public List<Detalleentregablespaquete> getDetallePaqueteEntregable(int idPaquete){
         return controlPaquete.getDetalleEntregable(idPaquete);
     }

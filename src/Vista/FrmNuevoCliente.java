@@ -32,6 +32,7 @@ public class FrmNuevoCliente extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        this.id = id;
         Clientes c = fachadaControl.getClienteId(id);
         txtNombre.setText(c.getNombre());
         txtApellido.setText(c.getApellido());
@@ -39,7 +40,6 @@ public class FrmNuevoCliente extends javax.swing.JFrame {
         txtDireccion.setText(c.getDireccion());
         txtTel.setText(c.getTelefono());
         jButton1.setText("Editar cliente");
-        this.id = id;
         
     }
 
