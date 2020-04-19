@@ -10,6 +10,8 @@ import Entidades.Detalleentregablespaquete;
 import Entidades.Detalleservicio;
 import Entidades.Entregables;
 import Entidades.Servicios;
+import java.awt.Color;
+import java.awt.Font;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
@@ -29,6 +31,7 @@ public class DetallePaquete extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         this.fachadaControl = fachadaControl;
+        
         CrearModeloEntregables();
         CrearModeloServicios();
         cargarEntregables(id);
@@ -36,6 +39,21 @@ public class DetallePaquete extends javax.swing.JFrame {
         tituloPaquete.setText(fachadaControl.getPaqueteId(id).getNombre().toString());
         cargarListaEntregables();
         cargarListaServicios();
+        diseñoTablas();
+    }
+    
+    public void diseñoTablas(){
+        tablaEntregables.getTableHeader().setFont(new Font("Segoe UI",Font.BOLD, 18));
+        tablaEntregables.getColumnModel().getColumn(0).setMaxWidth(50);
+        tablaEntregables.getColumnModel().getColumn(1).setMaxWidth(250);
+        tablaEntregables.getColumnModel().getColumn(2).setMaxWidth(250);
+        tablaEntregables.getTableHeader().setReorderingAllowed(false);
+        
+        tablaServicios.getColumnModel().getColumn(0).setMaxWidth(185);
+        tablaServicios.getColumnModel().getColumn(1).setMaxWidth(185);
+        tablaServicios.getColumnModel().getColumn(2).setMaxWidth(180);
+        tablaServicios.getTableHeader().setReorderingAllowed(false);
+    
     }
 
     
@@ -75,7 +93,7 @@ public class DetallePaquete extends javax.swing.JFrame {
         try {
             modelo4 = (new DefaultTableModel(
                     null, new String[]{
-                        "Tipo", "Tiempo", "Paquete"}) {
+                        "Tiempo", "Tipo", "Paquete"}) {
                 Class[] types = new Class[]{
                     java.lang.String.class,
                     java.lang.String.class,
@@ -259,12 +277,11 @@ public class DetallePaquete extends javax.swing.JFrame {
                         .addComponent(tituloPaquete)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 511, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 522, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 60, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 550, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -302,7 +319,6 @@ public class DetallePaquete extends javax.swing.JFrame {
                         .addGap(149, 149, 149)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jButton1)
                                 .addGap(18, 18, 18)
                                 .addComponent(jButton2)
