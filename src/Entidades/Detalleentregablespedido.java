@@ -15,7 +15,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -32,7 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Detalleentregablespedido.findAll", query = "SELECT d FROM Detalleentregablespedido d")
     , @NamedQuery(name = "Detalleentregablespedido.findByCantidad", query = "SELECT d FROM Detalleentregablespedido d WHERE d.cantidad = :cantidad")
     , @NamedQuery(name = "Detalleentregablespedido.findByFecha", query = "SELECT d FROM Detalleentregablespedido d WHERE d.fecha = :fecha")
-    , @NamedQuery(name = "Detalleentregablespedido.findByEntregablesIdentregable", query = "SELECT d FROM Detalleentregablespedido d WHERE d.entregablesIdentregable = :entregablesIdentregable")})
+    , @NamedQuery(name = "Detalleentregablespedido.findByPedidosIdpedido", query = "SELECT d FROM Detalleentregablespedido d WHERE d.pedidosIdpedido = :pedidosIdpedido")})
 public class Detalleentregablespedido implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -43,20 +42,22 @@ public class Detalleentregablespedido implements Serializable {
     private Date fecha;
     @Id
     @Basic(optional = false)
-    @Column(name = "entregables_identregable")
-    private Integer entregablesIdentregable;
-    @JoinColumn(name = "entregables_identregable", referencedColumnName = "identregable", insertable = false, updatable = false)
-    @OneToOne(optional = false)
-    private Entregables entregables;
-    @JoinColumn(name = "pedidos_idpedido", referencedColumnName = "idpedido")
-    @ManyToOne
-    private Pedidos pedidosIdpedido;
+    @Column(name = "pedidos_idpedido")
+    private Integer pedidosIdpedido;
+    @JoinColumn(name = "entregables_identregable", referencedColumnName = "identregable")
+    @ManyToOne(optional = false)
+    private Entregables entregablesIdentregable;
 
     public Detalleentregablespedido() {
     }
+    
+    public Detalleentregablespedido(Entregables idEntregable,Integer cantidad) {
+        this.entregablesIdentregable = idEntregable;
+        this.cantidad = cantidad;
+    }
 
-    public Detalleentregablespedido(Integer entregablesIdentregable) {
-        this.entregablesIdentregable = entregablesIdentregable;
+    public Detalleentregablespedido(Integer pedidosIdpedido) {
+        this.pedidosIdpedido = pedidosIdpedido;
     }
 
     public Integer getCantidad() {
@@ -75,34 +76,26 @@ public class Detalleentregablespedido implements Serializable {
         this.fecha = fecha;
     }
 
-    public Integer getEntregablesIdentregable() {
-        return entregablesIdentregable;
-    }
-
-    public void setEntregablesIdentregable(Integer entregablesIdentregable) {
-        this.entregablesIdentregable = entregablesIdentregable;
-    }
-
-    public Entregables getEntregables() {
-        return entregables;
-    }
-
-    public void setEntregables(Entregables entregables) {
-        this.entregables = entregables;
-    }
-
-    public Pedidos getPedidosIdpedido() {
+    public Integer getPedidosIdpedido() {
         return pedidosIdpedido;
     }
 
-    public void setPedidosIdpedido(Pedidos pedidosIdpedido) {
+    public void setPedidosIdpedido(Integer pedidosIdpedido) {
         this.pedidosIdpedido = pedidosIdpedido;
+    }
+
+    public Entregables getEntregablesIdentregable() {
+        return entregablesIdentregable;
+    }
+
+    public void setEntregablesIdentregable(Entregables entregablesIdentregable) {
+        this.entregablesIdentregable = entregablesIdentregable;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (entregablesIdentregable != null ? entregablesIdentregable.hashCode() : 0);
+        hash += (pedidosIdpedido != null ? pedidosIdpedido.hashCode() : 0);
         return hash;
     }
 
@@ -113,7 +106,7 @@ public class Detalleentregablespedido implements Serializable {
             return false;
         }
         Detalleentregablespedido other = (Detalleentregablespedido) object;
-        if ((this.entregablesIdentregable == null && other.entregablesIdentregable != null) || (this.entregablesIdentregable != null && !this.entregablesIdentregable.equals(other.entregablesIdentregable))) {
+        if ((this.pedidosIdpedido == null && other.pedidosIdpedido != null) || (this.pedidosIdpedido != null && !this.pedidosIdpedido.equals(other.pedidosIdpedido))) {
             return false;
         }
         return true;
@@ -121,7 +114,7 @@ public class Detalleentregablespedido implements Serializable {
 
     @Override
     public String toString() {
-        return "Entidades.Detalleentregablespedido[ entregablesIdentregable=" + entregablesIdentregable + " ]";
+        return "Entidades.Detalleentregablespedido[ pedidosIdpedido=" + pedidosIdpedido + " ]";
     }
     
 }

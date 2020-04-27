@@ -11,6 +11,7 @@ import Entidades.Detalleentregablespedido;
 import Entidades.Detalleservicio;
 import Entidades.Entregables;
 import Entidades.Paquetes;
+import Entidades.Pedidos;
 import Entidades.Servicios;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,7 +30,9 @@ public interface IFachadaControl {
     
     public void agregaCliente(String nombre, String apellido, String direccion, String numero, String correo);
 
-    public void registrarPedido(float precio,String promocion,String notas,int idCliente,int idPaquete);
+    public void registrarPedido(float precio, Date fecha,String promocion,String notas,int idCliente,int idPaquete);
+    
+    public void registrarDetalleServicio(Detalleservicio detalleServicio);
     
     public Clientes getClienteId(int id);
 
@@ -54,6 +57,20 @@ public interface IFachadaControl {
     public Servicios getServiciosId(int id);
     
     public Paquetes getPaqueteId(int id);
+    
+    public List<Pedidos> getPedidos();
+
+    public Pedidos getPedidoID(int id);
+    
+    public void asignarEntregablesPedido(List listaEntregablesPedido);
+    
+    public void asignarServiciosPedido(List listaServiciosPedido);
+    
+    public void asignarDetalleEntregablesPedido(List<Detalleentregablespedido> listaEntregablesPedido);
+    
+    public void asignarDetalleServiciosPedido(List<Detalleservicio> listaServicciosPedido);
+    
+    public List<Pedidos> getPedidosCliente(String nombre, String apellido);
     
     
 }

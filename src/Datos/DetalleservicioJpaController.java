@@ -39,14 +39,14 @@ public class DetalleservicioJpaController implements Serializable {
 
     public void create(Detalleservicio detalleservicio) throws IllegalOrphanException, PreexistingEntityException, Exception {
         List<String> illegalOrphanMessages = null;
-        Servicios serviciosOrphanCheck = detalleservicio.getServicios();
-        if (serviciosOrphanCheck != null) {
-            Detalleservicio oldDetalleservicioOfServicios = serviciosOrphanCheck.getDetalleservicio();
-            if (oldDetalleservicioOfServicios != null) {
+        Pedidos pedidosOrphanCheck = detalleservicio.getPedidos();
+        if (pedidosOrphanCheck != null) {
+            Detalleservicio oldDetalleservicioOfPedidos = pedidosOrphanCheck.getDetalleservicio();
+            if (oldDetalleservicioOfPedidos != null) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("The Servicios " + serviciosOrphanCheck + " already has an item of type Detalleservicio whose servicios column cannot be null. Please make another selection for the servicios field.");
+                illegalOrphanMessages.add("The Pedidos " + pedidosOrphanCheck + " already has an item of type Detalleservicio whose pedidos column cannot be null. Please make another selection for the pedidos field.");
             }
         }
         if (illegalOrphanMessages != null) {
@@ -56,28 +56,28 @@ public class DetalleservicioJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Pedidos pedidosIdpedido = detalleservicio.getPedidosIdpedido();
-            if (pedidosIdpedido != null) {
-                pedidosIdpedido = em.getReference(pedidosIdpedido.getClass(), pedidosIdpedido.getIdpedido());
-                detalleservicio.setPedidosIdpedido(pedidosIdpedido);
+            Pedidos pedidos = detalleservicio.getPedidos();
+            if (pedidos != null) {
+                pedidos = em.getReference(pedidos.getClass(), pedidos.getIdpedido());
+                detalleservicio.setPedidos(pedidos);
             }
-            Servicios servicios = detalleservicio.getServicios();
-            if (servicios != null) {
-                servicios = em.getReference(servicios.getClass(), servicios.getIdservicio());
-                detalleservicio.setServicios(servicios);
+            Servicios serviciosIdservicio = detalleservicio.getServiciosIdservicio();
+            if (serviciosIdservicio != null) {
+                serviciosIdservicio = em.getReference(serviciosIdservicio.getClass(), serviciosIdservicio.getIdservicio());
+                detalleservicio.setServiciosIdservicio(serviciosIdservicio);
             }
             em.persist(detalleservicio);
-            if (pedidosIdpedido != null) {
-                pedidosIdpedido.getDetalleservicioList().add(detalleservicio);
-                pedidosIdpedido = em.merge(pedidosIdpedido);
+            if (pedidos != null) {
+                pedidos.setDetalleservicio(detalleservicio);
+                pedidos = em.merge(pedidos);
             }
-            if (servicios != null) {
-                servicios.setDetalleservicio(detalleservicio);
-                servicios = em.merge(servicios);
+            if (serviciosIdservicio != null) {
+                serviciosIdservicio.getDetalleservicioList().add(detalleservicio);
+                serviciosIdservicio = em.merge(serviciosIdservicio);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
-            if (findDetalleservicio(detalleservicio.getServiciosIdservicio()) != null) {
+            if (findDetalleservicio(detalleservicio.getPedidosIdpedido()) != null) {
                 throw new PreexistingEntityException("Detalleservicio " + detalleservicio + " already exists.", ex);
             }
             throw ex;
@@ -93,54 +93,54 @@ public class DetalleservicioJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Detalleservicio persistentDetalleservicio = em.find(Detalleservicio.class, detalleservicio.getServiciosIdservicio());
-            Pedidos pedidosIdpedidoOld = persistentDetalleservicio.getPedidosIdpedido();
-            Pedidos pedidosIdpedidoNew = detalleservicio.getPedidosIdpedido();
-            Servicios serviciosOld = persistentDetalleservicio.getServicios();
-            Servicios serviciosNew = detalleservicio.getServicios();
+            Detalleservicio persistentDetalleservicio = em.find(Detalleservicio.class, detalleservicio.getPedidosIdpedido());
+            Pedidos pedidosOld = persistentDetalleservicio.getPedidos();
+            Pedidos pedidosNew = detalleservicio.getPedidos();
+            Servicios serviciosIdservicioOld = persistentDetalleservicio.getServiciosIdservicio();
+            Servicios serviciosIdservicioNew = detalleservicio.getServiciosIdservicio();
             List<String> illegalOrphanMessages = null;
-            if (serviciosNew != null && !serviciosNew.equals(serviciosOld)) {
-                Detalleservicio oldDetalleservicioOfServicios = serviciosNew.getDetalleservicio();
-                if (oldDetalleservicioOfServicios != null) {
+            if (pedidosNew != null && !pedidosNew.equals(pedidosOld)) {
+                Detalleservicio oldDetalleservicioOfPedidos = pedidosNew.getDetalleservicio();
+                if (oldDetalleservicioOfPedidos != null) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("The Servicios " + serviciosNew + " already has an item of type Detalleservicio whose servicios column cannot be null. Please make another selection for the servicios field.");
+                    illegalOrphanMessages.add("The Pedidos " + pedidosNew + " already has an item of type Detalleservicio whose pedidos column cannot be null. Please make another selection for the pedidos field.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            if (pedidosIdpedidoNew != null) {
-                pedidosIdpedidoNew = em.getReference(pedidosIdpedidoNew.getClass(), pedidosIdpedidoNew.getIdpedido());
-                detalleservicio.setPedidosIdpedido(pedidosIdpedidoNew);
+            if (pedidosNew != null) {
+                pedidosNew = em.getReference(pedidosNew.getClass(), pedidosNew.getIdpedido());
+                detalleservicio.setPedidos(pedidosNew);
             }
-            if (serviciosNew != null) {
-                serviciosNew = em.getReference(serviciosNew.getClass(), serviciosNew.getIdservicio());
-                detalleservicio.setServicios(serviciosNew);
+            if (serviciosIdservicioNew != null) {
+                serviciosIdservicioNew = em.getReference(serviciosIdservicioNew.getClass(), serviciosIdservicioNew.getIdservicio());
+                detalleservicio.setServiciosIdservicio(serviciosIdservicioNew);
             }
             detalleservicio = em.merge(detalleservicio);
-            if (pedidosIdpedidoOld != null && !pedidosIdpedidoOld.equals(pedidosIdpedidoNew)) {
-                pedidosIdpedidoOld.getDetalleservicioList().remove(detalleservicio);
-                pedidosIdpedidoOld = em.merge(pedidosIdpedidoOld);
+            if (pedidosOld != null && !pedidosOld.equals(pedidosNew)) {
+                pedidosOld.setDetalleservicio(null);
+                pedidosOld = em.merge(pedidosOld);
             }
-            if (pedidosIdpedidoNew != null && !pedidosIdpedidoNew.equals(pedidosIdpedidoOld)) {
-                pedidosIdpedidoNew.getDetalleservicioList().add(detalleservicio);
-                pedidosIdpedidoNew = em.merge(pedidosIdpedidoNew);
+            if (pedidosNew != null && !pedidosNew.equals(pedidosOld)) {
+                pedidosNew.setDetalleservicio(detalleservicio);
+                pedidosNew = em.merge(pedidosNew);
             }
-            if (serviciosOld != null && !serviciosOld.equals(serviciosNew)) {
-                serviciosOld.setDetalleservicio(null);
-                serviciosOld = em.merge(serviciosOld);
+            if (serviciosIdservicioOld != null && !serviciosIdservicioOld.equals(serviciosIdservicioNew)) {
+                serviciosIdservicioOld.getDetalleservicioList().remove(detalleservicio);
+                serviciosIdservicioOld = em.merge(serviciosIdservicioOld);
             }
-            if (serviciosNew != null && !serviciosNew.equals(serviciosOld)) {
-                serviciosNew.setDetalleservicio(detalleservicio);
-                serviciosNew = em.merge(serviciosNew);
+            if (serviciosIdservicioNew != null && !serviciosIdservicioNew.equals(serviciosIdservicioOld)) {
+                serviciosIdservicioNew.getDetalleservicioList().add(detalleservicio);
+                serviciosIdservicioNew = em.merge(serviciosIdservicioNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = detalleservicio.getServiciosIdservicio();
+                Integer id = detalleservicio.getPedidosIdpedido();
                 if (findDetalleservicio(id) == null) {
                     throw new NonexistentEntityException("The detalleservicio with id " + id + " no longer exists.");
                 }
@@ -161,19 +161,19 @@ public class DetalleservicioJpaController implements Serializable {
             Detalleservicio detalleservicio;
             try {
                 detalleservicio = em.getReference(Detalleservicio.class, id);
-                detalleservicio.getServiciosIdservicio();
+                detalleservicio.getPedidosIdpedido();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The detalleservicio with id " + id + " no longer exists.", enfe);
             }
-            Pedidos pedidosIdpedido = detalleservicio.getPedidosIdpedido();
-            if (pedidosIdpedido != null) {
-                pedidosIdpedido.getDetalleservicioList().remove(detalleservicio);
-                pedidosIdpedido = em.merge(pedidosIdpedido);
+            Pedidos pedidos = detalleservicio.getPedidos();
+            if (pedidos != null) {
+                pedidos.setDetalleservicio(null);
+                pedidos = em.merge(pedidos);
             }
-            Servicios servicios = detalleservicio.getServicios();
-            if (servicios != null) {
-                servicios.setDetalleservicio(null);
-                servicios = em.merge(servicios);
+            Servicios serviciosIdservicio = detalleservicio.getServiciosIdservicio();
+            if (serviciosIdservicio != null) {
+                serviciosIdservicio.getDetalleservicioList().remove(detalleservicio);
+                serviciosIdservicio = em.merge(serviciosIdservicio);
             }
             em.remove(detalleservicio);
             em.getTransaction().commit();
@@ -216,16 +216,6 @@ public class DetalleservicioJpaController implements Serializable {
             em.close();
         }
     }
-    
-    public List<Detalleservicio> buscarServicios(int id){
-        EntityManager em = getEntityManager();
-        try {
-            Query q = em.createNativeQuery("SELECT * FROM basedatos_sage.detalleservicio WHERE pedidos_idpedido = "+id,Detalleservicio.class);
-            return q.getResultList();
-        } finally {
-            em.close();
-        }
-    }
 
     public int getDetalleservicioCount() {
         EntityManager em = getEntityManager();
@@ -240,4 +230,13 @@ public class DetalleservicioJpaController implements Serializable {
         }
     }
     
+    public List<Detalleservicio> buscarServicios(int id){
+        EntityManager em = getEntityManager();
+        try {
+            Query q = em.createNativeQuery("SELECT * FROM basedatos_sage.detalleservicio WHERE pedidos_idpedido = "+id,Detalleservicio.class);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
 }

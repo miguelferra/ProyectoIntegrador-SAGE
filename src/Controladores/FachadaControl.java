@@ -23,6 +23,7 @@ import Entidades.Pedidos;
 import Entidades.Servicios;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,16 +32,16 @@ import java.util.logging.Logger;
  *
  * @author ferra
  */
-public class FachadaControl implements IFachadaControl{
-    
-    
+public class FachadaControl implements IFachadaControl {
+
     private ControlCliente controlCliente;
     private ControlEntregable controlEntregable;
     private ControlServicio controlServicio;
     private ControlPaquete controlPaquete;
     private ControlPedido controlPedido;
-
-    PedidosJpaController cPed = new PedidosJpaController();
+    
+    
+    
 
     public FachadaControl() {
         this.controlCliente = new ControlCliente();
@@ -49,67 +50,61 @@ public class FachadaControl implements IFachadaControl{
         this.controlPaquete = new ControlPaquete();
         this.controlPedido = new ControlPedido();
     }
-    
-    public List<Clientes> getClientes(){
+
+    public List<Clientes> getClientes() {
         return controlCliente.getClientes();
     }
-    
-    public Clientes getClienteNombre(String nombre, String apellido){
+
+    public Clientes getClienteNombre(String nombre, String apellido) {
         return controlCliente.getClienteNombre(nombre, apellido);
     }
-        
-    public Clientes getClienteId(int id){
+
+    public Clientes getClienteId(int id) {
         return controlCliente.getClienteId(id);
     }
-    
-    public void editarCliente(int id, String nombre, String apellido, String direccion, String numero, String correo){
-        
+
+    public void editarCliente(int id, String nombre, String apellido, String direccion, String numero, String correo) {
+
         controlCliente.editarCliente(id, nombre, apellido, direccion, numero, correo);
     }
-    
-    public List<Paquetes> getPaquetes(){
+
+    public List<Paquetes> getPaquetes() {
         return controlPaquete.getPaquetes();
     }
-    
-    public Paquetes getPaqueteId(int id){
+
+    public Paquetes getPaqueteId(int id) {
         return controlPaquete.getPaqueteId(id);
     }
-    public List<Detalleentregablespaquete> getDetallePaqueteEntregable(int idPaquete){
+
+    public List<Detalleentregablespaquete> getDetallePaqueteEntregable(int idPaquete) {
         return controlPaquete.getDetalleEntregable(idPaquete);
     }
-     public List<Detalleentregablespaquete> getDetallePaqueteServicio(int idPaquete){
-         return controlPaquete.getDetalleServicio(idPaquete);
-     }
-    
-    public void agregaCliente(String nombre, String apellido, String direccion, String numero, String correo){
+
+    public List<Detalleentregablespaquete> getDetallePaqueteServicio(int idPaquete) {
+        return controlPaquete.getDetalleServicio(idPaquete);
+    }
+
+    public void agregaCliente(String nombre, String apellido, String direccion, String numero, String correo) {
         controlCliente.agregaCliente(nombre, apellido, direccion, numero, correo);
     }
-    
-    public void registrarPedido(float precio,String promocion,String notas,int idCliente,int idPaquete)
-    {
-        Pedidos ped = new Pedidos(0, new java.sql.Date(new Date().getTime()), new java.sql.Date(new Date().getTime()), precio, promocion, notas);
-        ped.setClientesIdcliente(controlCliente.getClienteId(idCliente));
-        ped.setPaquetesIdpaquete(controlPaquete.getPaqueteId(idPaquete));
-        try {
-            cPed.create(ped);
-        } catch (Exception ex) {
-            Logger.getLogger(FachadaControl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+    public void registrarPedido(float precio, Date fecha, String promocion, String notas, int idCliente, int idPaquete) {
+        controlPedido.registrarPedido(precio,fecha , promocion, notas, controlCliente.getClienteId(idCliente), controlPaquete.getPaqueteId(idPaquete));
     }
-    
-    public List<Detalleentregablespedido> getDetalleEntregable(int idPaquete){
+
+    public List<Detalleentregablespedido> getDetalleEntregable(int idPaquete) {
         return controlEntregable.getDetalleEntregable(idPaquete);
     }
-    
-    public List<Entregables> getEntregables(){
+
+    public List<Entregables> getEntregables() {
         return controlEntregable.getEntregables();
     }
-    
-    public Entregables getEntregableId(int id){
+
+    public Entregables getEntregableId(int id) {
         return controlEntregable.getEntregableId(id);
-    } 
-    
-    public List<Detalleservicio> getDetalleServicio(int id){
+    }
+
+    public List<Detalleservicio> getDetalleServicio(int id) {
         return controlServicio.getDetalleServicio(id);
     }
 
@@ -117,13 +112,40 @@ public class FachadaControl implements IFachadaControl{
     public Servicios getServiciosId(int id) {
         return controlServicio.getServicioId(id);
     }
-    
-    public List<Servicios> getServicios(){
+
+    public List<Servicios> getServicios() {
         return controlServicio.getServicios();
     }
+
+    public void registrarDetalleServicio(Detalleservicio detalleServicio) {
+        controlServicio.registrarDetalleServicio(detalleServicio);
+    }
+
+    public List<Pedidos> getPedidos() {
+        return controlPedido.getPedidos();
+    }
+
+    public Pedidos getPedidoID(int id) {
+        return controlPedido.getPedidoID(id);
+    }
     
-   
+    public void asignarEntregablesPedido(List listaEntregablesPedido){
+        controlPedido.asignarEntregablesPedido(listaEntregablesPedido);
+    } 
     
+    public void asignarServiciosPedido(List listaServiciosPedido){
+        controlPedido.asignarServiciosPedido(listaServiciosPedido);
+    }
     
+    public void asignarDetalleEntregablesPedido(List<Detalleentregablespedido> listaEntregablesPedido){
+        controlEntregable.asignarDetalleEntregablesPedido(listaEntregablesPedido,controlPedido.getUltimoPedido());
+    }
+
+    public void asignarDetalleServiciosPedido(List<Detalleservicio> listaServicciosPedido){
+        controlServicio.asignarDetalleServiciosPedido(listaServicciosPedido,controlPedido.getUltimoPedido());
+    }
+    public List<Pedidos> getPedidosCliente(String nombre,String apellido){
+        return controlPedido.getPedidosClientes(controlCliente.getClienteNombre(nombre, apellido).getIdcliente());
+    }
 }
     

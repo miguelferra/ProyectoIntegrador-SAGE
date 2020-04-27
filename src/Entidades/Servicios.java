@@ -6,6 +6,7 @@
 package Entidades;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,9 +16,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -46,8 +48,8 @@ public class Servicios implements Serializable {
     private String lugar;
     @Column(name = "detalle")
     private String detalle;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "servicios")
-    private Detalleservicio detalleservicio;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "serviciosIdservicio")
+    private List<Detalleservicio> detalleservicioList;
 
     public Servicios() {
     }
@@ -88,12 +90,13 @@ public class Servicios implements Serializable {
         this.detalle = detalle;
     }
 
-    public Detalleservicio getDetalleservicio() {
-        return detalleservicio;
+    @XmlTransient
+    public List<Detalleservicio> getDetalleservicioList() {
+        return detalleservicioList;
     }
 
-    public void setDetalleservicio(Detalleservicio detalleservicio) {
-        this.detalleservicio = detalleservicio;
+    public void setDetalleservicioList(List<Detalleservicio> detalleservicioList) {
+        this.detalleservicioList = detalleservicioList;
     }
 
     @Override

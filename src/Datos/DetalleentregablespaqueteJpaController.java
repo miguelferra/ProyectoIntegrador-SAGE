@@ -25,7 +25,7 @@ import javax.persistence.Persistence;
 public class DetalleentregablespaqueteJpaController implements Serializable {
 
     public DetalleentregablespaqueteJpaController() {
-         this.emf = Persistence.createEntityManagerFactory("SAGEPU");
+        this.emf = Persistence.createEntityManagerFactory("SAGEPU");
     }
     private EntityManagerFactory emf = null;
 
@@ -152,26 +152,6 @@ public class DetalleentregablespaqueteJpaController implements Serializable {
             em.close();
         }
     }
-    
-    public List<Detalleentregablespaquete> buscarEntregables(int id){
-        EntityManager em = getEntityManager();
-        try {
-            Query q = em.createNativeQuery("SELECT * FROM basedatos_sage.detalleentregablespaquete WHERE paquetes_idpaquete =  "+id+" AND entregables_identregable IS NOT NULL",Detalleentregablespaquete.class);
-            return q.getResultList();
-        } finally {
-            em.close();
-        }
-    }
-    
-    public List<Detalleentregablespaquete> buscarServicios(int id){
-        EntityManager em = getEntityManager();
-        try {
-            Query q = em.createNativeQuery("SELECT * FROM basedatos_sage.detalleentregablespaquete WHERE paquetes_idpaquete =  "+id+" AND servicios_idservicio IS NOT NULL",Detalleentregablespaquete.class);
-            return q.getResultList();
-        } finally {
-            em.close();
-        }
-    }
 
     public int getDetalleentregablespaqueteCount() {
         EntityManager em = getEntityManager();
@@ -185,5 +165,26 @@ public class DetalleentregablespaqueteJpaController implements Serializable {
             em.close();
         }
     }
+    
+    public List<Detalleentregablespaquete> buscarEntregables(int id){
+        EntityManager em = getEntityManager();
+        try {
+            Query q = em.createNativeQuery("SELECT * FROM bd_sage.detalleentregablespaquete WHERE paquetes_idpaquete =  "+id+" AND entregables_identregable IS NOT NULL",Detalleentregablespaquete.class);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+    
+    public List<Detalleentregablespaquete> buscarServicios(int id){
+        EntityManager em = getEntityManager();
+        try {
+            Query q = em.createNativeQuery("SELECT * FROM bd_sage.detalleentregablespaquete WHERE paquetes_idpaquete =  "+id+" AND servicios_idservicio IS NOT NULL",Detalleentregablespaquete.class);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
     
 }

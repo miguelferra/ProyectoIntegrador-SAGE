@@ -5,7 +5,6 @@
  */
 package Datos;
 
-import Datos.exceptions.IllegalOrphanException;
 import Datos.exceptions.NonexistentEntityException;
 import Datos.exceptions.PreexistingEntityException;
 import Entidades.Detalleentregablespedido;
@@ -15,8 +14,6 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import Entidades.Entregables;
-import Entidades.Pedidos;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -37,47 +34,24 @@ public class DetalleentregablespedidoJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Detalleentregablespedido detalleentregablespedido) throws IllegalOrphanException, PreexistingEntityException, Exception {
-        List<String> illegalOrphanMessages = null;
-        Entregables entregablesOrphanCheck = detalleentregablespedido.getEntregables();
-        if (entregablesOrphanCheck != null) {
-            Detalleentregablespedido oldDetalleentregablespedidoOfEntregables = entregablesOrphanCheck.getDetalleentregablespedido();
-            if (oldDetalleentregablespedidoOfEntregables != null) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("The Entregables " + entregablesOrphanCheck + " already has an item of type Detalleentregablespedido whose entregables column cannot be null. Please make another selection for the entregables field.");
-            }
-        }
-        if (illegalOrphanMessages != null) {
-            throw new IllegalOrphanException(illegalOrphanMessages);
-        }
+    public void create(Detalleentregablespedido detalleentregablespedido) throws PreexistingEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Entregables entregables = detalleentregablespedido.getEntregables();
-            if (entregables != null) {
-                entregables = em.getReference(entregables.getClass(), entregables.getIdentregable());
-                detalleentregablespedido.setEntregables(entregables);
-            }
-            Pedidos pedidosIdpedido = detalleentregablespedido.getPedidosIdpedido();
-            if (pedidosIdpedido != null) {
-                pedidosIdpedido = em.getReference(pedidosIdpedido.getClass(), pedidosIdpedido.getIdpedido());
-                detalleentregablespedido.setPedidosIdpedido(pedidosIdpedido);
+            Entregables entregablesIdentregable = detalleentregablespedido.getEntregablesIdentregable();
+            if (entregablesIdentregable != null) {
+                entregablesIdentregable = em.getReference(entregablesIdentregable.getClass(), entregablesIdentregable.getIdentregable());
+                detalleentregablespedido.setEntregablesIdentregable(entregablesIdentregable);
             }
             em.persist(detalleentregablespedido);
-            if (entregables != null) {
-                entregables.setDetalleentregablespedido(detalleentregablespedido);
-                entregables = em.merge(entregables);
-            }
-            if (pedidosIdpedido != null) {
-                pedidosIdpedido.getDetalleentregablespedidoList().add(detalleentregablespedido);
-                pedidosIdpedido = em.merge(pedidosIdpedido);
+            if (entregablesIdentregable != null) {
+                entregablesIdentregable.getDetalleentregablespedidoList().add(detalleentregablespedido);
+                entregablesIdentregable = em.merge(entregablesIdentregable);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
-            if (findDetalleentregablespedido(detalleentregablespedido.getEntregablesIdentregable()) != null) {
+            if (findDetalleentregablespedido(detalleentregablespedido.getPedidosIdpedido()) != null) {
                 throw new PreexistingEntityException("Detalleentregablespedido " + detalleentregablespedido + " already exists.", ex);
             }
             throw ex;
@@ -88,59 +62,32 @@ public class DetalleentregablespedidoJpaController implements Serializable {
         }
     }
 
-    public void edit(Detalleentregablespedido detalleentregablespedido) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public void edit(Detalleentregablespedido detalleentregablespedido) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Detalleentregablespedido persistentDetalleentregablespedido = em.find(Detalleentregablespedido.class, detalleentregablespedido.getEntregablesIdentregable());
-            Entregables entregablesOld = persistentDetalleentregablespedido.getEntregables();
-            Entregables entregablesNew = detalleentregablespedido.getEntregables();
-            Pedidos pedidosIdpedidoOld = persistentDetalleentregablespedido.getPedidosIdpedido();
-            Pedidos pedidosIdpedidoNew = detalleentregablespedido.getPedidosIdpedido();
-            List<String> illegalOrphanMessages = null;
-            if (entregablesNew != null && !entregablesNew.equals(entregablesOld)) {
-                Detalleentregablespedido oldDetalleentregablespedidoOfEntregables = entregablesNew.getDetalleentregablespedido();
-                if (oldDetalleentregablespedidoOfEntregables != null) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("The Entregables " + entregablesNew + " already has an item of type Detalleentregablespedido whose entregables column cannot be null. Please make another selection for the entregables field.");
-                }
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
-            }
-            if (entregablesNew != null) {
-                entregablesNew = em.getReference(entregablesNew.getClass(), entregablesNew.getIdentregable());
-                detalleentregablespedido.setEntregables(entregablesNew);
-            }
-            if (pedidosIdpedidoNew != null) {
-                pedidosIdpedidoNew = em.getReference(pedidosIdpedidoNew.getClass(), pedidosIdpedidoNew.getIdpedido());
-                detalleentregablespedido.setPedidosIdpedido(pedidosIdpedidoNew);
+            Detalleentregablespedido persistentDetalleentregablespedido = em.find(Detalleentregablespedido.class, detalleentregablespedido.getPedidosIdpedido());
+            Entregables entregablesIdentregableOld = persistentDetalleentregablespedido.getEntregablesIdentregable();
+            Entregables entregablesIdentregableNew = detalleentregablespedido.getEntregablesIdentregable();
+            if (entregablesIdentregableNew != null) {
+                entregablesIdentregableNew = em.getReference(entregablesIdentregableNew.getClass(), entregablesIdentregableNew.getIdentregable());
+                detalleentregablespedido.setEntregablesIdentregable(entregablesIdentregableNew);
             }
             detalleentregablespedido = em.merge(detalleentregablespedido);
-            if (entregablesOld != null && !entregablesOld.equals(entregablesNew)) {
-                entregablesOld.setDetalleentregablespedido(null);
-                entregablesOld = em.merge(entregablesOld);
+            if (entregablesIdentregableOld != null && !entregablesIdentregableOld.equals(entregablesIdentregableNew)) {
+                entregablesIdentregableOld.getDetalleentregablespedidoList().remove(detalleentregablespedido);
+                entregablesIdentregableOld = em.merge(entregablesIdentregableOld);
             }
-            if (entregablesNew != null && !entregablesNew.equals(entregablesOld)) {
-                entregablesNew.setDetalleentregablespedido(detalleentregablespedido);
-                entregablesNew = em.merge(entregablesNew);
-            }
-            if (pedidosIdpedidoOld != null && !pedidosIdpedidoOld.equals(pedidosIdpedidoNew)) {
-                pedidosIdpedidoOld.getDetalleentregablespedidoList().remove(detalleentregablespedido);
-                pedidosIdpedidoOld = em.merge(pedidosIdpedidoOld);
-            }
-            if (pedidosIdpedidoNew != null && !pedidosIdpedidoNew.equals(pedidosIdpedidoOld)) {
-                pedidosIdpedidoNew.getDetalleentregablespedidoList().add(detalleentregablespedido);
-                pedidosIdpedidoNew = em.merge(pedidosIdpedidoNew);
+            if (entregablesIdentregableNew != null && !entregablesIdentregableNew.equals(entregablesIdentregableOld)) {
+                entregablesIdentregableNew.getDetalleentregablespedidoList().add(detalleentregablespedido);
+                entregablesIdentregableNew = em.merge(entregablesIdentregableNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = detalleentregablespedido.getEntregablesIdentregable();
+                Integer id = detalleentregablespedido.getPedidosIdpedido();
                 if (findDetalleentregablespedido(id) == null) {
                     throw new NonexistentEntityException("The detalleentregablespedido with id " + id + " no longer exists.");
                 }
@@ -161,19 +108,14 @@ public class DetalleentregablespedidoJpaController implements Serializable {
             Detalleentregablespedido detalleentregablespedido;
             try {
                 detalleentregablespedido = em.getReference(Detalleentregablespedido.class, id);
-                detalleentregablespedido.getEntregablesIdentregable();
+                detalleentregablespedido.getPedidosIdpedido();
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The detalleentregablespedido with id " + id + " no longer exists.", enfe);
             }
-            Entregables entregables = detalleentregablespedido.getEntregables();
-            if (entregables != null) {
-                entregables.setDetalleentregablespedido(null);
-                entregables = em.merge(entregables);
-            }
-            Pedidos pedidosIdpedido = detalleentregablespedido.getPedidosIdpedido();
-            if (pedidosIdpedido != null) {
-                pedidosIdpedido.getDetalleentregablespedidoList().remove(detalleentregablespedido);
-                pedidosIdpedido = em.merge(pedidosIdpedido);
+            Entregables entregablesIdentregable = detalleentregablespedido.getEntregablesIdentregable();
+            if (entregablesIdentregable != null) {
+                entregablesIdentregable.getDetalleentregablespedidoList().remove(detalleentregablespedido);
+                entregablesIdentregable = em.merge(entregablesIdentregable);
             }
             em.remove(detalleentregablespedido);
             em.getTransaction().commit();

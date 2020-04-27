@@ -29,8 +29,7 @@ import javax.persistence.Persistence;
 public class DetalleactividadesJpaController implements Serializable {
 
     public DetalleactividadesJpaController() {
-         this.emf = Persistence.createEntityManagerFactory("SAGEPU");
-
+        this.emf = Persistence.createEntityManagerFactory("SAGEPU");
     }
     private EntityManagerFactory emf = null;
 
@@ -42,8 +41,8 @@ public class DetalleactividadesJpaController implements Serializable {
         if (detalleactividades.getDetalleactividadesPK() == null) {
             detalleactividades.setDetalleactividadesPK(new DetalleactividadesPK());
         }
-        detalleactividades.getDetalleactividadesPK().setActividadesIdactividad(detalleactividades.getActividades().getIdactividad());
         detalleactividades.getDetalleactividadesPK().setPedidosIdpedido(detalleactividades.getPedidos().getIdpedido());
+        detalleactividades.getDetalleactividadesPK().setActividadesIdactividad(detalleactividades.getActividades().getIdactividad());
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -90,8 +89,8 @@ public class DetalleactividadesJpaController implements Serializable {
     }
 
     public void edit(Detalleactividades detalleactividades) throws NonexistentEntityException, Exception {
-        detalleactividades.getDetalleactividadesPK().setActividadesIdactividad(detalleactividades.getActividades().getIdactividad());
         detalleactividades.getDetalleactividadesPK().setPedidosIdpedido(detalleactividades.getPedidos().getIdpedido());
+        detalleactividades.getDetalleactividadesPK().setActividadesIdactividad(detalleactividades.getActividades().getIdactividad());
         EntityManager em = null;
         try {
             em = getEntityManager();

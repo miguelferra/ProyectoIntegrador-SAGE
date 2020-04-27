@@ -5,7 +5,6 @@
  */
 package Datos;
 
-
 import Datos.exceptions.IllegalOrphanException;
 import Datos.exceptions.NonexistentEntityException;
 import Entidades.Clientes;
@@ -188,17 +187,6 @@ public class ClientesJpaController implements Serializable {
             em.close();
         }
     }
-    
-    public Clientes buscarClienteNombre(String nombre, String apellido){
-        EntityManager em = getEntityManager();
-
-        try {
-            Query q = em.createNativeQuery("SELECT * FROM basedatos_sage.clientes WHERE nombre = "+ "'"+nombre+"'"+ "AND apellido = "+ "'"+apellido + "'",Clientes.class);
-            return (Clientes) q.getSingleResult();
-        } finally {
-            em.close();
-        }
-    }
 
     public int getClientesCount() {
         EntityManager em = getEntityManager();
@@ -212,5 +200,15 @@ public class ClientesJpaController implements Serializable {
             em.close();
         }
     }
-}
     
+    public Clientes buscarClienteNombre(String nombre, String apellido){
+        EntityManager em = getEntityManager();
+        try {
+            Query q = em.createNativeQuery("SELECT * FROM bd_sage.clientes WHERE nombre = "+ "'"+nombre+"'"+ "AND apellido = "+ "'"+apellido + "'",Clientes.class);
+            return (Clientes) q.getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
+    
+}

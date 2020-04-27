@@ -6,6 +6,7 @@
 package Entidades;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -15,9 +16,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -43,8 +45,8 @@ public class Entregables implements Serializable {
     private String tipo;
     @Column(name = "tama\u00f1o")
     private String tamaño;
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "entregables")
-    private Detalleentregablespedido detalleentregablespedido;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "entregablesIdentregable")
+    private List<Detalleentregablespedido> detalleentregablespedidoList;
 
     public Entregables() {
     }
@@ -77,12 +79,13 @@ public class Entregables implements Serializable {
         this.tamaño = tamaño;
     }
 
-    public Detalleentregablespedido getDetalleentregablespedido() {
-        return detalleentregablespedido;
+    @XmlTransient
+    public List<Detalleentregablespedido> getDetalleentregablespedidoList() {
+        return detalleentregablespedidoList;
     }
 
-    public void setDetalleentregablespedido(Detalleentregablespedido detalleentregablespedido) {
-        this.detalleentregablespedido = detalleentregablespedido;
+    public void setDetalleentregablespedidoList(List<Detalleentregablespedido> detalleentregablespedidoList) {
+        this.detalleentregablespedidoList = detalleentregablespedidoList;
     }
 
     @Override

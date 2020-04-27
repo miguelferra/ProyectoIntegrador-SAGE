@@ -14,12 +14,11 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import Entidades.Clientes;
 import Entidades.Paquetes;
+import Entidades.Detalleservicio;
 import Entidades.Detalleactividades;
+import Entidades.Pedidos;
 import java.util.ArrayList;
 import java.util.List;
-import Entidades.Detalleservicio;
-import Entidades.Detalleentregablespedido;
-import Entidades.Pedidos;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -43,12 +42,6 @@ public class PedidosJpaController implements Serializable {
         if (pedidos.getDetalleactividadesList() == null) {
             pedidos.setDetalleactividadesList(new ArrayList<Detalleactividades>());
         }
-        if (pedidos.getDetalleservicioList() == null) {
-            pedidos.setDetalleservicioList(new ArrayList<Detalleservicio>());
-        }
-        if (pedidos.getDetalleentregablespedidoList() == null) {
-            pedidos.setDetalleentregablespedidoList(new ArrayList<Detalleentregablespedido>());
-        }
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -63,24 +56,17 @@ public class PedidosJpaController implements Serializable {
                 paquetesIdpaquete = em.getReference(paquetesIdpaquete.getClass(), paquetesIdpaquete.getIdpaquete());
                 pedidos.setPaquetesIdpaquete(paquetesIdpaquete);
             }
+            Detalleservicio detalleservicio = pedidos.getDetalleservicio();
+            if (detalleservicio != null) {
+                detalleservicio = em.getReference(detalleservicio.getClass(), detalleservicio.getPedidosIdpedido());
+                pedidos.setDetalleservicio(detalleservicio);
+            }
             List<Detalleactividades> attachedDetalleactividadesList = new ArrayList<Detalleactividades>();
             for (Detalleactividades detalleactividadesListDetalleactividadesToAttach : pedidos.getDetalleactividadesList()) {
                 detalleactividadesListDetalleactividadesToAttach = em.getReference(detalleactividadesListDetalleactividadesToAttach.getClass(), detalleactividadesListDetalleactividadesToAttach.getDetalleactividadesPK());
                 attachedDetalleactividadesList.add(detalleactividadesListDetalleactividadesToAttach);
             }
             pedidos.setDetalleactividadesList(attachedDetalleactividadesList);
-            List<Detalleservicio> attachedDetalleservicioList = new ArrayList<Detalleservicio>();
-            for (Detalleservicio detalleservicioListDetalleservicioToAttach : pedidos.getDetalleservicioList()) {
-                detalleservicioListDetalleservicioToAttach = em.getReference(detalleservicioListDetalleservicioToAttach.getClass(), detalleservicioListDetalleservicioToAttach.getServiciosIdservicio());
-                attachedDetalleservicioList.add(detalleservicioListDetalleservicioToAttach);
-            }
-            pedidos.setDetalleservicioList(attachedDetalleservicioList);
-            List<Detalleentregablespedido> attachedDetalleentregablespedidoList = new ArrayList<Detalleentregablespedido>();
-            for (Detalleentregablespedido detalleentregablespedidoListDetalleentregablespedidoToAttach : pedidos.getDetalleentregablespedidoList()) {
-                detalleentregablespedidoListDetalleentregablespedidoToAttach = em.getReference(detalleentregablespedidoListDetalleentregablespedidoToAttach.getClass(), detalleentregablespedidoListDetalleentregablespedidoToAttach.getEntregablesIdentregable());
-                attachedDetalleentregablespedidoList.add(detalleentregablespedidoListDetalleentregablespedidoToAttach);
-            }
-            pedidos.setDetalleentregablespedidoList(attachedDetalleentregablespedidoList);
             em.persist(pedidos);
             if (clientesIdcliente != null) {
                 clientesIdcliente.getPedidosList().add(pedidos);
@@ -90,6 +76,15 @@ public class PedidosJpaController implements Serializable {
                 paquetesIdpaquete.getPedidosList().add(pedidos);
                 paquetesIdpaquete = em.merge(paquetesIdpaquete);
             }
+            if (detalleservicio != null) {
+                Pedidos oldPedidosOfDetalleservicio = detalleservicio.getPedidos();
+                if (oldPedidosOfDetalleservicio != null) {
+                    oldPedidosOfDetalleservicio.setDetalleservicio(null);
+                    oldPedidosOfDetalleservicio = em.merge(oldPedidosOfDetalleservicio);
+                }
+                detalleservicio.setPedidos(pedidos);
+                detalleservicio = em.merge(detalleservicio);
+            }
             for (Detalleactividades detalleactividadesListDetalleactividades : pedidos.getDetalleactividadesList()) {
                 Pedidos oldPedidosOfDetalleactividadesListDetalleactividades = detalleactividadesListDetalleactividades.getPedidos();
                 detalleactividadesListDetalleactividades.setPedidos(pedidos);
@@ -97,24 +92,6 @@ public class PedidosJpaController implements Serializable {
                 if (oldPedidosOfDetalleactividadesListDetalleactividades != null) {
                     oldPedidosOfDetalleactividadesListDetalleactividades.getDetalleactividadesList().remove(detalleactividadesListDetalleactividades);
                     oldPedidosOfDetalleactividadesListDetalleactividades = em.merge(oldPedidosOfDetalleactividadesListDetalleactividades);
-                }
-            }
-            for (Detalleservicio detalleservicioListDetalleservicio : pedidos.getDetalleservicioList()) {
-                Pedidos oldPedidosIdpedidoOfDetalleservicioListDetalleservicio = detalleservicioListDetalleservicio.getPedidosIdpedido();
-                detalleservicioListDetalleservicio.setPedidosIdpedido(pedidos);
-                detalleservicioListDetalleservicio = em.merge(detalleservicioListDetalleservicio);
-                if (oldPedidosIdpedidoOfDetalleservicioListDetalleservicio != null) {
-                    oldPedidosIdpedidoOfDetalleservicioListDetalleservicio.getDetalleservicioList().remove(detalleservicioListDetalleservicio);
-                    oldPedidosIdpedidoOfDetalleservicioListDetalleservicio = em.merge(oldPedidosIdpedidoOfDetalleservicioListDetalleservicio);
-                }
-            }
-            for (Detalleentregablespedido detalleentregablespedidoListDetalleentregablespedido : pedidos.getDetalleentregablespedidoList()) {
-                Pedidos oldPedidosIdpedidoOfDetalleentregablespedidoListDetalleentregablespedido = detalleentregablespedidoListDetalleentregablespedido.getPedidosIdpedido();
-                detalleentregablespedidoListDetalleentregablespedido.setPedidosIdpedido(pedidos);
-                detalleentregablespedidoListDetalleentregablespedido = em.merge(detalleentregablespedidoListDetalleentregablespedido);
-                if (oldPedidosIdpedidoOfDetalleentregablespedidoListDetalleentregablespedido != null) {
-                    oldPedidosIdpedidoOfDetalleentregablespedidoListDetalleentregablespedido.getDetalleentregablespedidoList().remove(detalleentregablespedidoListDetalleentregablespedido);
-                    oldPedidosIdpedidoOfDetalleentregablespedidoListDetalleentregablespedido = em.merge(oldPedidosIdpedidoOfDetalleentregablespedidoListDetalleentregablespedido);
                 }
             }
             em.getTransaction().commit();
@@ -135,13 +112,17 @@ public class PedidosJpaController implements Serializable {
             Clientes clientesIdclienteNew = pedidos.getClientesIdcliente();
             Paquetes paquetesIdpaqueteOld = persistentPedidos.getPaquetesIdpaquete();
             Paquetes paquetesIdpaqueteNew = pedidos.getPaquetesIdpaquete();
+            Detalleservicio detalleservicioOld = persistentPedidos.getDetalleservicio();
+            Detalleservicio detalleservicioNew = pedidos.getDetalleservicio();
             List<Detalleactividades> detalleactividadesListOld = persistentPedidos.getDetalleactividadesList();
             List<Detalleactividades> detalleactividadesListNew = pedidos.getDetalleactividadesList();
-            List<Detalleservicio> detalleservicioListOld = persistentPedidos.getDetalleservicioList();
-            List<Detalleservicio> detalleservicioListNew = pedidos.getDetalleservicioList();
-            List<Detalleentregablespedido> detalleentregablespedidoListOld = persistentPedidos.getDetalleentregablespedidoList();
-            List<Detalleentregablespedido> detalleentregablespedidoListNew = pedidos.getDetalleentregablespedidoList();
             List<String> illegalOrphanMessages = null;
+            if (detalleservicioOld != null && !detalleservicioOld.equals(detalleservicioNew)) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("You must retain Detalleservicio " + detalleservicioOld + " since its pedidos field is not nullable.");
+            }
             for (Detalleactividades detalleactividadesListOldDetalleactividades : detalleactividadesListOld) {
                 if (!detalleactividadesListNew.contains(detalleactividadesListOldDetalleactividades)) {
                     if (illegalOrphanMessages == null) {
@@ -161,6 +142,10 @@ public class PedidosJpaController implements Serializable {
                 paquetesIdpaqueteNew = em.getReference(paquetesIdpaqueteNew.getClass(), paquetesIdpaqueteNew.getIdpaquete());
                 pedidos.setPaquetesIdpaquete(paquetesIdpaqueteNew);
             }
+            if (detalleservicioNew != null) {
+                detalleservicioNew = em.getReference(detalleservicioNew.getClass(), detalleservicioNew.getPedidosIdpedido());
+                pedidos.setDetalleservicio(detalleservicioNew);
+            }
             List<Detalleactividades> attachedDetalleactividadesListNew = new ArrayList<Detalleactividades>();
             for (Detalleactividades detalleactividadesListNewDetalleactividadesToAttach : detalleactividadesListNew) {
                 detalleactividadesListNewDetalleactividadesToAttach = em.getReference(detalleactividadesListNewDetalleactividadesToAttach.getClass(), detalleactividadesListNewDetalleactividadesToAttach.getDetalleactividadesPK());
@@ -168,20 +153,6 @@ public class PedidosJpaController implements Serializable {
             }
             detalleactividadesListNew = attachedDetalleactividadesListNew;
             pedidos.setDetalleactividadesList(detalleactividadesListNew);
-            List<Detalleservicio> attachedDetalleservicioListNew = new ArrayList<Detalleservicio>();
-            for (Detalleservicio detalleservicioListNewDetalleservicioToAttach : detalleservicioListNew) {
-                detalleservicioListNewDetalleservicioToAttach = em.getReference(detalleservicioListNewDetalleservicioToAttach.getClass(), detalleservicioListNewDetalleservicioToAttach.getServiciosIdservicio());
-                attachedDetalleservicioListNew.add(detalleservicioListNewDetalleservicioToAttach);
-            }
-            detalleservicioListNew = attachedDetalleservicioListNew;
-            pedidos.setDetalleservicioList(detalleservicioListNew);
-            List<Detalleentregablespedido> attachedDetalleentregablespedidoListNew = new ArrayList<Detalleentregablespedido>();
-            for (Detalleentregablespedido detalleentregablespedidoListNewDetalleentregablespedidoToAttach : detalleentregablespedidoListNew) {
-                detalleentregablespedidoListNewDetalleentregablespedidoToAttach = em.getReference(detalleentregablespedidoListNewDetalleentregablespedidoToAttach.getClass(), detalleentregablespedidoListNewDetalleentregablespedidoToAttach.getEntregablesIdentregable());
-                attachedDetalleentregablespedidoListNew.add(detalleentregablespedidoListNewDetalleentregablespedidoToAttach);
-            }
-            detalleentregablespedidoListNew = attachedDetalleentregablespedidoListNew;
-            pedidos.setDetalleentregablespedidoList(detalleentregablespedidoListNew);
             pedidos = em.merge(pedidos);
             if (clientesIdclienteOld != null && !clientesIdclienteOld.equals(clientesIdclienteNew)) {
                 clientesIdclienteOld.getPedidosList().remove(pedidos);
@@ -199,6 +170,15 @@ public class PedidosJpaController implements Serializable {
                 paquetesIdpaqueteNew.getPedidosList().add(pedidos);
                 paquetesIdpaqueteNew = em.merge(paquetesIdpaqueteNew);
             }
+            if (detalleservicioNew != null && !detalleservicioNew.equals(detalleservicioOld)) {
+                Pedidos oldPedidosOfDetalleservicio = detalleservicioNew.getPedidos();
+                if (oldPedidosOfDetalleservicio != null) {
+                    oldPedidosOfDetalleservicio.setDetalleservicio(null);
+                    oldPedidosOfDetalleservicio = em.merge(oldPedidosOfDetalleservicio);
+                }
+                detalleservicioNew.setPedidos(pedidos);
+                detalleservicioNew = em.merge(detalleservicioNew);
+            }
             for (Detalleactividades detalleactividadesListNewDetalleactividades : detalleactividadesListNew) {
                 if (!detalleactividadesListOld.contains(detalleactividadesListNewDetalleactividades)) {
                     Pedidos oldPedidosOfDetalleactividadesListNewDetalleactividades = detalleactividadesListNewDetalleactividades.getPedidos();
@@ -207,40 +187,6 @@ public class PedidosJpaController implements Serializable {
                     if (oldPedidosOfDetalleactividadesListNewDetalleactividades != null && !oldPedidosOfDetalleactividadesListNewDetalleactividades.equals(pedidos)) {
                         oldPedidosOfDetalleactividadesListNewDetalleactividades.getDetalleactividadesList().remove(detalleactividadesListNewDetalleactividades);
                         oldPedidosOfDetalleactividadesListNewDetalleactividades = em.merge(oldPedidosOfDetalleactividadesListNewDetalleactividades);
-                    }
-                }
-            }
-            for (Detalleservicio detalleservicioListOldDetalleservicio : detalleservicioListOld) {
-                if (!detalleservicioListNew.contains(detalleservicioListOldDetalleservicio)) {
-                    detalleservicioListOldDetalleservicio.setPedidosIdpedido(null);
-                    detalleservicioListOldDetalleservicio = em.merge(detalleservicioListOldDetalleservicio);
-                }
-            }
-            for (Detalleservicio detalleservicioListNewDetalleservicio : detalleservicioListNew) {
-                if (!detalleservicioListOld.contains(detalleservicioListNewDetalleservicio)) {
-                    Pedidos oldPedidosIdpedidoOfDetalleservicioListNewDetalleservicio = detalleservicioListNewDetalleservicio.getPedidosIdpedido();
-                    detalleservicioListNewDetalleservicio.setPedidosIdpedido(pedidos);
-                    detalleservicioListNewDetalleservicio = em.merge(detalleservicioListNewDetalleservicio);
-                    if (oldPedidosIdpedidoOfDetalleservicioListNewDetalleservicio != null && !oldPedidosIdpedidoOfDetalleservicioListNewDetalleservicio.equals(pedidos)) {
-                        oldPedidosIdpedidoOfDetalleservicioListNewDetalleservicio.getDetalleservicioList().remove(detalleservicioListNewDetalleservicio);
-                        oldPedidosIdpedidoOfDetalleservicioListNewDetalleservicio = em.merge(oldPedidosIdpedidoOfDetalleservicioListNewDetalleservicio);
-                    }
-                }
-            }
-            for (Detalleentregablespedido detalleentregablespedidoListOldDetalleentregablespedido : detalleentregablespedidoListOld) {
-                if (!detalleentregablespedidoListNew.contains(detalleentregablespedidoListOldDetalleentregablespedido)) {
-                    detalleentregablespedidoListOldDetalleentregablespedido.setPedidosIdpedido(null);
-                    detalleentregablespedidoListOldDetalleentregablespedido = em.merge(detalleentregablespedidoListOldDetalleentregablespedido);
-                }
-            }
-            for (Detalleentregablespedido detalleentregablespedidoListNewDetalleentregablespedido : detalleentregablespedidoListNew) {
-                if (!detalleentregablespedidoListOld.contains(detalleentregablespedidoListNewDetalleentregablespedido)) {
-                    Pedidos oldPedidosIdpedidoOfDetalleentregablespedidoListNewDetalleentregablespedido = detalleentregablespedidoListNewDetalleentregablespedido.getPedidosIdpedido();
-                    detalleentregablespedidoListNewDetalleentregablespedido.setPedidosIdpedido(pedidos);
-                    detalleentregablespedidoListNewDetalleentregablespedido = em.merge(detalleentregablespedidoListNewDetalleentregablespedido);
-                    if (oldPedidosIdpedidoOfDetalleentregablespedidoListNewDetalleentregablespedido != null && !oldPedidosIdpedidoOfDetalleentregablespedidoListNewDetalleentregablespedido.equals(pedidos)) {
-                        oldPedidosIdpedidoOfDetalleentregablespedidoListNewDetalleentregablespedido.getDetalleentregablespedidoList().remove(detalleentregablespedidoListNewDetalleentregablespedido);
-                        oldPedidosIdpedidoOfDetalleentregablespedidoListNewDetalleentregablespedido = em.merge(oldPedidosIdpedidoOfDetalleentregablespedidoListNewDetalleentregablespedido);
                     }
                 }
             }
@@ -274,6 +220,13 @@ public class PedidosJpaController implements Serializable {
                 throw new NonexistentEntityException("The pedidos with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
+            Detalleservicio detalleservicioOrphanCheck = pedidos.getDetalleservicio();
+            if (detalleservicioOrphanCheck != null) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Pedidos (" + pedidos + ") cannot be destroyed since the Detalleservicio " + detalleservicioOrphanCheck + " in its detalleservicio field has a non-nullable pedidos field.");
+            }
             List<Detalleactividades> detalleactividadesListOrphanCheck = pedidos.getDetalleactividadesList();
             for (Detalleactividades detalleactividadesListOrphanCheckDetalleactividades : detalleactividadesListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
@@ -293,16 +246,6 @@ public class PedidosJpaController implements Serializable {
             if (paquetesIdpaquete != null) {
                 paquetesIdpaquete.getPedidosList().remove(pedidos);
                 paquetesIdpaquete = em.merge(paquetesIdpaquete);
-            }
-            List<Detalleservicio> detalleservicioList = pedidos.getDetalleservicioList();
-            for (Detalleservicio detalleservicioListDetalleservicio : detalleservicioList) {
-                detalleservicioListDetalleservicio.setPedidosIdpedido(null);
-                detalleservicioListDetalleservicio = em.merge(detalleservicioListDetalleservicio);
-            }
-            List<Detalleentregablespedido> detalleentregablespedidoList = pedidos.getDetalleentregablespedidoList();
-            for (Detalleentregablespedido detalleentregablespedidoListDetalleentregablespedido : detalleentregablespedidoList) {
-                detalleentregablespedidoListDetalleentregablespedido.setPedidosIdpedido(null);
-                detalleentregablespedidoListDetalleentregablespedido = em.merge(detalleentregablespedidoListDetalleentregablespedido);
             }
             em.remove(pedidos);
             em.getTransaction().commit();
@@ -354,6 +297,28 @@ public class PedidosJpaController implements Serializable {
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
+        } finally {
+            em.close();
+        }
+    }
+    
+    public Pedidos getUltimoPedido(){
+        EntityManager em = getEntityManager();
+
+        try {
+            Query q = em.createNativeQuery("SELECT * FROM bd_sage.pedidos ORDER BY idPedido DESC LIMIT 1;",Pedidos.class);
+            return (Pedidos) q.getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
+    
+    public List<Pedidos> findPedidosCliente(Integer id){
+        EntityManager em = getEntityManager();
+
+        try {
+            Query q = em.createNativeQuery("SELECT * FROM bd_sage.pedidos WHERE clientes_idcliente = "+id,Pedidos.class);
+            return q.getResultList();
         } finally {
             em.close();
         }

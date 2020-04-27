@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Detalleservicio.findByTiempo", query = "SELECT d FROM Detalleservicio d WHERE d.tiempo = :tiempo")
     , @NamedQuery(name = "Detalleservicio.findByDireccion", query = "SELECT d FROM Detalleservicio d WHERE d.direccion = :direccion")
     , @NamedQuery(name = "Detalleservicio.findByFecha", query = "SELECT d FROM Detalleservicio d WHERE d.fecha = :fecha")
-    , @NamedQuery(name = "Detalleservicio.findByServiciosIdservicio", query = "SELECT d FROM Detalleservicio d WHERE d.serviciosIdservicio = :serviciosIdservicio")})
+    , @NamedQuery(name = "Detalleservicio.findByPedidosIdpedido", query = "SELECT d FROM Detalleservicio d WHERE d.pedidosIdpedido = :pedidosIdpedido")})
 public class Detalleservicio implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -46,20 +46,25 @@ public class Detalleservicio implements Serializable {
     private Date fecha;
     @Id
     @Basic(optional = false)
-    @Column(name = "servicios_idservicio")
-    private Integer serviciosIdservicio;
-    @JoinColumn(name = "pedidos_idpedido", referencedColumnName = "idpedido")
-    @ManyToOne
-    private Pedidos pedidosIdpedido;
-    @JoinColumn(name = "servicios_idservicio", referencedColumnName = "idservicio", insertable = false, updatable = false)
+    @Column(name = "pedidos_idpedido")
+    private Integer pedidosIdpedido;
+    @JoinColumn(name = "pedidos_idpedido", referencedColumnName = "idpedido", insertable = false, updatable = false)
     @OneToOne(optional = false)
-    private Servicios servicios;
+    private Pedidos pedidos;
+    @JoinColumn(name = "servicios_idservicio", referencedColumnName = "idservicio")
+    @ManyToOne(optional = false)
+    private Servicios serviciosIdservicio;
 
     public Detalleservicio() {
     }
 
-    public Detalleservicio(Integer serviciosIdservicio) {
-        this.serviciosIdservicio = serviciosIdservicio;
+    public Detalleservicio(Servicios servicio,String tiempo) {
+        this.serviciosIdservicio = servicio;
+        this.tiempo = tiempo;
+    }
+
+    public Detalleservicio(Integer pedidosIdpedido) {
+        this.pedidosIdpedido = pedidosIdpedido;
     }
 
     public String getTiempo() {
@@ -86,34 +91,34 @@ public class Detalleservicio implements Serializable {
         this.fecha = fecha;
     }
 
-    public Integer getServiciosIdservicio() {
-        return serviciosIdservicio;
-    }
-
-    public void setServiciosIdservicio(Integer serviciosIdservicio) {
-        this.serviciosIdservicio = serviciosIdservicio;
-    }
-
-    public Pedidos getPedidosIdpedido() {
+    public Integer getPedidosIdpedido() {
         return pedidosIdpedido;
     }
 
-    public void setPedidosIdpedido(Pedidos pedidosIdpedido) {
+    public void setPedidosIdpedido(Integer pedidosIdpedido) {
         this.pedidosIdpedido = pedidosIdpedido;
     }
 
-    public Servicios getServicios() {
-        return servicios;
+    public Pedidos getPedidos() {
+        return pedidos;
     }
 
-    public void setServicios(Servicios servicios) {
-        this.servicios = servicios;
+    public void setPedidos(Pedidos pedidos) {
+        this.pedidos = pedidos;
+    }
+
+    public Servicios getServiciosIdservicio() {
+        return serviciosIdservicio;
+    }
+
+    public void setServiciosIdservicio(Servicios serviciosIdservicio) {
+        this.serviciosIdservicio = serviciosIdservicio;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (serviciosIdservicio != null ? serviciosIdservicio.hashCode() : 0);
+        hash += (pedidosIdpedido != null ? pedidosIdpedido.hashCode() : 0);
         return hash;
     }
 
@@ -124,7 +129,7 @@ public class Detalleservicio implements Serializable {
             return false;
         }
         Detalleservicio other = (Detalleservicio) object;
-        if ((this.serviciosIdservicio == null && other.serviciosIdservicio != null) || (this.serviciosIdservicio != null && !this.serviciosIdservicio.equals(other.serviciosIdservicio))) {
+        if ((this.pedidosIdpedido == null && other.pedidosIdpedido != null) || (this.pedidosIdpedido != null && !this.pedidosIdpedido.equals(other.pedidosIdpedido))) {
             return false;
         }
         return true;
@@ -132,7 +137,7 @@ public class Detalleservicio implements Serializable {
 
     @Override
     public String toString() {
-        return "Entidades.Detalleservicio[ serviciosIdservicio=" + serviciosIdservicio + " ]";
+        return "Entidades.Detalleservicio[ pedidosIdpedido=" + pedidosIdpedido + " ]";
     }
     
 }

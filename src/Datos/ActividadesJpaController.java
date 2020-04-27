@@ -27,8 +27,7 @@ import javax.persistence.Persistence;
 public class ActividadesJpaController implements Serializable {
 
     public ActividadesJpaController() {
-         this.emf = Persistence.createEntityManagerFactory("SAGEPU");
-
+        this.emf = Persistence.createEntityManagerFactory("SAGEPU");
     }
     private EntityManagerFactory emf = null;
 

@@ -20,6 +20,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -72,10 +73,8 @@ public class Pedidos implements Serializable {
     @JoinColumn(name = "paquetes_idpaquete", referencedColumnName = "idpaquete")
     @ManyToOne(optional = false)
     private Paquetes paquetesIdpaquete;
-    @OneToMany(mappedBy = "pedidosIdpedido")
-    private List<Detalleservicio> detalleservicioList;
-    @OneToMany(mappedBy = "pedidosIdpedido")
-    private List<Detalleentregablespedido> detalleentregablespedidoList;
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "pedidos")
+    private Detalleservicio detalleservicio;
 
     public Pedidos() {
     }
@@ -83,7 +82,7 @@ public class Pedidos implements Serializable {
     public Pedidos(Integer idpedido) {
         this.idpedido = idpedido;
     }
-
+    
     public Pedidos(Integer idpedido, Date fechaPedido, Date fechaRequerida, double precio, String promocion, String notas) {
         this.idpedido = idpedido;
         this.fechaPedido = fechaPedido;
@@ -91,6 +90,14 @@ public class Pedidos implements Serializable {
         this.precio = precio;
         this.promocion = promocion;
         this.notas = notas;
+    }
+
+
+    public Pedidos(Integer idpedido, Date fechaPedido, double precio, String promocion) {
+        this.idpedido = idpedido;
+        this.fechaPedido = fechaPedido;
+        this.precio = precio;
+        this.promocion = promocion;
     }
 
     public Integer getIdpedido() {
@@ -166,22 +173,12 @@ public class Pedidos implements Serializable {
         this.paquetesIdpaquete = paquetesIdpaquete;
     }
 
-    @XmlTransient
-    public List<Detalleservicio> getDetalleservicioList() {
-        return detalleservicioList;
+    public Detalleservicio getDetalleservicio() {
+        return detalleservicio;
     }
 
-    public void setDetalleservicioList(List<Detalleservicio> detalleservicioList) {
-        this.detalleservicioList = detalleservicioList;
-    }
-
-    @XmlTransient
-    public List<Detalleentregablespedido> getDetalleentregablespedidoList() {
-        return detalleentregablespedidoList;
-    }
-
-    public void setDetalleentregablespedidoList(List<Detalleentregablespedido> detalleentregablespedidoList) {
-        this.detalleentregablespedidoList = detalleentregablespedidoList;
+    public void setDetalleservicio(Detalleservicio detalleservicio) {
+        this.detalleservicio = detalleservicio;
     }
 
     @Override

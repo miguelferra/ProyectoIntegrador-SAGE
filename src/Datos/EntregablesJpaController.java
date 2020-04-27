@@ -36,24 +36,28 @@ public class EntregablesJpaController implements Serializable {
     }
 
     public void create(Entregables entregables) {
+        if (entregables.getDetalleentregablespedidoList() == null) {
+            entregables.setDetalleentregablespedidoList(new ArrayList<Detalleentregablespedido>());
+        }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Detalleentregablespedido detalleentregablespedido = entregables.getDetalleentregablespedido();
-            if (detalleentregablespedido != null) {
-                detalleentregablespedido = em.getReference(detalleentregablespedido.getClass(), detalleentregablespedido.getEntregablesIdentregable());
-                entregables.setDetalleentregablespedido(detalleentregablespedido);
+            List<Detalleentregablespedido> attachedDetalleentregablespedidoList = new ArrayList<Detalleentregablespedido>();
+            for (Detalleentregablespedido detalleentregablespedidoListDetalleentregablespedidoToAttach : entregables.getDetalleentregablespedidoList()) {
+                detalleentregablespedidoListDetalleentregablespedidoToAttach = em.getReference(detalleentregablespedidoListDetalleentregablespedidoToAttach.getClass(), detalleentregablespedidoListDetalleentregablespedidoToAttach.getPedidosIdpedido());
+                attachedDetalleentregablespedidoList.add(detalleentregablespedidoListDetalleentregablespedidoToAttach);
             }
+            entregables.setDetalleentregablespedidoList(attachedDetalleentregablespedidoList);
             em.persist(entregables);
-            if (detalleentregablespedido != null) {
-                Entregables oldEntregablesOfDetalleentregablespedido = detalleentregablespedido.getEntregables();
-                if (oldEntregablesOfDetalleentregablespedido != null) {
-                    oldEntregablesOfDetalleentregablespedido.setDetalleentregablespedido(null);
-                    oldEntregablesOfDetalleentregablespedido = em.merge(oldEntregablesOfDetalleentregablespedido);
+            for (Detalleentregablespedido detalleentregablespedidoListDetalleentregablespedido : entregables.getDetalleentregablespedidoList()) {
+                Entregables oldEntregablesIdentregableOfDetalleentregablespedidoListDetalleentregablespedido = detalleentregablespedidoListDetalleentregablespedido.getEntregablesIdentregable();
+                detalleentregablespedidoListDetalleentregablespedido.setEntregablesIdentregable(entregables);
+                detalleentregablespedidoListDetalleentregablespedido = em.merge(detalleentregablespedidoListDetalleentregablespedido);
+                if (oldEntregablesIdentregableOfDetalleentregablespedidoListDetalleentregablespedido != null) {
+                    oldEntregablesIdentregableOfDetalleentregablespedidoListDetalleentregablespedido.getDetalleentregablespedidoList().remove(detalleentregablespedidoListDetalleentregablespedido);
+                    oldEntregablesIdentregableOfDetalleentregablespedidoListDetalleentregablespedido = em.merge(oldEntregablesIdentregableOfDetalleentregablespedidoListDetalleentregablespedido);
                 }
-                detalleentregablespedido.setEntregables(entregables);
-                detalleentregablespedido = em.merge(detalleentregablespedido);
             }
             em.getTransaction().commit();
         } finally {
@@ -69,31 +73,38 @@ public class EntregablesJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Entregables persistentEntregables = em.find(Entregables.class, entregables.getIdentregable());
-            Detalleentregablespedido detalleentregablespedidoOld = persistentEntregables.getDetalleentregablespedido();
-            Detalleentregablespedido detalleentregablespedidoNew = entregables.getDetalleentregablespedido();
+            List<Detalleentregablespedido> detalleentregablespedidoListOld = persistentEntregables.getDetalleentregablespedidoList();
+            List<Detalleentregablespedido> detalleentregablespedidoListNew = entregables.getDetalleentregablespedidoList();
             List<String> illegalOrphanMessages = null;
-            if (detalleentregablespedidoOld != null && !detalleentregablespedidoOld.equals(detalleentregablespedidoNew)) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
+            for (Detalleentregablespedido detalleentregablespedidoListOldDetalleentregablespedido : detalleentregablespedidoListOld) {
+                if (!detalleentregablespedidoListNew.contains(detalleentregablespedidoListOldDetalleentregablespedido)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain Detalleentregablespedido " + detalleentregablespedidoListOldDetalleentregablespedido + " since its entregablesIdentregable field is not nullable.");
                 }
-                illegalOrphanMessages.add("You must retain Detalleentregablespedido " + detalleentregablespedidoOld + " since its entregables field is not nullable.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            if (detalleentregablespedidoNew != null) {
-                detalleentregablespedidoNew = em.getReference(detalleentregablespedidoNew.getClass(), detalleentregablespedidoNew.getEntregablesIdentregable());
-                entregables.setDetalleentregablespedido(detalleentregablespedidoNew);
+            List<Detalleentregablespedido> attachedDetalleentregablespedidoListNew = new ArrayList<Detalleentregablespedido>();
+            for (Detalleentregablespedido detalleentregablespedidoListNewDetalleentregablespedidoToAttach : detalleentregablespedidoListNew) {
+                detalleentregablespedidoListNewDetalleentregablespedidoToAttach = em.getReference(detalleentregablespedidoListNewDetalleentregablespedidoToAttach.getClass(), detalleentregablespedidoListNewDetalleentregablespedidoToAttach.getPedidosIdpedido());
+                attachedDetalleentregablespedidoListNew.add(detalleentregablespedidoListNewDetalleentregablespedidoToAttach);
             }
+            detalleentregablespedidoListNew = attachedDetalleentregablespedidoListNew;
+            entregables.setDetalleentregablespedidoList(detalleentregablespedidoListNew);
             entregables = em.merge(entregables);
-            if (detalleentregablespedidoNew != null && !detalleentregablespedidoNew.equals(detalleentregablespedidoOld)) {
-                Entregables oldEntregablesOfDetalleentregablespedido = detalleentregablespedidoNew.getEntregables();
-                if (oldEntregablesOfDetalleentregablespedido != null) {
-                    oldEntregablesOfDetalleentregablespedido.setDetalleentregablespedido(null);
-                    oldEntregablesOfDetalleentregablespedido = em.merge(oldEntregablesOfDetalleentregablespedido);
+            for (Detalleentregablespedido detalleentregablespedidoListNewDetalleentregablespedido : detalleentregablespedidoListNew) {
+                if (!detalleentregablespedidoListOld.contains(detalleentregablespedidoListNewDetalleentregablespedido)) {
+                    Entregables oldEntregablesIdentregableOfDetalleentregablespedidoListNewDetalleentregablespedido = detalleentregablespedidoListNewDetalleentregablespedido.getEntregablesIdentregable();
+                    detalleentregablespedidoListNewDetalleentregablespedido.setEntregablesIdentregable(entregables);
+                    detalleentregablespedidoListNewDetalleentregablespedido = em.merge(detalleentregablespedidoListNewDetalleentregablespedido);
+                    if (oldEntregablesIdentregableOfDetalleentregablespedidoListNewDetalleentregablespedido != null && !oldEntregablesIdentregableOfDetalleentregablespedidoListNewDetalleentregablespedido.equals(entregables)) {
+                        oldEntregablesIdentregableOfDetalleentregablespedidoListNewDetalleentregablespedido.getDetalleentregablespedidoList().remove(detalleentregablespedidoListNewDetalleentregablespedido);
+                        oldEntregablesIdentregableOfDetalleentregablespedidoListNewDetalleentregablespedido = em.merge(oldEntregablesIdentregableOfDetalleentregablespedidoListNewDetalleentregablespedido);
+                    }
                 }
-                detalleentregablespedidoNew.setEntregables(entregables);
-                detalleentregablespedidoNew = em.merge(detalleentregablespedidoNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -125,12 +136,12 @@ public class EntregablesJpaController implements Serializable {
                 throw new NonexistentEntityException("The entregables with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            Detalleentregablespedido detalleentregablespedidoOrphanCheck = entregables.getDetalleentregablespedido();
-            if (detalleentregablespedidoOrphanCheck != null) {
+            List<Detalleentregablespedido> detalleentregablespedidoListOrphanCheck = entregables.getDetalleentregablespedidoList();
+            for (Detalleentregablespedido detalleentregablespedidoListOrphanCheckDetalleentregablespedido : detalleentregablespedidoListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Entregables (" + entregables + ") cannot be destroyed since the Detalleentregablespedido " + detalleentregablespedidoOrphanCheck + " in its detalleentregablespedido field has a non-nullable entregables field.");
+                illegalOrphanMessages.add("This Entregables (" + entregables + ") cannot be destroyed since the Detalleentregablespedido " + detalleentregablespedidoListOrphanCheckDetalleentregablespedido + " in its detalleentregablespedidoList field has a non-nullable entregablesIdentregable field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
