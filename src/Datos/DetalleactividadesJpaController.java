@@ -5,6 +5,7 @@
  */
 package Datos;
 
+import Datos.exceptions.IllegalOrphanException;
 import Datos.exceptions.NonexistentEntityException;
 import Datos.exceptions.PreexistingEntityException;
 import java.io.Serializable;
@@ -17,6 +18,7 @@ import Entidades.Detalleactividades;
 import Entidades.DetalleactividadesPK;
 import Entidades.Empleados;
 import Entidades.Pedidos;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -37,12 +39,36 @@ public class DetalleactividadesJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Detalleactividades detalleactividades) throws PreexistingEntityException, Exception {
+    public void create(Detalleactividades detalleactividades) throws IllegalOrphanException, PreexistingEntityException, Exception {
         if (detalleactividades.getDetalleactividadesPK() == null) {
             detalleactividades.setDetalleactividadesPK(new DetalleactividadesPK());
         }
         detalleactividades.getDetalleactividadesPK().setPedidosIdpedido(detalleactividades.getPedidos().getIdpedido());
         detalleactividades.getDetalleactividadesPK().setActividadesIdactividad(detalleactividades.getActividades().getIdactividad());
+        List<String> illegalOrphanMessages = null;
+        Actividades actividadesOrphanCheck = detalleactividades.getActividades();
+        if (actividadesOrphanCheck != null) {
+            Detalleactividades oldDetalleactividadesOfActividades = actividadesOrphanCheck.getDetalleactividades();
+            if (oldDetalleactividadesOfActividades != null) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("The Actividades " + actividadesOrphanCheck + " already has an item of type Detalleactividades whose actividades column cannot be null. Please make another selection for the actividades field.");
+            }
+        }
+        Pedidos pedidosOrphanCheck = detalleactividades.getPedidos();
+        if (pedidosOrphanCheck != null) {
+            Detalleactividades oldDetalleactividadesOfPedidos = pedidosOrphanCheck.getDetalleactividades();
+            if (oldDetalleactividadesOfPedidos != null) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("The Pedidos " + pedidosOrphanCheck + " already has an item of type Detalleactividades whose pedidos column cannot be null. Please make another selection for the pedidos field.");
+            }
+        }
+        if (illegalOrphanMessages != null) {
+            throw new IllegalOrphanException(illegalOrphanMessages);
+        }
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -52,10 +78,10 @@ public class DetalleactividadesJpaController implements Serializable {
                 actividades = em.getReference(actividades.getClass(), actividades.getIdactividad());
                 detalleactividades.setActividades(actividades);
             }
-            Empleados empleadosRFC = detalleactividades.getEmpleadosRFC();
-            if (empleadosRFC != null) {
-                empleadosRFC = em.getReference(empleadosRFC.getClass(), empleadosRFC.getRfc());
-                detalleactividades.setEmpleadosRFC(empleadosRFC);
+            Empleados empleados = detalleactividades.getEmpleados();
+            if (empleados != null) {
+                empleados = em.getReference(empleados.getClass(), empleados.getRfc());
+                detalleactividades.setEmpleados(empleados);
             }
             Pedidos pedidos = detalleactividades.getPedidos();
             if (pedidos != null) {
@@ -64,15 +90,15 @@ public class DetalleactividadesJpaController implements Serializable {
             }
             em.persist(detalleactividades);
             if (actividades != null) {
-                actividades.getDetalleactividadesList().add(detalleactividades);
+                actividades.setDetalleactividades(detalleactividades);
                 actividades = em.merge(actividades);
             }
-            if (empleadosRFC != null) {
-                empleadosRFC.getDetalleactividadesList().add(detalleactividades);
-                empleadosRFC = em.merge(empleadosRFC);
+            if (empleados != null) {
+                empleados.getDetalleactividadesList().add(detalleactividades);
+                empleados = em.merge(empleados);
             }
             if (pedidos != null) {
-                pedidos.getDetalleactividadesList().add(detalleactividades);
+                pedidos.setDetalleactividades(detalleactividades);
                 pedidos = em.merge(pedidos);
             }
             em.getTransaction().commit();
@@ -88,7 +114,7 @@ public class DetalleactividadesJpaController implements Serializable {
         }
     }
 
-    public void edit(Detalleactividades detalleactividades) throws NonexistentEntityException, Exception {
+    public void edit(Detalleactividades detalleactividades) throws IllegalOrphanException, NonexistentEntityException, Exception {
         detalleactividades.getDetalleactividadesPK().setPedidosIdpedido(detalleactividades.getPedidos().getIdpedido());
         detalleactividades.getDetalleactividadesPK().setActividadesIdactividad(detalleactividades.getActividades().getIdactividad());
         EntityManager em = null;
@@ -98,17 +124,39 @@ public class DetalleactividadesJpaController implements Serializable {
             Detalleactividades persistentDetalleactividades = em.find(Detalleactividades.class, detalleactividades.getDetalleactividadesPK());
             Actividades actividadesOld = persistentDetalleactividades.getActividades();
             Actividades actividadesNew = detalleactividades.getActividades();
-            Empleados empleadosRFCOld = persistentDetalleactividades.getEmpleadosRFC();
-            Empleados empleadosRFCNew = detalleactividades.getEmpleadosRFC();
+            Empleados empleadosOld = persistentDetalleactividades.getEmpleados();
+            Empleados empleadosNew = detalleactividades.getEmpleados();
             Pedidos pedidosOld = persistentDetalleactividades.getPedidos();
             Pedidos pedidosNew = detalleactividades.getPedidos();
+            List<String> illegalOrphanMessages = null;
+            if (actividadesNew != null && !actividadesNew.equals(actividadesOld)) {
+                Detalleactividades oldDetalleactividadesOfActividades = actividadesNew.getDetalleactividades();
+                if (oldDetalleactividadesOfActividades != null) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("The Actividades " + actividadesNew + " already has an item of type Detalleactividades whose actividades column cannot be null. Please make another selection for the actividades field.");
+                }
+            }
+            if (pedidosNew != null && !pedidosNew.equals(pedidosOld)) {
+                Detalleactividades oldDetalleactividadesOfPedidos = pedidosNew.getDetalleactividades();
+                if (oldDetalleactividadesOfPedidos != null) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("The Pedidos " + pedidosNew + " already has an item of type Detalleactividades whose pedidos column cannot be null. Please make another selection for the pedidos field.");
+                }
+            }
+            if (illegalOrphanMessages != null) {
+                throw new IllegalOrphanException(illegalOrphanMessages);
+            }
             if (actividadesNew != null) {
                 actividadesNew = em.getReference(actividadesNew.getClass(), actividadesNew.getIdactividad());
                 detalleactividades.setActividades(actividadesNew);
             }
-            if (empleadosRFCNew != null) {
-                empleadosRFCNew = em.getReference(empleadosRFCNew.getClass(), empleadosRFCNew.getRfc());
-                detalleactividades.setEmpleadosRFC(empleadosRFCNew);
+            if (empleadosNew != null) {
+                empleadosNew = em.getReference(empleadosNew.getClass(), empleadosNew.getRfc());
+                detalleactividades.setEmpleados(empleadosNew);
             }
             if (pedidosNew != null) {
                 pedidosNew = em.getReference(pedidosNew.getClass(), pedidosNew.getIdpedido());
@@ -116,27 +164,27 @@ public class DetalleactividadesJpaController implements Serializable {
             }
             detalleactividades = em.merge(detalleactividades);
             if (actividadesOld != null && !actividadesOld.equals(actividadesNew)) {
-                actividadesOld.getDetalleactividadesList().remove(detalleactividades);
+                actividadesOld.setDetalleactividades(null);
                 actividadesOld = em.merge(actividadesOld);
             }
             if (actividadesNew != null && !actividadesNew.equals(actividadesOld)) {
-                actividadesNew.getDetalleactividadesList().add(detalleactividades);
+                actividadesNew.setDetalleactividades(detalleactividades);
                 actividadesNew = em.merge(actividadesNew);
             }
-            if (empleadosRFCOld != null && !empleadosRFCOld.equals(empleadosRFCNew)) {
-                empleadosRFCOld.getDetalleactividadesList().remove(detalleactividades);
-                empleadosRFCOld = em.merge(empleadosRFCOld);
+            if (empleadosOld != null && !empleadosOld.equals(empleadosNew)) {
+                empleadosOld.getDetalleactividadesList().remove(detalleactividades);
+                empleadosOld = em.merge(empleadosOld);
             }
-            if (empleadosRFCNew != null && !empleadosRFCNew.equals(empleadosRFCOld)) {
-                empleadosRFCNew.getDetalleactividadesList().add(detalleactividades);
-                empleadosRFCNew = em.merge(empleadosRFCNew);
+            if (empleadosNew != null && !empleadosNew.equals(empleadosOld)) {
+                empleadosNew.getDetalleactividadesList().add(detalleactividades);
+                empleadosNew = em.merge(empleadosNew);
             }
             if (pedidosOld != null && !pedidosOld.equals(pedidosNew)) {
-                pedidosOld.getDetalleactividadesList().remove(detalleactividades);
+                pedidosOld.setDetalleactividades(null);
                 pedidosOld = em.merge(pedidosOld);
             }
             if (pedidosNew != null && !pedidosNew.equals(pedidosOld)) {
-                pedidosNew.getDetalleactividadesList().add(detalleactividades);
+                pedidosNew.setDetalleactividades(detalleactividades);
                 pedidosNew = em.merge(pedidosNew);
             }
             em.getTransaction().commit();
@@ -170,17 +218,17 @@ public class DetalleactividadesJpaController implements Serializable {
             }
             Actividades actividades = detalleactividades.getActividades();
             if (actividades != null) {
-                actividades.getDetalleactividadesList().remove(detalleactividades);
+                actividades.setDetalleactividades(null);
                 actividades = em.merge(actividades);
             }
-            Empleados empleadosRFC = detalleactividades.getEmpleadosRFC();
-            if (empleadosRFC != null) {
-                empleadosRFC.getDetalleactividadesList().remove(detalleactividades);
-                empleadosRFC = em.merge(empleadosRFC);
+            Empleados empleados = detalleactividades.getEmpleados();
+            if (empleados != null) {
+                empleados.getDetalleactividadesList().remove(detalleactividades);
+                empleados = em.merge(empleados);
             }
             Pedidos pedidos = detalleactividades.getPedidos();
             if (pedidos != null) {
-                pedidos.getDetalleactividadesList().remove(detalleactividades);
+                pedidos.setDetalleactividades(null);
                 pedidos = em.merge(pedidos);
             }
             em.remove(detalleactividades);

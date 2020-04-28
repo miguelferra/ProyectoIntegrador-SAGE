@@ -48,7 +48,7 @@ public class Servicios implements Serializable {
     private String lugar;
     @Column(name = "detalle")
     private String detalle;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "serviciosIdservicio")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "servicios")
     private List<Detalleservicio> detalleservicioList;
 
     public Servicios() {

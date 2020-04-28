@@ -38,15 +38,15 @@ public class DetalleentregablespaqueteJpaController implements Serializable {
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Paquetes paquetesIdpaquete = detalleentregablespaquete.getPaquetesIdpaquete();
-            if (paquetesIdpaquete != null) {
-                paquetesIdpaquete = em.getReference(paquetesIdpaquete.getClass(), paquetesIdpaquete.getIdpaquete());
-                detalleentregablespaquete.setPaquetesIdpaquete(paquetesIdpaquete);
+            Paquetes paquetes = detalleentregablespaquete.getPaquetes();
+            if (paquetes != null) {
+                paquetes = em.getReference(paquetes.getClass(), paquetes.getIdpaquete());
+                detalleentregablespaquete.setPaquetes(paquetes);
             }
             em.persist(detalleentregablespaquete);
-            if (paquetesIdpaquete != null) {
-                paquetesIdpaquete.getDetalleentregablespaqueteList().add(detalleentregablespaquete);
-                paquetesIdpaquete = em.merge(paquetesIdpaquete);
+            if (paquetes != null) {
+                paquetes.getDetalleentregablespaqueteList().add(detalleentregablespaquete);
+                paquetes = em.merge(paquetes);
             }
             em.getTransaction().commit();
         } finally {
@@ -62,20 +62,20 @@ public class DetalleentregablespaqueteJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Detalleentregablespaquete persistentDetalleentregablespaquete = em.find(Detalleentregablespaquete.class, detalleentregablespaquete.getPrueba());
-            Paquetes paquetesIdpaqueteOld = persistentDetalleentregablespaquete.getPaquetesIdpaquete();
-            Paquetes paquetesIdpaqueteNew = detalleentregablespaquete.getPaquetesIdpaquete();
-            if (paquetesIdpaqueteNew != null) {
-                paquetesIdpaqueteNew = em.getReference(paquetesIdpaqueteNew.getClass(), paquetesIdpaqueteNew.getIdpaquete());
-                detalleentregablespaquete.setPaquetesIdpaquete(paquetesIdpaqueteNew);
+            Paquetes paquetesOld = persistentDetalleentregablespaquete.getPaquetes();
+            Paquetes paquetesNew = detalleentregablespaquete.getPaquetes();
+            if (paquetesNew != null) {
+                paquetesNew = em.getReference(paquetesNew.getClass(), paquetesNew.getIdpaquete());
+                detalleentregablespaquete.setPaquetes(paquetesNew);
             }
             detalleentregablespaquete = em.merge(detalleentregablespaquete);
-            if (paquetesIdpaqueteOld != null && !paquetesIdpaqueteOld.equals(paquetesIdpaqueteNew)) {
-                paquetesIdpaqueteOld.getDetalleentregablespaqueteList().remove(detalleentregablespaquete);
-                paquetesIdpaqueteOld = em.merge(paquetesIdpaqueteOld);
+            if (paquetesOld != null && !paquetesOld.equals(paquetesNew)) {
+                paquetesOld.getDetalleentregablespaqueteList().remove(detalleentregablespaquete);
+                paquetesOld = em.merge(paquetesOld);
             }
-            if (paquetesIdpaqueteNew != null && !paquetesIdpaqueteNew.equals(paquetesIdpaqueteOld)) {
-                paquetesIdpaqueteNew.getDetalleentregablespaqueteList().add(detalleentregablespaquete);
-                paquetesIdpaqueteNew = em.merge(paquetesIdpaqueteNew);
+            if (paquetesNew != null && !paquetesNew.equals(paquetesOld)) {
+                paquetesNew.getDetalleentregablespaqueteList().add(detalleentregablespaquete);
+                paquetesNew = em.merge(paquetesNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -106,10 +106,10 @@ public class DetalleentregablespaqueteJpaController implements Serializable {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The detalleentregablespaquete with id " + id + " no longer exists.", enfe);
             }
-            Paquetes paquetesIdpaquete = detalleentregablespaquete.getPaquetesIdpaquete();
-            if (paquetesIdpaquete != null) {
-                paquetesIdpaquete.getDetalleentregablespaqueteList().remove(detalleentregablespaquete);
-                paquetesIdpaquete = em.merge(paquetesIdpaquete);
+            Paquetes paquetes = detalleentregablespaquete.getPaquetes();
+            if (paquetes != null) {
+                paquetes.getDetalleentregablespaqueteList().remove(detalleentregablespaquete);
+                paquetes = em.merge(paquetes);
             }
             em.remove(detalleentregablespaquete);
             em.getTransaction().commit();
@@ -185,6 +185,5 @@ public class DetalleentregablespaqueteJpaController implements Serializable {
             em.close();
         }
     }
-
     
 }

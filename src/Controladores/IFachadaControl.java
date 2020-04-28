@@ -72,5 +72,7 @@ public interface IFachadaControl {
     
     public List<Pedidos> getPedidosCliente(String nombre, String apellido);
     
+    public void eliminarPedido(Pedidos pedido);
+    
     
 }

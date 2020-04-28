@@ -9,7 +9,6 @@ package Controladores;
 import Datos.DetalleentregablespedidoJpaController;
 import Datos.EntregablesJpaController;
 import Entidades.Detalleentregablespedido;
-import Entidades.Detalleservicio;
 import Entidades.Entregables;
 import Entidades.Pedidos;
 import java.util.Date;
@@ -47,13 +46,17 @@ public class ControlEntregable {
         try {         
             for (int i = 0; i < listaEntregablesPedido.size(); i++) {
                 Detalleentregablespedido detalleEntregable = listaEntregablesPedido.get(i);
-                detalleEntregable.setPedidosIdpedido(pedido.getIdpedido());
+                detalleEntregable.setPedidos(pedido);
                 detalleEntregable.setFecha(new java.sql.Date(new Date().getTime()));
                 cDetEnt.create(detalleEntregable);
             }
         } catch (Exception ex) {
             Logger.getLogger(FachadaControl.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void eliminarDetalleEntregable(Pedidos pedido){
+       cDetEnt.eliminarDetalleEntregable(pedido.getIdpedido());
     }
     
     

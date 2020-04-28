@@ -36,28 +36,24 @@ public class ActividadesJpaController implements Serializable {
     }
 
     public void create(Actividades actividades) {
-        if (actividades.getDetalleactividadesList() == null) {
-            actividades.setDetalleactividadesList(new ArrayList<Detalleactividades>());
-        }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            List<Detalleactividades> attachedDetalleactividadesList = new ArrayList<Detalleactividades>();
-            for (Detalleactividades detalleactividadesListDetalleactividadesToAttach : actividades.getDetalleactividadesList()) {
-                detalleactividadesListDetalleactividadesToAttach = em.getReference(detalleactividadesListDetalleactividadesToAttach.getClass(), detalleactividadesListDetalleactividadesToAttach.getDetalleactividadesPK());
-                attachedDetalleactividadesList.add(detalleactividadesListDetalleactividadesToAttach);
+            Detalleactividades detalleactividades = actividades.getDetalleactividades();
+            if (detalleactividades != null) {
+                detalleactividades = em.getReference(detalleactividades.getClass(), detalleactividades.getDetalleactividadesPK());
+                actividades.setDetalleactividades(detalleactividades);
             }
-            actividades.setDetalleactividadesList(attachedDetalleactividadesList);
             em.persist(actividades);
-            for (Detalleactividades detalleactividadesListDetalleactividades : actividades.getDetalleactividadesList()) {
-                Actividades oldActividadesOfDetalleactividadesListDetalleactividades = detalleactividadesListDetalleactividades.getActividades();
-                detalleactividadesListDetalleactividades.setActividades(actividades);
-                detalleactividadesListDetalleactividades = em.merge(detalleactividadesListDetalleactividades);
-                if (oldActividadesOfDetalleactividadesListDetalleactividades != null) {
-                    oldActividadesOfDetalleactividadesListDetalleactividades.getDetalleactividadesList().remove(detalleactividadesListDetalleactividades);
-                    oldActividadesOfDetalleactividadesListDetalleactividades = em.merge(oldActividadesOfDetalleactividadesListDetalleactividades);
+            if (detalleactividades != null) {
+                Actividades oldActividadesOfDetalleactividades = detalleactividades.getActividades();
+                if (oldActividadesOfDetalleactividades != null) {
+                    oldActividadesOfDetalleactividades.setDetalleactividades(null);
+                    oldActividadesOfDetalleactividades = em.merge(oldActividadesOfDetalleactividades);
                 }
+                detalleactividades.setActividades(actividades);
+                detalleactividades = em.merge(detalleactividades);
             }
             em.getTransaction().commit();
         } finally {
@@ -73,38 +69,31 @@ public class ActividadesJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Actividades persistentActividades = em.find(Actividades.class, actividades.getIdactividad());
-            List<Detalleactividades> detalleactividadesListOld = persistentActividades.getDetalleactividadesList();
-            List<Detalleactividades> detalleactividadesListNew = actividades.getDetalleactividadesList();
+            Detalleactividades detalleactividadesOld = persistentActividades.getDetalleactividades();
+            Detalleactividades detalleactividadesNew = actividades.getDetalleactividades();
             List<String> illegalOrphanMessages = null;
-            for (Detalleactividades detalleactividadesListOldDetalleactividades : detalleactividadesListOld) {
-                if (!detalleactividadesListNew.contains(detalleactividadesListOldDetalleactividades)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain Detalleactividades " + detalleactividadesListOldDetalleactividades + " since its actividades field is not nullable.");
+            if (detalleactividadesOld != null && !detalleactividadesOld.equals(detalleactividadesNew)) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
                 }
+                illegalOrphanMessages.add("You must retain Detalleactividades " + detalleactividadesOld + " since its actividades field is not nullable.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            List<Detalleactividades> attachedDetalleactividadesListNew = new ArrayList<Detalleactividades>();
-            for (Detalleactividades detalleactividadesListNewDetalleactividadesToAttach : detalleactividadesListNew) {
-                detalleactividadesListNewDetalleactividadesToAttach = em.getReference(detalleactividadesListNewDetalleactividadesToAttach.getClass(), detalleactividadesListNewDetalleactividadesToAttach.getDetalleactividadesPK());
-                attachedDetalleactividadesListNew.add(detalleactividadesListNewDetalleactividadesToAttach);
+            if (detalleactividadesNew != null) {
+                detalleactividadesNew = em.getReference(detalleactividadesNew.getClass(), detalleactividadesNew.getDetalleactividadesPK());
+                actividades.setDetalleactividades(detalleactividadesNew);
             }
-            detalleactividadesListNew = attachedDetalleactividadesListNew;
-            actividades.setDetalleactividadesList(detalleactividadesListNew);
             actividades = em.merge(actividades);
-            for (Detalleactividades detalleactividadesListNewDetalleactividades : detalleactividadesListNew) {
-                if (!detalleactividadesListOld.contains(detalleactividadesListNewDetalleactividades)) {
-                    Actividades oldActividadesOfDetalleactividadesListNewDetalleactividades = detalleactividadesListNewDetalleactividades.getActividades();
-                    detalleactividadesListNewDetalleactividades.setActividades(actividades);
-                    detalleactividadesListNewDetalleactividades = em.merge(detalleactividadesListNewDetalleactividades);
-                    if (oldActividadesOfDetalleactividadesListNewDetalleactividades != null && !oldActividadesOfDetalleactividadesListNewDetalleactividades.equals(actividades)) {
-                        oldActividadesOfDetalleactividadesListNewDetalleactividades.getDetalleactividadesList().remove(detalleactividadesListNewDetalleactividades);
-                        oldActividadesOfDetalleactividadesListNewDetalleactividades = em.merge(oldActividadesOfDetalleactividadesListNewDetalleactividades);
-                    }
+            if (detalleactividadesNew != null && !detalleactividadesNew.equals(detalleactividadesOld)) {
+                Actividades oldActividadesOfDetalleactividades = detalleactividadesNew.getActividades();
+                if (oldActividadesOfDetalleactividades != null) {
+                    oldActividadesOfDetalleactividades.setDetalleactividades(null);
+                    oldActividadesOfDetalleactividades = em.merge(oldActividadesOfDetalleactividades);
                 }
+                detalleactividadesNew.setActividades(actividades);
+                detalleactividadesNew = em.merge(detalleactividadesNew);
             }
             em.getTransaction().commit();
         } catch (Exception ex) {
@@ -136,12 +125,12 @@ public class ActividadesJpaController implements Serializable {
                 throw new NonexistentEntityException("The actividades with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<Detalleactividades> detalleactividadesListOrphanCheck = actividades.getDetalleactividadesList();
-            for (Detalleactividades detalleactividadesListOrphanCheckDetalleactividades : detalleactividadesListOrphanCheck) {
+            Detalleactividades detalleactividadesOrphanCheck = actividades.getDetalleactividades();
+            if (detalleactividadesOrphanCheck != null) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Actividades (" + actividades + ") cannot be destroyed since the Detalleactividades " + detalleactividadesListOrphanCheckDetalleactividades + " in its detalleactividadesList field has a non-nullable actividades field.");
+                illegalOrphanMessages.add("This Actividades (" + actividades + ") cannot be destroyed since the Detalleactividades " + detalleactividadesOrphanCheck + " in its detalleactividades field has a non-nullable actividades field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

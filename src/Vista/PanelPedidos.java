@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -30,11 +31,14 @@ public class PanelPedidos extends javax.swing.JPanel {
      * Creates new form PanelPedidos
      */
     IFachadaControl fachadaControl;
+    List<Pedidos> pedidos;
     JPanel panelPrincipal;
+    int row;
     public PanelPedidos(IFachadaControl fachadaControl,JPanel panelPrincipal) {
         initComponents();
         this.fachadaControl = fachadaControl;
         this.panelPrincipal = panelPrincipal;
+        this.pedidos = new LinkedList<>();
         CrearModelo2();
         cargarPedidos();
         diseñoTabla();
@@ -44,7 +48,6 @@ public class PanelPedidos extends javax.swing.JPanel {
     
     private void diseñoTabla(){    
         tablaPedidos.setRowHeight(30);
-        tablaPedidos.getTableHeader().setForeground(Color.red);
         tablaPedidos.getColumnModel().getColumn(0).setMaxWidth(450);
         tablaPedidos.getColumnModel().getColumn(1).setMaxWidth(450);
         tablaPedidos.getColumnModel().getColumn(2).setMaxWidth(450);
@@ -91,11 +94,12 @@ public class PanelPedidos extends javax.swing.JPanel {
             List<Pedidos> listaPedidos = fachadaControl.getPedidos();
             for (int i = 0; i < listaPedidos.size(); i++) {
                 modelo2.addRow(o);
-                modelo2.setValueAt(listaPedidos.get(i).getClientesIdcliente().getNombre()+" "+listaPedidos.get(i).getClientesIdcliente().getApellido(), i, 0);
-                modelo2.setValueAt(listaPedidos.get(i).getPaquetesIdpaquete().getNombre(), i, 1);
+                modelo2.setValueAt(listaPedidos.get(i).getClientes().getNombre()+" "+listaPedidos.get(i).getClientes().getApellido(), i, 0);
+                modelo2.setValueAt(listaPedidos.get(i).getPaquetes().getNombre(), i, 1);
                 SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                 modelo2.setValueAt(formato.format(listaPedidos.get(i).getFechaRequerida()), i, 2);
                 modelo2.setValueAt("$" + listaPedidos.get(i).getPrecio(), i, 3);
+                pedidos.add(listaPedidos.get(i));
             }
 
         } catch (Exception e) {
@@ -110,8 +114,8 @@ public class PanelPedidos extends javax.swing.JPanel {
             List<Pedidos> listaPedidos = fachadaControl.getPedidosCliente(splited[0],splited[1]);
             for (int i = 0; i < listaPedidos.size(); i++) {
                 modelo2.addRow(o);
-                modelo2.setValueAt(listaPedidos.get(i).getClientesIdcliente().getNombre() + " " + listaPedidos.get(i).getClientesIdcliente().getApellido(), i, 0);
-                modelo2.setValueAt(listaPedidos.get(i).getPaquetesIdpaquete().getNombre(), i, 1);
+                modelo2.setValueAt(listaPedidos.get(i).getClientes().getNombre() + " " + listaPedidos.get(i).getClientes().getApellido(), i, 0);
+                modelo2.setValueAt(listaPedidos.get(i).getPaquetes().getNombre(), i, 1);
                 SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                 modelo2.setValueAt(formato.format(listaPedidos.get(i).getFechaRequerida()), i, 2);
                 modelo2.setValueAt("$"+listaPedidos.get(i).getPrecio(), i, 3);
@@ -130,14 +134,15 @@ public class PanelPedidos extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaPedidos = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        botonElimiinarPedido = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jComboBox1 = new javax.swing.JComboBox<>();
         textoBuscarCliente = new javax.swing.JTextField();
 
         setBackground(new java.awt.Color(107, 19, 43));
 
-        tablaPedidos.setFont(new java.awt.Font("Yu Gothic Medium", 0, 18)); // NOI18N
+        tablaPedidos.setFont(new java.awt.Font("Yu Gothic Medium", 0, 24)); // NOI18N
+        tablaPedidos.setForeground(new java.awt.Color(102, 0, 0));
         tablaPedidos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
@@ -151,6 +156,11 @@ public class PanelPedidos extends javax.swing.JPanel {
         ));
         tablaPedidos.setSelectionBackground(new java.awt.Color(107, 19, 43));
         tablaPedidos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tablaPedidos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaPedidosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tablaPedidos);
 
         jButton1.setFont(new java.awt.Font("Yu Gothic Medium", 0, 18)); // NOI18N
@@ -161,8 +171,13 @@ public class PanelPedidos extends javax.swing.JPanel {
             }
         });
 
-        jButton2.setFont(new java.awt.Font("Yu Gothic Medium", 0, 18)); // NOI18N
-        jButton2.setText("Eliminar");
+        botonElimiinarPedido.setFont(new java.awt.Font("Yu Gothic Medium", 0, 18)); // NOI18N
+        botonElimiinarPedido.setText("Eliminar");
+        botonElimiinarPedido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonElimiinarPedidoActionPerformed(evt);
+            }
+        });
 
         jButton3.setFont(new java.awt.Font("Yu Gothic Medium", 0, 18)); // NOI18N
         jButton3.setText("Modificar");
@@ -190,7 +205,7 @@ public class PanelPedidos extends javax.swing.JPanel {
                     .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(botonElimiinarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(26, 26, 26)))
                 .addGap(68, 68, 68))
@@ -212,7 +227,7 @@ public class PanelPedidos extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 678, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(botonElimiinarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(21, 21, 21)
@@ -241,10 +256,27 @@ public class PanelPedidos extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_textoBuscarClienteKeyReleased
 
+    private void botonElimiinarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonElimiinarPedidoActionPerformed
+        // TODO add your handling code here:
+        fachadaControl.eliminarPedido(pedidos.get(row));
+       
+        try {
+            
+            JOptionPane.showMessageDialog(this, "Pedido eliminado correctamente");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "No se pudo eliminar el pedido");
+        }
+    }//GEN-LAST:event_botonElimiinarPedidoActionPerformed
+
+    private void tablaPedidosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaPedidosMouseClicked
+        // TODO add your handling code here:
+        row = tablaPedidos.rowAtPoint(evt.getPoint());
+    }//GEN-LAST:event_tablaPedidosMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton botonElimiinarPedido;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JScrollPane jScrollPane1;

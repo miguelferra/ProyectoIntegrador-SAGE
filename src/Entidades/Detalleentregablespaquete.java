@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -52,9 +53,11 @@ public class Detalleentregablespaquete implements Serializable {
     @Basic(optional = false)
     @Column(name = "prueba")
     private Integer prueba;
-    @JoinColumn(name = "paquetes_idpaquete", referencedColumnName = "idpaquete")
+    @JoinColumns({
+        @JoinColumn(name = "paquetes_idpaquete", referencedColumnName = "idpaquete")
+        , @JoinColumn(name = "paquetes_idpaquete", referencedColumnName = "idpaquete")})
     @ManyToOne(optional = false)
-    private Paquetes paquetesIdpaquete;
+    private Paquetes paquetes;
 
     public Detalleentregablespaquete() {
     }
@@ -111,12 +114,12 @@ public class Detalleentregablespaquete implements Serializable {
         this.prueba = prueba;
     }
 
-    public Paquetes getPaquetesIdpaquete() {
-        return paquetesIdpaquete;
+    public Paquetes getPaquetes() {
+        return paquetes;
     }
 
-    public void setPaquetesIdpaquete(Paquetes paquetesIdpaquete) {
-        this.paquetesIdpaquete = paquetesIdpaquete;
+    public void setPaquetes(Paquetes paquetes) {
+        this.paquetes = paquetes;
     }
 
     @Override

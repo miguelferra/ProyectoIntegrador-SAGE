@@ -51,12 +51,12 @@ public class EmpleadosJpaController implements Serializable {
             empleados.setDetalleactividadesList(attachedDetalleactividadesList);
             em.persist(empleados);
             for (Detalleactividades detalleactividadesListDetalleactividades : empleados.getDetalleactividadesList()) {
-                Empleados oldEmpleadosRFCOfDetalleactividadesListDetalleactividades = detalleactividadesListDetalleactividades.getEmpleadosRFC();
-                detalleactividadesListDetalleactividades.setEmpleadosRFC(empleados);
+                Empleados oldEmpleadosOfDetalleactividadesListDetalleactividades = detalleactividadesListDetalleactividades.getEmpleados();
+                detalleactividadesListDetalleactividades.setEmpleados(empleados);
                 detalleactividadesListDetalleactividades = em.merge(detalleactividadesListDetalleactividades);
-                if (oldEmpleadosRFCOfDetalleactividadesListDetalleactividades != null) {
-                    oldEmpleadosRFCOfDetalleactividadesListDetalleactividades.getDetalleactividadesList().remove(detalleactividadesListDetalleactividades);
-                    oldEmpleadosRFCOfDetalleactividadesListDetalleactividades = em.merge(oldEmpleadosRFCOfDetalleactividadesListDetalleactividades);
+                if (oldEmpleadosOfDetalleactividadesListDetalleactividades != null) {
+                    oldEmpleadosOfDetalleactividadesListDetalleactividades.getDetalleactividadesList().remove(detalleactividadesListDetalleactividades);
+                    oldEmpleadosOfDetalleactividadesListDetalleactividades = em.merge(oldEmpleadosOfDetalleactividadesListDetalleactividades);
                 }
             }
             em.getTransaction().commit();
@@ -90,18 +90,18 @@ public class EmpleadosJpaController implements Serializable {
             empleados = em.merge(empleados);
             for (Detalleactividades detalleactividadesListOldDetalleactividades : detalleactividadesListOld) {
                 if (!detalleactividadesListNew.contains(detalleactividadesListOldDetalleactividades)) {
-                    detalleactividadesListOldDetalleactividades.setEmpleadosRFC(null);
+                    detalleactividadesListOldDetalleactividades.setEmpleados(null);
                     detalleactividadesListOldDetalleactividades = em.merge(detalleactividadesListOldDetalleactividades);
                 }
             }
             for (Detalleactividades detalleactividadesListNewDetalleactividades : detalleactividadesListNew) {
                 if (!detalleactividadesListOld.contains(detalleactividadesListNewDetalleactividades)) {
-                    Empleados oldEmpleadosRFCOfDetalleactividadesListNewDetalleactividades = detalleactividadesListNewDetalleactividades.getEmpleadosRFC();
-                    detalleactividadesListNewDetalleactividades.setEmpleadosRFC(empleados);
+                    Empleados oldEmpleadosOfDetalleactividadesListNewDetalleactividades = detalleactividadesListNewDetalleactividades.getEmpleados();
+                    detalleactividadesListNewDetalleactividades.setEmpleados(empleados);
                     detalleactividadesListNewDetalleactividades = em.merge(detalleactividadesListNewDetalleactividades);
-                    if (oldEmpleadosRFCOfDetalleactividadesListNewDetalleactividades != null && !oldEmpleadosRFCOfDetalleactividadesListNewDetalleactividades.equals(empleados)) {
-                        oldEmpleadosRFCOfDetalleactividadesListNewDetalleactividades.getDetalleactividadesList().remove(detalleactividadesListNewDetalleactividades);
-                        oldEmpleadosRFCOfDetalleactividadesListNewDetalleactividades = em.merge(oldEmpleadosRFCOfDetalleactividadesListNewDetalleactividades);
+                    if (oldEmpleadosOfDetalleactividadesListNewDetalleactividades != null && !oldEmpleadosOfDetalleactividadesListNewDetalleactividades.equals(empleados)) {
+                        oldEmpleadosOfDetalleactividadesListNewDetalleactividades.getDetalleactividadesList().remove(detalleactividadesListNewDetalleactividades);
+                        oldEmpleadosOfDetalleactividadesListNewDetalleactividades = em.merge(oldEmpleadosOfDetalleactividadesListNewDetalleactividades);
                     }
                 }
             }
@@ -136,7 +136,7 @@ public class EmpleadosJpaController implements Serializable {
             }
             List<Detalleactividades> detalleactividadesList = empleados.getDetalleactividadesList();
             for (Detalleactividades detalleactividadesListDetalleactividades : detalleactividadesList) {
-                detalleactividadesListDetalleactividades.setEmpleadosRFC(null);
+                detalleactividadesListDetalleactividades.setEmpleados(null);
                 detalleactividadesListDetalleactividades = em.merge(detalleactividadesListDetalleactividades);
             }
             em.remove(empleados);

@@ -16,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -65,24 +66,26 @@ public class Pedidos implements Serializable {
     private String promocion;
     @Column(name = "notas")
     private String notas;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pedidos")
-    private List<Detalleactividades> detalleactividadesList;
-    @JoinColumn(name = "clientes_idcliente", referencedColumnName = "idcliente")
-    @ManyToOne(optional = false)
-    private Clientes clientesIdcliente;
-    @JoinColumn(name = "paquetes_idpaquete", referencedColumnName = "idpaquete")
-    @ManyToOne(optional = false)
-    private Paquetes paquetesIdpaquete;
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "pedidos")
-    private Detalleservicio detalleservicio;
+    private Detalleactividades detalleactividades;
+    @JoinColumns({
+        @JoinColumn(name = "clientes_idcliente", referencedColumnName = "idcliente")
+        , @JoinColumn(name = "clientes_idcliente", referencedColumnName = "idcliente")})
+    @ManyToOne(optional = false)
+    private Clientes clientes;
+    @JoinColumns({
+        @JoinColumn(name = "paquetes_idpaquete", referencedColumnName = "idpaquete")
+        , @JoinColumn(name = "paquetes_idpaquete", referencedColumnName = "idpaquete")})
+    @ManyToOne(optional = false)
+    private Paquetes paquetes;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pedidos")
+    private List<Detalleservicio> detalleservicioList;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pedidos")
+    private List<Detalleentregablespedido> detalleentregablespedidoList;
 
     public Pedidos() {
     }
 
-    public Pedidos(Integer idpedido) {
-        this.idpedido = idpedido;
-    }
-    
     public Pedidos(Integer idpedido, Date fechaPedido, Date fechaRequerida, double precio, String promocion, String notas) {
         this.idpedido = idpedido;
         this.fechaPedido = fechaPedido;
@@ -92,6 +95,10 @@ public class Pedidos implements Serializable {
         this.notas = notas;
     }
 
+    
+    public Pedidos(Integer idpedido) {
+        this.idpedido = idpedido;
+    }
 
     public Pedidos(Integer idpedido, Date fechaPedido, double precio, String promocion) {
         this.idpedido = idpedido;
@@ -148,37 +155,46 @@ public class Pedidos implements Serializable {
         this.notas = notas;
     }
 
+    public Detalleactividades getDetalleactividades() {
+        return detalleactividades;
+    }
+
+    public void setDetalleactividades(Detalleactividades detalleactividades) {
+        this.detalleactividades = detalleactividades;
+    }
+
+    public Clientes getClientes() {
+        return clientes;
+    }
+
+    public void setClientes(Clientes clientes) {
+        this.clientes = clientes;
+    }
+
+    public Paquetes getPaquetes() {
+        return paquetes;
+    }
+
+    public void setPaquetes(Paquetes paquetes) {
+        this.paquetes = paquetes;
+    }
+
     @XmlTransient
-    public List<Detalleactividades> getDetalleactividadesList() {
-        return detalleactividadesList;
+    public List<Detalleservicio> getDetalleservicioList() {
+        return detalleservicioList;
     }
 
-    public void setDetalleactividadesList(List<Detalleactividades> detalleactividadesList) {
-        this.detalleactividadesList = detalleactividadesList;
+    public void setDetalleservicioList(List<Detalleservicio> detalleservicioList) {
+        this.detalleservicioList = detalleservicioList;
     }
 
-    public Clientes getClientesIdcliente() {
-        return clientesIdcliente;
+    @XmlTransient
+    public List<Detalleentregablespedido> getDetalleentregablespedidoList() {
+        return detalleentregablespedidoList;
     }
 
-    public void setClientesIdcliente(Clientes clientesIdcliente) {
-        this.clientesIdcliente = clientesIdcliente;
-    }
-
-    public Paquetes getPaquetesIdpaquete() {
-        return paquetesIdpaquete;
-    }
-
-    public void setPaquetesIdpaquete(Paquetes paquetesIdpaquete) {
-        this.paquetesIdpaquete = paquetesIdpaquete;
-    }
-
-    public Detalleservicio getDetalleservicio() {
-        return detalleservicio;
-    }
-
-    public void setDetalleservicio(Detalleservicio detalleservicio) {
-        this.detalleservicio = detalleservicio;
+    public void setDetalleentregablespedidoList(List<Detalleentregablespedido> detalleentregablespedidoList) {
+        this.detalleentregablespedidoList = detalleentregablespedidoList;
     }
 
     @Override

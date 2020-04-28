@@ -402,7 +402,7 @@ public class DetallePaquete extends javax.swing.JDialog {
             int row = tablaEntregables.rowAtPoint(evt.getPoint());
              String tipo = tablaEntregables.getValueAt(row, 0).toString();
             for (int i = 0; i < listaEntregablesPedido.size(); i++) {
-                String tipoT = fachadaControl.getEntregableId(listaEntregablesPedido.get(i).getEntregablesIdentregable().getIdentregable()).getTipo();
+                String tipoT = fachadaControl.getEntregableId(listaEntregablesPedido.get(i).getEntregables().getIdentregable()).getTipo();
                 if (tipo.equals(tipoT)) {
                     modelo3.removeRow(row);
                     listaEntregablesPedido.remove(row);
@@ -457,7 +457,7 @@ public class DetallePaquete extends javax.swing.JDialog {
             int row = tablaServicios.rowAtPoint(evt.getPoint());
             String tipo = tablaServicios.getValueAt(row, 0).toString();
             for (int i = 0; i < listaServiciosesPedido.size(); i++) {
-                String tipoT = fachadaControl.getServiciosId(listaServiciosesPedido.get(i).getServiciosIdservicio().getIdservicio()).getTipo();
+                String tipoT = fachadaControl.getServiciosId(listaServiciosesPedido.get(i).getServicios().getIdservicio()).getTipo();
                 if (tipo.equals(tipoT)) {
                     modelo4.removeRow(row);
                     listaServiciosesPedido.remove(row);
@@ -470,8 +470,13 @@ public class DetallePaquete extends javax.swing.JDialog {
     private void btnSeleccionarPaqueteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarPaqueteActionPerformed
 //        fachadaControl.asignarServiciosPedido(listaServiciosesPedido);
 //        fachadaControl.asignarEntregablesPedido(listaEntregablesPedido);
-        seleccionado = true;
-        this.dispose();
+        if (listaServiciosesPedido.size() != 0 && listaEntregablesPedido.size() != 0) {
+            seleccionado = true;
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Ingrese al menos un servicio y un entregable");
+        }
+
     }//GEN-LAST:event_btnSeleccionarPaqueteActionPerformed
 
 

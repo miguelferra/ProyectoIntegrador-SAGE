@@ -49,9 +49,9 @@ public class Paquetes implements Serializable {
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "precio")
     private Float precio;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "paquetesIdpaquete")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "paquetes")
     private List<Pedidos> pedidosList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "paquetesIdpaquete")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "paquetes")
     private List<Detalleentregablespaquete> detalleentregablespaqueteList;
 
     public Paquetes() {

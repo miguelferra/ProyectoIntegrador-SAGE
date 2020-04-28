@@ -47,8 +47,6 @@ public class ControlServicio {
     public void registrarDetalleServicio(Detalleservicio detalleServicio){
         try {
             cDetServ.create(detalleServicio);
-        } catch (PreexistingEntityException ex) {
-            Logger.getLogger(ControlServicio.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(ControlServicio.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -58,7 +56,7 @@ public class ControlServicio {
          try {         
             for (int i = 0; i < listaServiciosPedido.size(); i++) {
                 Detalleservicio detalleServicio = listaServiciosPedido.get(i);
-                detalleServicio.setPedidosIdpedido(pedido.getIdpedido());
+                detalleServicio.setPedidos(pedido);
                 detalleServicio.setFecha(new java.sql.Date(new Date().getTime()));
                 cDetServ.create(detalleServicio);
             }
@@ -67,6 +65,9 @@ public class ControlServicio {
         }
     }
     
-   
+    public void eliminarDetalleServicio(Pedidos pedido){
+        cDetServ.eliminarDetalleServicio(pedido.getIdpedido());
+    }
+       
     
 }

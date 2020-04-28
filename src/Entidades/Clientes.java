@@ -56,16 +56,12 @@ public class Clientes implements Serializable {
     private String email;
     @Column(name = "direccion")
     private String direccion;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientesIdcliente")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientes")
     private List<Pedidos> pedidosList;
 
     public Clientes() {
     }
 
-    public Clientes(Integer idcliente) {
-        this.idcliente = idcliente;
-    }
-    
     public Clientes(int id, String nombre, String apellido, String telefono, String correo, String direccion) {
         this.idcliente = id;
         this.nombre = nombre;
@@ -73,6 +69,10 @@ public class Clientes implements Serializable {
         this.direccion = direccion;
         this.email = correo;
         this.telefono = telefono;
+    }
+    
+    public Clientes(Integer idcliente) {
+        this.idcliente = idcliente;
     }
 
     public Clientes(Integer idcliente, String nombre, String apellido) {

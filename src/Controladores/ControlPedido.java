@@ -7,6 +7,8 @@ package Controladores;
 
 import Datos.PaquetesJpaController;
 import Datos.PedidosJpaController;
+import Datos.exceptions.IllegalOrphanException;
+import Datos.exceptions.NonexistentEntityException;
 import Entidades.Clientes;
 import Entidades.Detalleentregablespedido;
 import Entidades.Detalleservicio;
@@ -51,8 +53,8 @@ public class ControlPedido {
     
     public void registrarPedido(float precio,Date fecha, String promocion, String notas, Clientes cliente, Paquetes paquete) {
         Pedidos ped = new Pedidos(0, new Date(),fecha, precio, promocion, notas);
-        ped.setClientesIdcliente(cliente);
-        ped.setPaquetesIdpaquete(paquete);
+        ped.setClientes(cliente);
+        ped.setPaquetes(paquete);
         try {
             cPedido.create(ped);
         } catch (Exception ex) {
@@ -70,6 +72,16 @@ public class ControlPedido {
     
     public void asignarServiciosPedido(List listaServiciosPedido){
         this .listaServiciosesPedido = listaServiciosPedido;
+    }
+    
+    public void eliminarPedido(Pedidos pedido){
+        try {
+            cPedido.destroy(pedido.getIdpedido());
+        } catch (IllegalOrphanException ex) {
+            Logger.getLogger(ControlPedido.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(ControlPedido.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     

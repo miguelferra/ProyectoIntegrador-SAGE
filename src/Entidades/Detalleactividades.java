@@ -11,9 +11,11 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -37,14 +39,20 @@ public class Detalleactividades implements Serializable {
     @Basic(optional = false)
     @Column(name = "fecha")
     private int fecha;
-    @JoinColumn(name = "actividades_idactividad", referencedColumnName = "idactividad", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
+    @JoinColumns({
+        @JoinColumn(name = "actividades_idactividad", referencedColumnName = "idactividad", insertable = false, updatable = false)
+        , @JoinColumn(name = "actividades_idactividad", referencedColumnName = "idactividad", insertable = false, updatable = false)})
+    @OneToOne(optional = false)
     private Actividades actividades;
-    @JoinColumn(name = "empleados_RFC", referencedColumnName = "RFC")
+    @JoinColumns({
+        @JoinColumn(name = "empleados_RFC", referencedColumnName = "RFC")
+        , @JoinColumn(name = "empleados_RFC", referencedColumnName = "RFC")})
     @ManyToOne
-    private Empleados empleadosRFC;
-    @JoinColumn(name = "pedidos_idpedido", referencedColumnName = "idpedido", insertable = false, updatable = false)
-    @ManyToOne(optional = false)
+    private Empleados empleados;
+    @JoinColumns({
+        @JoinColumn(name = "pedidos_idpedido", referencedColumnName = "idpedido", insertable = false, updatable = false)
+        , @JoinColumn(name = "pedidos_idpedido", referencedColumnName = "idpedido", insertable = false, updatable = false)})
+    @OneToOne(optional = false)
     private Pedidos pedidos;
 
     public Detalleactividades() {
@@ -87,12 +95,12 @@ public class Detalleactividades implements Serializable {
         this.actividades = actividades;
     }
 
-    public Empleados getEmpleadosRFC() {
-        return empleadosRFC;
+    public Empleados getEmpleados() {
+        return empleados;
     }
 
-    public void setEmpleadosRFC(Empleados empleadosRFC) {
-        this.empleadosRFC = empleadosRFC;
+    public void setEmpleados(Empleados empleados) {
+        this.empleados = empleados;
     }
 
     public Pedidos getPedidos() {

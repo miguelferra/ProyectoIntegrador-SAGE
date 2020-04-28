@@ -58,7 +58,7 @@ public class Empleados implements Serializable {
     private String rol;
     @Column(name = "telefono")
     private String telefono;
-    @OneToMany(mappedBy = "empleadosRFC")
+    @OneToMany(mappedBy = "empleados")
     private List<Detalleactividades> detalleactividadesList;
 
     public Empleados() {

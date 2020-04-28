@@ -10,12 +10,14 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -33,7 +35,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Detalleservicio.findByTiempo", query = "SELECT d FROM Detalleservicio d WHERE d.tiempo = :tiempo")
     , @NamedQuery(name = "Detalleservicio.findByDireccion", query = "SELECT d FROM Detalleservicio d WHERE d.direccion = :direccion")
     , @NamedQuery(name = "Detalleservicio.findByFecha", query = "SELECT d FROM Detalleservicio d WHERE d.fecha = :fecha")
-    , @NamedQuery(name = "Detalleservicio.findByPedidosIdpedido", query = "SELECT d FROM Detalleservicio d WHERE d.pedidosIdpedido = :pedidosIdpedido")})
+    , @NamedQuery(name = "Detalleservicio.findByIdDetalleServicio", query = "SELECT d FROM Detalleservicio d WHERE d.idDetalleServicio = :idDetalleServicio")})
 public class Detalleservicio implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -45,26 +47,32 @@ public class Detalleservicio implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @Column(name = "pedidos_idpedido")
-    private Integer pedidosIdpedido;
-    @JoinColumn(name = "pedidos_idpedido", referencedColumnName = "idpedido", insertable = false, updatable = false)
-    @OneToOne(optional = false)
-    private Pedidos pedidos;
-    @JoinColumn(name = "servicios_idservicio", referencedColumnName = "idservicio")
+    @Column(name = "idDetalleServicio")
+    private Integer idDetalleServicio;
+    @JoinColumns({
+        @JoinColumn(name = "pedidos_idpedido", referencedColumnName = "idpedido")
+        , @JoinColumn(name = "pedidos_idpedido", referencedColumnName = "idpedido")})
     @ManyToOne(optional = false)
-    private Servicios serviciosIdservicio;
+    private Pedidos pedidos;
+    @JoinColumns({
+        @JoinColumn(name = "servicios_idservicio", referencedColumnName = "idservicio")
+        , @JoinColumn(name = "servicios_idservicio", referencedColumnName = "idservicio")})
+    @ManyToOne(optional = false)
+    private Servicios servicios;
 
     public Detalleservicio() {
     }
 
     public Detalleservicio(Servicios servicio,String tiempo) {
-        this.serviciosIdservicio = servicio;
+        this.idDetalleServicio = 0;
+        this.servicios = servicio;
         this.tiempo = tiempo;
     }
-
-    public Detalleservicio(Integer pedidosIdpedido) {
-        this.pedidosIdpedido = pedidosIdpedido;
+    
+    public Detalleservicio(Integer idDetalleServicio) {
+        this.idDetalleServicio = idDetalleServicio;
     }
 
     public String getTiempo() {
@@ -91,12 +99,12 @@ public class Detalleservicio implements Serializable {
         this.fecha = fecha;
     }
 
-    public Integer getPedidosIdpedido() {
-        return pedidosIdpedido;
+    public Integer getIdDetalleServicio() {
+        return idDetalleServicio;
     }
 
-    public void setPedidosIdpedido(Integer pedidosIdpedido) {
-        this.pedidosIdpedido = pedidosIdpedido;
+    public void setIdDetalleServicio(Integer idDetalleServicio) {
+        this.idDetalleServicio = idDetalleServicio;
     }
 
     public Pedidos getPedidos() {
@@ -107,18 +115,18 @@ public class Detalleservicio implements Serializable {
         this.pedidos = pedidos;
     }
 
-    public Servicios getServiciosIdservicio() {
-        return serviciosIdservicio;
+    public Servicios getServicios() {
+        return servicios;
     }
 
-    public void setServiciosIdservicio(Servicios serviciosIdservicio) {
-        this.serviciosIdservicio = serviciosIdservicio;
+    public void setServicios(Servicios servicios) {
+        this.servicios = servicios;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (pedidosIdpedido != null ? pedidosIdpedido.hashCode() : 0);
+        hash += (idDetalleServicio != null ? idDetalleServicio.hashCode() : 0);
         return hash;
     }
 
@@ -129,7 +137,7 @@ public class Detalleservicio implements Serializable {
             return false;
         }
         Detalleservicio other = (Detalleservicio) object;
-        if ((this.pedidosIdpedido == null && other.pedidosIdpedido != null) || (this.pedidosIdpedido != null && !this.pedidosIdpedido.equals(other.pedidosIdpedido))) {
+        if ((this.idDetalleServicio == null && other.idDetalleServicio != null) || (this.idDetalleServicio != null && !this.idDetalleServicio.equals(other.idDetalleServicio))) {
             return false;
         }
         return true;
@@ -137,7 +145,7 @@ public class Detalleservicio implements Serializable {
 
     @Override
     public String toString() {
-        return "Entidades.Detalleservicio[ pedidosIdpedido=" + pedidosIdpedido + " ]";
+        return "Entidades.Detalleservicio[ idDetalleServicio=" + idDetalleServicio + " ]";
     }
     
 }

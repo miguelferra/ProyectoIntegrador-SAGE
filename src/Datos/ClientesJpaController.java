@@ -51,12 +51,12 @@ public class ClientesJpaController implements Serializable {
             clientes.setPedidosList(attachedPedidosList);
             em.persist(clientes);
             for (Pedidos pedidosListPedidos : clientes.getPedidosList()) {
-                Clientes oldClientesIdclienteOfPedidosListPedidos = pedidosListPedidos.getClientesIdcliente();
-                pedidosListPedidos.setClientesIdcliente(clientes);
+                Clientes oldClientesOfPedidosListPedidos = pedidosListPedidos.getClientes();
+                pedidosListPedidos.setClientes(clientes);
                 pedidosListPedidos = em.merge(pedidosListPedidos);
-                if (oldClientesIdclienteOfPedidosListPedidos != null) {
-                    oldClientesIdclienteOfPedidosListPedidos.getPedidosList().remove(pedidosListPedidos);
-                    oldClientesIdclienteOfPedidosListPedidos = em.merge(oldClientesIdclienteOfPedidosListPedidos);
+                if (oldClientesOfPedidosListPedidos != null) {
+                    oldClientesOfPedidosListPedidos.getPedidosList().remove(pedidosListPedidos);
+                    oldClientesOfPedidosListPedidos = em.merge(oldClientesOfPedidosListPedidos);
                 }
             }
             em.getTransaction().commit();
@@ -81,7 +81,7 @@ public class ClientesJpaController implements Serializable {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Pedidos " + pedidosListOldPedidos + " since its clientesIdcliente field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Pedidos " + pedidosListOldPedidos + " since its clientes field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -97,12 +97,12 @@ public class ClientesJpaController implements Serializable {
             clientes = em.merge(clientes);
             for (Pedidos pedidosListNewPedidos : pedidosListNew) {
                 if (!pedidosListOld.contains(pedidosListNewPedidos)) {
-                    Clientes oldClientesIdclienteOfPedidosListNewPedidos = pedidosListNewPedidos.getClientesIdcliente();
-                    pedidosListNewPedidos.setClientesIdcliente(clientes);
+                    Clientes oldClientesOfPedidosListNewPedidos = pedidosListNewPedidos.getClientes();
+                    pedidosListNewPedidos.setClientes(clientes);
                     pedidosListNewPedidos = em.merge(pedidosListNewPedidos);
-                    if (oldClientesIdclienteOfPedidosListNewPedidos != null && !oldClientesIdclienteOfPedidosListNewPedidos.equals(clientes)) {
-                        oldClientesIdclienteOfPedidosListNewPedidos.getPedidosList().remove(pedidosListNewPedidos);
-                        oldClientesIdclienteOfPedidosListNewPedidos = em.merge(oldClientesIdclienteOfPedidosListNewPedidos);
+                    if (oldClientesOfPedidosListNewPedidos != null && !oldClientesOfPedidosListNewPedidos.equals(clientes)) {
+                        oldClientesOfPedidosListNewPedidos.getPedidosList().remove(pedidosListNewPedidos);
+                        oldClientesOfPedidosListNewPedidos = em.merge(oldClientesOfPedidosListNewPedidos);
                     }
                 }
             }
@@ -141,7 +141,7 @@ public class ClientesJpaController implements Serializable {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Clientes (" + clientes + ") cannot be destroyed since the Pedidos " + pedidosListOrphanCheckPedidos + " in its pedidosList field has a non-nullable clientesIdcliente field.");
+                illegalOrphanMessages.add("This Clientes (" + clientes + ") cannot be destroyed since the Pedidos " + pedidosListOrphanCheckPedidos + " in its pedidosList field has a non-nullable clientes field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
@@ -210,5 +210,4 @@ public class ClientesJpaController implements Serializable {
             em.close();
         }
     }
-    
 }

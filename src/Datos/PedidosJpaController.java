@@ -12,13 +12,14 @@ import javax.persistence.Query;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import Entidades.Detalleactividades;
 import Entidades.Clientes;
 import Entidades.Paquetes;
 import Entidades.Detalleservicio;
-import Entidades.Detalleactividades;
-import Entidades.Pedidos;
 import java.util.ArrayList;
 import java.util.List;
+import Entidades.Detalleentregablespedido;
+import Entidades.Pedidos;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -39,59 +40,77 @@ public class PedidosJpaController implements Serializable {
     }
 
     public void create(Pedidos pedidos) {
-        if (pedidos.getDetalleactividadesList() == null) {
-            pedidos.setDetalleactividadesList(new ArrayList<Detalleactividades>());
+        if (pedidos.getDetalleservicioList() == null) {
+            pedidos.setDetalleservicioList(new ArrayList<Detalleservicio>());
+        }
+        if (pedidos.getDetalleentregablespedidoList() == null) {
+            pedidos.setDetalleentregablespedidoList(new ArrayList<Detalleentregablespedido>());
         }
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
-            Clientes clientesIdcliente = pedidos.getClientesIdcliente();
-            if (clientesIdcliente != null) {
-                clientesIdcliente = em.getReference(clientesIdcliente.getClass(), clientesIdcliente.getIdcliente());
-                pedidos.setClientesIdcliente(clientesIdcliente);
+            Detalleactividades detalleactividades = pedidos.getDetalleactividades();
+            if (detalleactividades != null) {
+                detalleactividades = em.getReference(detalleactividades.getClass(), detalleactividades.getDetalleactividadesPK());
+                pedidos.setDetalleactividades(detalleactividades);
             }
-            Paquetes paquetesIdpaquete = pedidos.getPaquetesIdpaquete();
-            if (paquetesIdpaquete != null) {
-                paquetesIdpaquete = em.getReference(paquetesIdpaquete.getClass(), paquetesIdpaquete.getIdpaquete());
-                pedidos.setPaquetesIdpaquete(paquetesIdpaquete);
+            Clientes clientes = pedidos.getClientes();
+            if (clientes != null) {
+                clientes = em.getReference(clientes.getClass(), clientes.getIdcliente());
+                pedidos.setClientes(clientes);
             }
-            Detalleservicio detalleservicio = pedidos.getDetalleservicio();
-            if (detalleservicio != null) {
-                detalleservicio = em.getReference(detalleservicio.getClass(), detalleservicio.getPedidosIdpedido());
-                pedidos.setDetalleservicio(detalleservicio);
+            Paquetes paquetes = pedidos.getPaquetes();
+            if (paquetes != null) {
+                paquetes = em.getReference(paquetes.getClass(), paquetes.getIdpaquete());
+                pedidos.setPaquetes(paquetes);
             }
-            List<Detalleactividades> attachedDetalleactividadesList = new ArrayList<Detalleactividades>();
-            for (Detalleactividades detalleactividadesListDetalleactividadesToAttach : pedidos.getDetalleactividadesList()) {
-                detalleactividadesListDetalleactividadesToAttach = em.getReference(detalleactividadesListDetalleactividadesToAttach.getClass(), detalleactividadesListDetalleactividadesToAttach.getDetalleactividadesPK());
-                attachedDetalleactividadesList.add(detalleactividadesListDetalleactividadesToAttach);
+            List<Detalleservicio> attachedDetalleservicioList = new ArrayList<Detalleservicio>();
+            for (Detalleservicio detalleservicioListDetalleservicioToAttach : pedidos.getDetalleservicioList()) {
+                detalleservicioListDetalleservicioToAttach = em.getReference(detalleservicioListDetalleservicioToAttach.getClass(), detalleservicioListDetalleservicioToAttach.getIdDetalleServicio());
+                attachedDetalleservicioList.add(detalleservicioListDetalleservicioToAttach);
             }
-            pedidos.setDetalleactividadesList(attachedDetalleactividadesList);
+            pedidos.setDetalleservicioList(attachedDetalleservicioList);
+            List<Detalleentregablespedido> attachedDetalleentregablespedidoList = new ArrayList<Detalleentregablespedido>();
+            for (Detalleentregablespedido detalleentregablespedidoListDetalleentregablespedidoToAttach : pedidos.getDetalleentregablespedidoList()) {
+                detalleentregablespedidoListDetalleentregablespedidoToAttach = em.getReference(detalleentregablespedidoListDetalleentregablespedidoToAttach.getClass(), detalleentregablespedidoListDetalleentregablespedidoToAttach.getIdDetalleEntregable());
+                attachedDetalleentregablespedidoList.add(detalleentregablespedidoListDetalleentregablespedidoToAttach);
+            }
+            pedidos.setDetalleentregablespedidoList(attachedDetalleentregablespedidoList);
             em.persist(pedidos);
-            if (clientesIdcliente != null) {
-                clientesIdcliente.getPedidosList().add(pedidos);
-                clientesIdcliente = em.merge(clientesIdcliente);
-            }
-            if (paquetesIdpaquete != null) {
-                paquetesIdpaquete.getPedidosList().add(pedidos);
-                paquetesIdpaquete = em.merge(paquetesIdpaquete);
-            }
-            if (detalleservicio != null) {
-                Pedidos oldPedidosOfDetalleservicio = detalleservicio.getPedidos();
-                if (oldPedidosOfDetalleservicio != null) {
-                    oldPedidosOfDetalleservicio.setDetalleservicio(null);
-                    oldPedidosOfDetalleservicio = em.merge(oldPedidosOfDetalleservicio);
+            if (detalleactividades != null) {
+                Pedidos oldPedidosOfDetalleactividades = detalleactividades.getPedidos();
+                if (oldPedidosOfDetalleactividades != null) {
+                    oldPedidosOfDetalleactividades.setDetalleactividades(null);
+                    oldPedidosOfDetalleactividades = em.merge(oldPedidosOfDetalleactividades);
                 }
-                detalleservicio.setPedidos(pedidos);
-                detalleservicio = em.merge(detalleservicio);
+                detalleactividades.setPedidos(pedidos);
+                detalleactividades = em.merge(detalleactividades);
             }
-            for (Detalleactividades detalleactividadesListDetalleactividades : pedidos.getDetalleactividadesList()) {
-                Pedidos oldPedidosOfDetalleactividadesListDetalleactividades = detalleactividadesListDetalleactividades.getPedidos();
-                detalleactividadesListDetalleactividades.setPedidos(pedidos);
-                detalleactividadesListDetalleactividades = em.merge(detalleactividadesListDetalleactividades);
-                if (oldPedidosOfDetalleactividadesListDetalleactividades != null) {
-                    oldPedidosOfDetalleactividadesListDetalleactividades.getDetalleactividadesList().remove(detalleactividadesListDetalleactividades);
-                    oldPedidosOfDetalleactividadesListDetalleactividades = em.merge(oldPedidosOfDetalleactividadesListDetalleactividades);
+            if (clientes != null) {
+                clientes.getPedidosList().add(pedidos);
+                clientes = em.merge(clientes);
+            }
+            if (paquetes != null) {
+                paquetes.getPedidosList().add(pedidos);
+                paquetes = em.merge(paquetes);
+            }
+            for (Detalleservicio detalleservicioListDetalleservicio : pedidos.getDetalleservicioList()) {
+                Pedidos oldPedidosOfDetalleservicioListDetalleservicio = detalleservicioListDetalleservicio.getPedidos();
+                detalleservicioListDetalleservicio.setPedidos(pedidos);
+                detalleservicioListDetalleservicio = em.merge(detalleservicioListDetalleservicio);
+                if (oldPedidosOfDetalleservicioListDetalleservicio != null) {
+                    oldPedidosOfDetalleservicioListDetalleservicio.getDetalleservicioList().remove(detalleservicioListDetalleservicio);
+                    oldPedidosOfDetalleservicioListDetalleservicio = em.merge(oldPedidosOfDetalleservicioListDetalleservicio);
+                }
+            }
+            for (Detalleentregablespedido detalleentregablespedidoListDetalleentregablespedido : pedidos.getDetalleentregablespedidoList()) {
+                Pedidos oldPedidosOfDetalleentregablespedidoListDetalleentregablespedido = detalleentregablespedidoListDetalleentregablespedido.getPedidos();
+                detalleentregablespedidoListDetalleentregablespedido.setPedidos(pedidos);
+                detalleentregablespedidoListDetalleentregablespedido = em.merge(detalleentregablespedidoListDetalleentregablespedido);
+                if (oldPedidosOfDetalleentregablespedidoListDetalleentregablespedido != null) {
+                    oldPedidosOfDetalleentregablespedidoListDetalleentregablespedido.getDetalleentregablespedidoList().remove(detalleentregablespedidoListDetalleentregablespedido);
+                    oldPedidosOfDetalleentregablespedidoListDetalleentregablespedido = em.merge(oldPedidosOfDetalleentregablespedidoListDetalleentregablespedido);
                 }
             }
             em.getTransaction().commit();
@@ -108,85 +127,113 @@ public class PedidosJpaController implements Serializable {
             em = getEntityManager();
             em.getTransaction().begin();
             Pedidos persistentPedidos = em.find(Pedidos.class, pedidos.getIdpedido());
-            Clientes clientesIdclienteOld = persistentPedidos.getClientesIdcliente();
-            Clientes clientesIdclienteNew = pedidos.getClientesIdcliente();
-            Paquetes paquetesIdpaqueteOld = persistentPedidos.getPaquetesIdpaquete();
-            Paquetes paquetesIdpaqueteNew = pedidos.getPaquetesIdpaquete();
-            Detalleservicio detalleservicioOld = persistentPedidos.getDetalleservicio();
-            Detalleservicio detalleservicioNew = pedidos.getDetalleservicio();
-            List<Detalleactividades> detalleactividadesListOld = persistentPedidos.getDetalleactividadesList();
-            List<Detalleactividades> detalleactividadesListNew = pedidos.getDetalleactividadesList();
+            Detalleactividades detalleactividadesOld = persistentPedidos.getDetalleactividades();
+            Detalleactividades detalleactividadesNew = pedidos.getDetalleactividades();
+            Clientes clientesOld = persistentPedidos.getClientes();
+            Clientes clientesNew = pedidos.getClientes();
+            Paquetes paquetesOld = persistentPedidos.getPaquetes();
+            Paquetes paquetesNew = pedidos.getPaquetes();
+            List<Detalleservicio> detalleservicioListOld = persistentPedidos.getDetalleservicioList();
+            List<Detalleservicio> detalleservicioListNew = pedidos.getDetalleservicioList();
+            List<Detalleentregablespedido> detalleentregablespedidoListOld = persistentPedidos.getDetalleentregablespedidoList();
+            List<Detalleentregablespedido> detalleentregablespedidoListNew = pedidos.getDetalleentregablespedidoList();
             List<String> illegalOrphanMessages = null;
-            if (detalleservicioOld != null && !detalleservicioOld.equals(detalleservicioNew)) {
+            if (detalleactividadesOld != null && !detalleactividadesOld.equals(detalleactividadesNew)) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("You must retain Detalleservicio " + detalleservicioOld + " since its pedidos field is not nullable.");
+                illegalOrphanMessages.add("You must retain Detalleactividades " + detalleactividadesOld + " since its pedidos field is not nullable.");
             }
-            for (Detalleactividades detalleactividadesListOldDetalleactividades : detalleactividadesListOld) {
-                if (!detalleactividadesListNew.contains(detalleactividadesListOldDetalleactividades)) {
+            for (Detalleservicio detalleservicioListOldDetalleservicio : detalleservicioListOld) {
+                if (!detalleservicioListNew.contains(detalleservicioListOldDetalleservicio)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Detalleactividades " + detalleactividadesListOldDetalleactividades + " since its pedidos field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Detalleservicio " + detalleservicioListOldDetalleservicio + " since its pedidos field is not nullable.");
+                }
+            }
+            for (Detalleentregablespedido detalleentregablespedidoListOldDetalleentregablespedido : detalleentregablespedidoListOld) {
+                if (!detalleentregablespedidoListNew.contains(detalleentregablespedidoListOldDetalleentregablespedido)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain Detalleentregablespedido " + detalleentregablespedidoListOldDetalleentregablespedido + " since its pedidos field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            if (clientesIdclienteNew != null) {
-                clientesIdclienteNew = em.getReference(clientesIdclienteNew.getClass(), clientesIdclienteNew.getIdcliente());
-                pedidos.setClientesIdcliente(clientesIdclienteNew);
+            if (detalleactividadesNew != null) {
+                detalleactividadesNew = em.getReference(detalleactividadesNew.getClass(), detalleactividadesNew.getDetalleactividadesPK());
+                pedidos.setDetalleactividades(detalleactividadesNew);
             }
-            if (paquetesIdpaqueteNew != null) {
-                paquetesIdpaqueteNew = em.getReference(paquetesIdpaqueteNew.getClass(), paquetesIdpaqueteNew.getIdpaquete());
-                pedidos.setPaquetesIdpaquete(paquetesIdpaqueteNew);
+            if (clientesNew != null) {
+                clientesNew = em.getReference(clientesNew.getClass(), clientesNew.getIdcliente());
+                pedidos.setClientes(clientesNew);
             }
-            if (detalleservicioNew != null) {
-                detalleservicioNew = em.getReference(detalleservicioNew.getClass(), detalleservicioNew.getPedidosIdpedido());
-                pedidos.setDetalleservicio(detalleservicioNew);
+            if (paquetesNew != null) {
+                paquetesNew = em.getReference(paquetesNew.getClass(), paquetesNew.getIdpaquete());
+                pedidos.setPaquetes(paquetesNew);
             }
-            List<Detalleactividades> attachedDetalleactividadesListNew = new ArrayList<Detalleactividades>();
-            for (Detalleactividades detalleactividadesListNewDetalleactividadesToAttach : detalleactividadesListNew) {
-                detalleactividadesListNewDetalleactividadesToAttach = em.getReference(detalleactividadesListNewDetalleactividadesToAttach.getClass(), detalleactividadesListNewDetalleactividadesToAttach.getDetalleactividadesPK());
-                attachedDetalleactividadesListNew.add(detalleactividadesListNewDetalleactividadesToAttach);
+            List<Detalleservicio> attachedDetalleservicioListNew = new ArrayList<Detalleservicio>();
+            for (Detalleservicio detalleservicioListNewDetalleservicioToAttach : detalleservicioListNew) {
+                detalleservicioListNewDetalleservicioToAttach = em.getReference(detalleservicioListNewDetalleservicioToAttach.getClass(), detalleservicioListNewDetalleservicioToAttach.getIdDetalleServicio());
+                attachedDetalleservicioListNew.add(detalleservicioListNewDetalleservicioToAttach);
             }
-            detalleactividadesListNew = attachedDetalleactividadesListNew;
-            pedidos.setDetalleactividadesList(detalleactividadesListNew);
+            detalleservicioListNew = attachedDetalleservicioListNew;
+            pedidos.setDetalleservicioList(detalleservicioListNew);
+            List<Detalleentregablespedido> attachedDetalleentregablespedidoListNew = new ArrayList<Detalleentregablespedido>();
+            for (Detalleentregablespedido detalleentregablespedidoListNewDetalleentregablespedidoToAttach : detalleentregablespedidoListNew) {
+                detalleentregablespedidoListNewDetalleentregablespedidoToAttach = em.getReference(detalleentregablespedidoListNewDetalleentregablespedidoToAttach.getClass(), detalleentregablespedidoListNewDetalleentregablespedidoToAttach.getIdDetalleEntregable());
+                attachedDetalleentregablespedidoListNew.add(detalleentregablespedidoListNewDetalleentregablespedidoToAttach);
+            }
+            detalleentregablespedidoListNew = attachedDetalleentregablespedidoListNew;
+            pedidos.setDetalleentregablespedidoList(detalleentregablespedidoListNew);
             pedidos = em.merge(pedidos);
-            if (clientesIdclienteOld != null && !clientesIdclienteOld.equals(clientesIdclienteNew)) {
-                clientesIdclienteOld.getPedidosList().remove(pedidos);
-                clientesIdclienteOld = em.merge(clientesIdclienteOld);
-            }
-            if (clientesIdclienteNew != null && !clientesIdclienteNew.equals(clientesIdclienteOld)) {
-                clientesIdclienteNew.getPedidosList().add(pedidos);
-                clientesIdclienteNew = em.merge(clientesIdclienteNew);
-            }
-            if (paquetesIdpaqueteOld != null && !paquetesIdpaqueteOld.equals(paquetesIdpaqueteNew)) {
-                paquetesIdpaqueteOld.getPedidosList().remove(pedidos);
-                paquetesIdpaqueteOld = em.merge(paquetesIdpaqueteOld);
-            }
-            if (paquetesIdpaqueteNew != null && !paquetesIdpaqueteNew.equals(paquetesIdpaqueteOld)) {
-                paquetesIdpaqueteNew.getPedidosList().add(pedidos);
-                paquetesIdpaqueteNew = em.merge(paquetesIdpaqueteNew);
-            }
-            if (detalleservicioNew != null && !detalleservicioNew.equals(detalleservicioOld)) {
-                Pedidos oldPedidosOfDetalleservicio = detalleservicioNew.getPedidos();
-                if (oldPedidosOfDetalleservicio != null) {
-                    oldPedidosOfDetalleservicio.setDetalleservicio(null);
-                    oldPedidosOfDetalleservicio = em.merge(oldPedidosOfDetalleservicio);
+            if (detalleactividadesNew != null && !detalleactividadesNew.equals(detalleactividadesOld)) {
+                Pedidos oldPedidosOfDetalleactividades = detalleactividadesNew.getPedidos();
+                if (oldPedidosOfDetalleactividades != null) {
+                    oldPedidosOfDetalleactividades.setDetalleactividades(null);
+                    oldPedidosOfDetalleactividades = em.merge(oldPedidosOfDetalleactividades);
                 }
-                detalleservicioNew.setPedidos(pedidos);
-                detalleservicioNew = em.merge(detalleservicioNew);
+                detalleactividadesNew.setPedidos(pedidos);
+                detalleactividadesNew = em.merge(detalleactividadesNew);
             }
-            for (Detalleactividades detalleactividadesListNewDetalleactividades : detalleactividadesListNew) {
-                if (!detalleactividadesListOld.contains(detalleactividadesListNewDetalleactividades)) {
-                    Pedidos oldPedidosOfDetalleactividadesListNewDetalleactividades = detalleactividadesListNewDetalleactividades.getPedidos();
-                    detalleactividadesListNewDetalleactividades.setPedidos(pedidos);
-                    detalleactividadesListNewDetalleactividades = em.merge(detalleactividadesListNewDetalleactividades);
-                    if (oldPedidosOfDetalleactividadesListNewDetalleactividades != null && !oldPedidosOfDetalleactividadesListNewDetalleactividades.equals(pedidos)) {
-                        oldPedidosOfDetalleactividadesListNewDetalleactividades.getDetalleactividadesList().remove(detalleactividadesListNewDetalleactividades);
-                        oldPedidosOfDetalleactividadesListNewDetalleactividades = em.merge(oldPedidosOfDetalleactividadesListNewDetalleactividades);
+            if (clientesOld != null && !clientesOld.equals(clientesNew)) {
+                clientesOld.getPedidosList().remove(pedidos);
+                clientesOld = em.merge(clientesOld);
+            }
+            if (clientesNew != null && !clientesNew.equals(clientesOld)) {
+                clientesNew.getPedidosList().add(pedidos);
+                clientesNew = em.merge(clientesNew);
+            }
+            if (paquetesOld != null && !paquetesOld.equals(paquetesNew)) {
+                paquetesOld.getPedidosList().remove(pedidos);
+                paquetesOld = em.merge(paquetesOld);
+            }
+            if (paquetesNew != null && !paquetesNew.equals(paquetesOld)) {
+                paquetesNew.getPedidosList().add(pedidos);
+                paquetesNew = em.merge(paquetesNew);
+            }
+            for (Detalleservicio detalleservicioListNewDetalleservicio : detalleservicioListNew) {
+                if (!detalleservicioListOld.contains(detalleservicioListNewDetalleservicio)) {
+                    Pedidos oldPedidosOfDetalleservicioListNewDetalleservicio = detalleservicioListNewDetalleservicio.getPedidos();
+                    detalleservicioListNewDetalleservicio.setPedidos(pedidos);
+                    detalleservicioListNewDetalleservicio = em.merge(detalleservicioListNewDetalleservicio);
+                    if (oldPedidosOfDetalleservicioListNewDetalleservicio != null && !oldPedidosOfDetalleservicioListNewDetalleservicio.equals(pedidos)) {
+                        oldPedidosOfDetalleservicioListNewDetalleservicio.getDetalleservicioList().remove(detalleservicioListNewDetalleservicio);
+                        oldPedidosOfDetalleservicioListNewDetalleservicio = em.merge(oldPedidosOfDetalleservicioListNewDetalleservicio);
+                    }
+                }
+            }
+            for (Detalleentregablespedido detalleentregablespedidoListNewDetalleentregablespedido : detalleentregablespedidoListNew) {
+                if (!detalleentregablespedidoListOld.contains(detalleentregablespedidoListNewDetalleentregablespedido)) {
+                    Pedidos oldPedidosOfDetalleentregablespedidoListNewDetalleentregablespedido = detalleentregablespedidoListNewDetalleentregablespedido.getPedidos();
+                    detalleentregablespedidoListNewDetalleentregablespedido.setPedidos(pedidos);
+                    detalleentregablespedidoListNewDetalleentregablespedido = em.merge(detalleentregablespedidoListNewDetalleentregablespedido);
+                    if (oldPedidosOfDetalleentregablespedidoListNewDetalleentregablespedido != null && !oldPedidosOfDetalleentregablespedidoListNewDetalleentregablespedido.equals(pedidos)) {
+                        oldPedidosOfDetalleentregablespedidoListNewDetalleentregablespedido.getDetalleentregablespedidoList().remove(detalleentregablespedidoListNewDetalleentregablespedido);
+                        oldPedidosOfDetalleentregablespedidoListNewDetalleentregablespedido = em.merge(oldPedidosOfDetalleentregablespedidoListNewDetalleentregablespedido);
                     }
                 }
             }
@@ -220,32 +267,39 @@ public class PedidosJpaController implements Serializable {
                 throw new NonexistentEntityException("The pedidos with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            Detalleservicio detalleservicioOrphanCheck = pedidos.getDetalleservicio();
-            if (detalleservicioOrphanCheck != null) {
+            Detalleactividades detalleactividadesOrphanCheck = pedidos.getDetalleactividades();
+            if (detalleactividadesOrphanCheck != null) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Pedidos (" + pedidos + ") cannot be destroyed since the Detalleservicio " + detalleservicioOrphanCheck + " in its detalleservicio field has a non-nullable pedidos field.");
+                illegalOrphanMessages.add("This Pedidos (" + pedidos + ") cannot be destroyed since the Detalleactividades " + detalleactividadesOrphanCheck + " in its detalleactividades field has a non-nullable pedidos field.");
             }
-            List<Detalleactividades> detalleactividadesListOrphanCheck = pedidos.getDetalleactividadesList();
-            for (Detalleactividades detalleactividadesListOrphanCheckDetalleactividades : detalleactividadesListOrphanCheck) {
+            List<Detalleservicio> detalleservicioListOrphanCheck = pedidos.getDetalleservicioList();
+            for (Detalleservicio detalleservicioListOrphanCheckDetalleservicio : detalleservicioListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Pedidos (" + pedidos + ") cannot be destroyed since the Detalleactividades " + detalleactividadesListOrphanCheckDetalleactividades + " in its detalleactividadesList field has a non-nullable pedidos field.");
+                illegalOrphanMessages.add("This Pedidos (" + pedidos + ") cannot be destroyed since the Detalleservicio " + detalleservicioListOrphanCheckDetalleservicio + " in its detalleservicioList field has a non-nullable pedidos field.");
+            }
+            List<Detalleentregablespedido> detalleentregablespedidoListOrphanCheck = pedidos.getDetalleentregablespedidoList();
+            for (Detalleentregablespedido detalleentregablespedidoListOrphanCheckDetalleentregablespedido : detalleentregablespedidoListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This Pedidos (" + pedidos + ") cannot be destroyed since the Detalleentregablespedido " + detalleentregablespedidoListOrphanCheckDetalleentregablespedido + " in its detalleentregablespedidoList field has a non-nullable pedidos field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            Clientes clientesIdcliente = pedidos.getClientesIdcliente();
-            if (clientesIdcliente != null) {
-                clientesIdcliente.getPedidosList().remove(pedidos);
-                clientesIdcliente = em.merge(clientesIdcliente);
+            Clientes clientes = pedidos.getClientes();
+            if (clientes != null) {
+                clientes.getPedidosList().remove(pedidos);
+                clientes = em.merge(clientes);
             }
-            Paquetes paquetesIdpaquete = pedidos.getPaquetesIdpaquete();
-            if (paquetesIdpaquete != null) {
-                paquetesIdpaquete.getPedidosList().remove(pedidos);
-                paquetesIdpaquete = em.merge(paquetesIdpaquete);
+            Paquetes paquetes = pedidos.getPaquetes();
+            if (paquetes != null) {
+                paquetes.getPedidosList().remove(pedidos);
+                paquetes = em.merge(paquetes);
             }
             em.remove(pedidos);
             em.getTransaction().commit();

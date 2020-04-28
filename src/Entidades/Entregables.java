@@ -45,7 +45,7 @@ public class Entregables implements Serializable {
     private String tipo;
     @Column(name = "tama\u00f1o")
     private String tamaño;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "entregablesIdentregable")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "entregables")
     private List<Detalleentregablespedido> detalleentregablespedidoList;
 
     public Entregables() {

@@ -61,21 +61,21 @@ public class PaquetesJpaController implements Serializable {
             paquetes.setDetalleentregablespaqueteList(attachedDetalleentregablespaqueteList);
             em.persist(paquetes);
             for (Pedidos pedidosListPedidos : paquetes.getPedidosList()) {
-                Paquetes oldPaquetesIdpaqueteOfPedidosListPedidos = pedidosListPedidos.getPaquetesIdpaquete();
-                pedidosListPedidos.setPaquetesIdpaquete(paquetes);
+                Paquetes oldPaquetesOfPedidosListPedidos = pedidosListPedidos.getPaquetes();
+                pedidosListPedidos.setPaquetes(paquetes);
                 pedidosListPedidos = em.merge(pedidosListPedidos);
-                if (oldPaquetesIdpaqueteOfPedidosListPedidos != null) {
-                    oldPaquetesIdpaqueteOfPedidosListPedidos.getPedidosList().remove(pedidosListPedidos);
-                    oldPaquetesIdpaqueteOfPedidosListPedidos = em.merge(oldPaquetesIdpaqueteOfPedidosListPedidos);
+                if (oldPaquetesOfPedidosListPedidos != null) {
+                    oldPaquetesOfPedidosListPedidos.getPedidosList().remove(pedidosListPedidos);
+                    oldPaquetesOfPedidosListPedidos = em.merge(oldPaquetesOfPedidosListPedidos);
                 }
             }
             for (Detalleentregablespaquete detalleentregablespaqueteListDetalleentregablespaquete : paquetes.getDetalleentregablespaqueteList()) {
-                Paquetes oldPaquetesIdpaqueteOfDetalleentregablespaqueteListDetalleentregablespaquete = detalleentregablespaqueteListDetalleentregablespaquete.getPaquetesIdpaquete();
-                detalleentregablespaqueteListDetalleentregablespaquete.setPaquetesIdpaquete(paquetes);
+                Paquetes oldPaquetesOfDetalleentregablespaqueteListDetalleentregablespaquete = detalleentregablespaqueteListDetalleentregablespaquete.getPaquetes();
+                detalleentregablespaqueteListDetalleentregablespaquete.setPaquetes(paquetes);
                 detalleentregablespaqueteListDetalleentregablespaquete = em.merge(detalleentregablespaqueteListDetalleentregablespaquete);
-                if (oldPaquetesIdpaqueteOfDetalleentregablespaqueteListDetalleentregablespaquete != null) {
-                    oldPaquetesIdpaqueteOfDetalleentregablespaqueteListDetalleentregablespaquete.getDetalleentregablespaqueteList().remove(detalleentregablespaqueteListDetalleentregablespaquete);
-                    oldPaquetesIdpaqueteOfDetalleentregablespaqueteListDetalleentregablespaquete = em.merge(oldPaquetesIdpaqueteOfDetalleentregablespaqueteListDetalleentregablespaquete);
+                if (oldPaquetesOfDetalleentregablespaqueteListDetalleentregablespaquete != null) {
+                    oldPaquetesOfDetalleentregablespaqueteListDetalleentregablespaquete.getDetalleentregablespaqueteList().remove(detalleentregablespaqueteListDetalleentregablespaquete);
+                    oldPaquetesOfDetalleentregablespaqueteListDetalleentregablespaquete = em.merge(oldPaquetesOfDetalleentregablespaqueteListDetalleentregablespaquete);
                 }
             }
             em.getTransaction().commit();
@@ -102,7 +102,7 @@ public class PaquetesJpaController implements Serializable {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Pedidos " + pedidosListOldPedidos + " since its paquetesIdpaquete field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Pedidos " + pedidosListOldPedidos + " since its paquetes field is not nullable.");
                 }
             }
             for (Detalleentregablespaquete detalleentregablespaqueteListOldDetalleentregablespaquete : detalleentregablespaqueteListOld) {
@@ -110,7 +110,7 @@ public class PaquetesJpaController implements Serializable {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Detalleentregablespaquete " + detalleentregablespaqueteListOldDetalleentregablespaquete + " since its paquetesIdpaquete field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Detalleentregablespaquete " + detalleentregablespaqueteListOldDetalleentregablespaquete + " since its paquetes field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -133,23 +133,23 @@ public class PaquetesJpaController implements Serializable {
             paquetes = em.merge(paquetes);
             for (Pedidos pedidosListNewPedidos : pedidosListNew) {
                 if (!pedidosListOld.contains(pedidosListNewPedidos)) {
-                    Paquetes oldPaquetesIdpaqueteOfPedidosListNewPedidos = pedidosListNewPedidos.getPaquetesIdpaquete();
-                    pedidosListNewPedidos.setPaquetesIdpaquete(paquetes);
+                    Paquetes oldPaquetesOfPedidosListNewPedidos = pedidosListNewPedidos.getPaquetes();
+                    pedidosListNewPedidos.setPaquetes(paquetes);
                     pedidosListNewPedidos = em.merge(pedidosListNewPedidos);
-                    if (oldPaquetesIdpaqueteOfPedidosListNewPedidos != null && !oldPaquetesIdpaqueteOfPedidosListNewPedidos.equals(paquetes)) {
-                        oldPaquetesIdpaqueteOfPedidosListNewPedidos.getPedidosList().remove(pedidosListNewPedidos);
-                        oldPaquetesIdpaqueteOfPedidosListNewPedidos = em.merge(oldPaquetesIdpaqueteOfPedidosListNewPedidos);
+                    if (oldPaquetesOfPedidosListNewPedidos != null && !oldPaquetesOfPedidosListNewPedidos.equals(paquetes)) {
+                        oldPaquetesOfPedidosListNewPedidos.getPedidosList().remove(pedidosListNewPedidos);
+                        oldPaquetesOfPedidosListNewPedidos = em.merge(oldPaquetesOfPedidosListNewPedidos);
                     }
                 }
             }
             for (Detalleentregablespaquete detalleentregablespaqueteListNewDetalleentregablespaquete : detalleentregablespaqueteListNew) {
                 if (!detalleentregablespaqueteListOld.contains(detalleentregablespaqueteListNewDetalleentregablespaquete)) {
-                    Paquetes oldPaquetesIdpaqueteOfDetalleentregablespaqueteListNewDetalleentregablespaquete = detalleentregablespaqueteListNewDetalleentregablespaquete.getPaquetesIdpaquete();
-                    detalleentregablespaqueteListNewDetalleentregablespaquete.setPaquetesIdpaquete(paquetes);
+                    Paquetes oldPaquetesOfDetalleentregablespaqueteListNewDetalleentregablespaquete = detalleentregablespaqueteListNewDetalleentregablespaquete.getPaquetes();
+                    detalleentregablespaqueteListNewDetalleentregablespaquete.setPaquetes(paquetes);
                     detalleentregablespaqueteListNewDetalleentregablespaquete = em.merge(detalleentregablespaqueteListNewDetalleentregablespaquete);
-                    if (oldPaquetesIdpaqueteOfDetalleentregablespaqueteListNewDetalleentregablespaquete != null && !oldPaquetesIdpaqueteOfDetalleentregablespaqueteListNewDetalleentregablespaquete.equals(paquetes)) {
-                        oldPaquetesIdpaqueteOfDetalleentregablespaqueteListNewDetalleentregablespaquete.getDetalleentregablespaqueteList().remove(detalleentregablespaqueteListNewDetalleentregablespaquete);
-                        oldPaquetesIdpaqueteOfDetalleentregablespaqueteListNewDetalleentregablespaquete = em.merge(oldPaquetesIdpaqueteOfDetalleentregablespaqueteListNewDetalleentregablespaquete);
+                    if (oldPaquetesOfDetalleentregablespaqueteListNewDetalleentregablespaquete != null && !oldPaquetesOfDetalleentregablespaqueteListNewDetalleentregablespaquete.equals(paquetes)) {
+                        oldPaquetesOfDetalleentregablespaqueteListNewDetalleentregablespaquete.getDetalleentregablespaqueteList().remove(detalleentregablespaqueteListNewDetalleentregablespaquete);
+                        oldPaquetesOfDetalleentregablespaqueteListNewDetalleentregablespaquete = em.merge(oldPaquetesOfDetalleentregablespaqueteListNewDetalleentregablespaquete);
                     }
                 }
             }
@@ -188,14 +188,14 @@ public class PaquetesJpaController implements Serializable {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Paquetes (" + paquetes + ") cannot be destroyed since the Pedidos " + pedidosListOrphanCheckPedidos + " in its pedidosList field has a non-nullable paquetesIdpaquete field.");
+                illegalOrphanMessages.add("This Paquetes (" + paquetes + ") cannot be destroyed since the Pedidos " + pedidosListOrphanCheckPedidos + " in its pedidosList field has a non-nullable paquetes field.");
             }
             List<Detalleentregablespaquete> detalleentregablespaqueteListOrphanCheck = paquetes.getDetalleentregablespaqueteList();
             for (Detalleentregablespaquete detalleentregablespaqueteListOrphanCheckDetalleentregablespaquete : detalleentregablespaqueteListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Paquetes (" + paquetes + ") cannot be destroyed since the Detalleentregablespaquete " + detalleentregablespaqueteListOrphanCheckDetalleentregablespaquete + " in its detalleentregablespaqueteList field has a non-nullable paquetesIdpaquete field.");
+                illegalOrphanMessages.add("This Paquetes (" + paquetes + ") cannot be destroyed since the Detalleentregablespaquete " + detalleentregablespaqueteListOrphanCheckDetalleentregablespaquete + " in its detalleentregablespaqueteList field has a non-nullable paquetes field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
