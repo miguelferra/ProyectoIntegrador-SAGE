@@ -149,8 +149,8 @@ public class FachadaControl implements IFachadaControl {
     }
     
     public void eliminarPedido(Pedidos pedido){
-        eliminarDetalleEntregable(pedido);
         eliminarDetalleServicio(pedido);
+        eliminarDetalleEntregable(pedido);
         controlPedido.eliminarPedido(pedido);
     }
     

@@ -100,7 +100,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/sage/pedidos.png"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="     Pedidos"/>
+            <Property name="text" type="java.lang.String" value="      Pedidos"/>
             <Property name="actionCommand" type="java.lang.String" value="Paquetes"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="null"/>
@@ -219,7 +219,7 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/sage/agenda2.png"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="     Agenda"/>
+            <Property name="text" type="java.lang.String" value="    Actividades"/>
             <Property name="actionCommand" type="java.lang.String" value="Paquetes"/>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="null"/>

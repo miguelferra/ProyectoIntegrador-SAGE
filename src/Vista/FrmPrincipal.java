@@ -30,7 +30,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
         initComponents();
         this.setExtendedState(MAXIMIZED_BOTH);
         fachadaControl = FabricaControl.getFachadaDeControl();
-        pedidos = new PanelPedidos(fachadaControl,panelPrincipal);
     }
 
     /**
@@ -71,7 +70,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         menuPedidos.setFont(new java.awt.Font("Yu Gothic Medium", 0, 24)); // NOI18N
         menuPedidos.setForeground(new java.awt.Color(255, 255, 255));
         menuPedidos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sage/pedidos.png"))); // NOI18N
-        menuPedidos.setText("     Pedidos");
+        menuPedidos.setText("      Pedidos");
         menuPedidos.setActionCommand("Paquetes");
         menuPedidos.setBorder(null);
         menuPedidos.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -116,7 +115,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jButton8.setFont(new java.awt.Font("Yu Gothic Medium", 0, 24)); // NOI18N
         jButton8.setForeground(new java.awt.Color(255, 255, 255));
         jButton8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sage/agenda2.png"))); // NOI18N
-        jButton8.setText("     Agenda");
+        jButton8.setText("    Actividades");
         jButton8.setActionCommand("Paquetes");
         jButton8.setBorder(null);
         jButton8.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -146,9 +145,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, 0)
-                        .addComponent(panelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(panelPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -165,9 +162,10 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private void menuPedidosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuPedidosActionPerformed
         // TODO add your handling code here:
         panelPrincipal.removeAll();
-        panelPrincipal.add(pedidos, "Pedidos");
+        pedidos = new PanelPedidos(fachadaControl,panelPrincipal);
         panelPrincipal.repaint();
         panelPrincipal.revalidate();
+        panelPrincipal.add(pedidos, "Pedidos");
     }//GEN-LAST:event_menuPedidosActionPerformed
 
     /**

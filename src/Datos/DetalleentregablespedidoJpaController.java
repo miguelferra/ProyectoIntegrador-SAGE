@@ -15,6 +15,8 @@ import javax.persistence.criteria.Root;
 import Entidades.Entregables;
 import Entidades.Pedidos;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -208,7 +210,13 @@ public class DetalleentregablespedidoJpaController implements Serializable {
     public void eliminarDetalleEntregable(int id){
         EntityManager em = getEntityManager();
         try {
-            int count = em.createQuery("DELETE FROM bd_sage.detalleentregablespedido WHERE pedidos_idpedido= "+id).executeUpdate();
+            Query q = em.createNativeQuery("SELECT * FROM bd_sage.detalleentregablespedido WHERE pedidos_idpedido = "+id,Detalleentregablespedido.class);
+            List<Detalleentregablespedido> listaEntregables = q.getResultList();
+            for (Detalleentregablespedido entregable : listaEntregables) {
+                destroy(entregable.getIdDetalleEntregable());
+            }
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(DetalleentregablespedidoJpaController.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             em.close();
         }

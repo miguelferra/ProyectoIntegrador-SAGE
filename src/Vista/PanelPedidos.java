@@ -259,7 +259,6 @@ public class PanelPedidos extends javax.swing.JPanel {
     private void botonElimiinarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonElimiinarPedidoActionPerformed
         // TODO add your handling code here:
         fachadaControl.eliminarPedido(pedidos.get(row));
-       
         try {
             
             JOptionPane.showMessageDialog(this, "Pedido eliminado correctamente");

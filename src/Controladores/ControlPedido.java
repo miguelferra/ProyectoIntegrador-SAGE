@@ -61,29 +61,27 @@ public class ControlPedido {
             Logger.getLogger(FachadaControl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public Pedidos getUltimoPedido(){
+
+    public Pedidos getUltimoPedido() {
         return cPedido.getUltimoPedido();
     }
-    
-    public void asignarEntregablesPedido(List listaEntregablesPedido){
+
+    public void asignarEntregablesPedido(List listaEntregablesPedido) {
         this.listaEntregablesPedido = listaEntregablesPedido;
     }
-    
-    public void asignarServiciosPedido(List listaServiciosPedido){
-        this .listaServiciosesPedido = listaServiciosPedido;
+
+    public void asignarServiciosPedido(List listaServiciosPedido) {
+        this.listaServiciosesPedido = listaServiciosPedido;
     }
-    
-    public void eliminarPedido(Pedidos pedido){
+
+    public void eliminarPedido(Pedidos pedido) {
         try {
-            cPedido.destroy(pedido.getIdpedido());
+            this.cPedido.destroy(pedido.getIdpedido());
         } catch (IllegalOrphanException ex) {
             Logger.getLogger(ControlPedido.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NonexistentEntityException ex) {
             Logger.getLogger(ControlPedido.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-    
 
 }

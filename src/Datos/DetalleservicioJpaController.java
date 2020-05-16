@@ -15,6 +15,8 @@ import javax.persistence.criteria.Root;
 import Entidades.Pedidos;
 import Entidades.Servicios;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -208,7 +210,13 @@ public class DetalleservicioJpaController implements Serializable {
     public void eliminarDetalleServicio(int id){
         EntityManager em = getEntityManager();
         try {
-            int count = em.createQuery("DELETE FROM bd_sage.detalleservicio WHERE pedidos_idpedido= "+id).executeUpdate();
+            Query q = em.createNativeQuery("SELECT * FROM bd_sage.detalleservicio WHERE pedidos_idpedido = "+id,Detalleservicio.class);
+            List<Detalleservicio> listaServicios = q.getResultList();
+            for (Detalleservicio listaServicio : listaServicios) {
+                destroy(listaServicio.getIdDetalleServicio());
+            }
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(DetalleservicioJpaController.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             em.close();
         }
