@@ -138,35 +138,35 @@ public class PedidosJpaController implements Serializable {
             List<Detalleentregablespedido> detalleentregablespedidoListOld = persistentPedidos.getDetalleentregablespedidoList();
             List<Detalleentregablespedido> detalleentregablespedidoListNew = pedidos.getDetalleentregablespedidoList();
             List<String> illegalOrphanMessages = null;
-            if (detalleactividadesOld != null && !detalleactividadesOld.equals(detalleactividadesNew)) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("You must retain Detalleactividades " + detalleactividadesOld + " since its pedidos field is not nullable.");
-            }
-            for (Detalleservicio detalleservicioListOldDetalleservicio : detalleservicioListOld) {
-                if (!detalleservicioListNew.contains(detalleservicioListOldDetalleservicio)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain Detalleservicio " + detalleservicioListOldDetalleservicio + " since its pedidos field is not nullable.");
-                }
-            }
-            for (Detalleentregablespedido detalleentregablespedidoListOldDetalleentregablespedido : detalleentregablespedidoListOld) {
-                if (!detalleentregablespedidoListNew.contains(detalleentregablespedidoListOldDetalleentregablespedido)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain Detalleentregablespedido " + detalleentregablespedidoListOldDetalleentregablespedido + " since its pedidos field is not nullable.");
-                }
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
-            }
-            if (detalleactividadesNew != null) {
-                detalleactividadesNew = em.getReference(detalleactividadesNew.getClass(), detalleactividadesNew.getDetalleactividadesPK());
-                pedidos.setDetalleactividades(detalleactividadesNew);
-            }
+//            if (detalleactividadesOld != null && !detalleactividadesOld.equals(detalleactividadesNew)) {
+//                if (illegalOrphanMessages == null) {
+//                    illegalOrphanMessages = new ArrayList<String>();
+//                }
+//                illegalOrphanMessages.add("You must retain Detalleactividades " + detalleactividadesOld + " since its pedidos field is not nullable.");
+//            }
+//            for (Detalleservicio detalleservicioListOldDetalleservicio : detalleservicioListOld) {
+//                if (!detalleservicioListNew.contains(detalleservicioListOldDetalleservicio)) {
+//                    if (illegalOrphanMessages == null) {
+//                        illegalOrphanMessages = new ArrayList<String>();
+//                    }
+//                    illegalOrphanMessages.add("You must retain Detalleservicio " + detalleservicioListOldDetalleservicio + " since its pedidos field is not nullable.");
+//                }
+//            }
+//            for (Detalleentregablespedido detalleentregablespedidoListOldDetalleentregablespedido : detalleentregablespedidoListOld) {
+//                if (!detalleentregablespedidoListNew.contains(detalleentregablespedidoListOldDetalleentregablespedido)) {
+//                    if (illegalOrphanMessages == null) {
+//                        illegalOrphanMessages = new ArrayList<String>();
+//                    }
+//                    illegalOrphanMessages.add("You must retain Detalleentregablespedido " + detalleentregablespedidoListOldDetalleentregablespedido + " since its pedidos field is not nullable.");
+//                }
+//            }
+//            if (illegalOrphanMessages != null) {
+//                throw new IllegalOrphanException(illegalOrphanMessages);
+//            }
+//            if (detalleactividadesNew != null) {
+//                detalleactividadesNew = em.getReference(detalleactividadesNew.getClass(), detalleactividadesNew.getDetalleactividadesPK());
+//                pedidos.setDetalleactividades(detalleactividadesNew);
+//            }
             if (clientesNew != null) {
                 clientesNew = em.getReference(clientesNew.getClass(), clientesNew.getIdcliente());
                 pedidos.setClientes(clientesNew);
@@ -175,30 +175,30 @@ public class PedidosJpaController implements Serializable {
                 paquetesNew = em.getReference(paquetesNew.getClass(), paquetesNew.getIdpaquete());
                 pedidos.setPaquetes(paquetesNew);
             }
-            List<Detalleservicio> attachedDetalleservicioListNew = new ArrayList<Detalleservicio>();
-            for (Detalleservicio detalleservicioListNewDetalleservicioToAttach : detalleservicioListNew) {
-                detalleservicioListNewDetalleservicioToAttach = em.getReference(detalleservicioListNewDetalleservicioToAttach.getClass(), detalleservicioListNewDetalleservicioToAttach.getIdDetalleServicio());
-                attachedDetalleservicioListNew.add(detalleservicioListNewDetalleservicioToAttach);
-            }
-            detalleservicioListNew = attachedDetalleservicioListNew;
-            pedidos.setDetalleservicioList(detalleservicioListNew);
-            List<Detalleentregablespedido> attachedDetalleentregablespedidoListNew = new ArrayList<Detalleentregablespedido>();
-            for (Detalleentregablespedido detalleentregablespedidoListNewDetalleentregablespedidoToAttach : detalleentregablespedidoListNew) {
-                detalleentregablespedidoListNewDetalleentregablespedidoToAttach = em.getReference(detalleentregablespedidoListNewDetalleentregablespedidoToAttach.getClass(), detalleentregablespedidoListNewDetalleentregablespedidoToAttach.getIdDetalleEntregable());
-                attachedDetalleentregablespedidoListNew.add(detalleentregablespedidoListNewDetalleentregablespedidoToAttach);
-            }
-            detalleentregablespedidoListNew = attachedDetalleentregablespedidoListNew;
-            pedidos.setDetalleentregablespedidoList(detalleentregablespedidoListNew);
-            pedidos = em.merge(pedidos);
-            if (detalleactividadesNew != null && !detalleactividadesNew.equals(detalleactividadesOld)) {
-                Pedidos oldPedidosOfDetalleactividades = detalleactividadesNew.getPedidos();
-                if (oldPedidosOfDetalleactividades != null) {
-                    oldPedidosOfDetalleactividades.setDetalleactividades(null);
-                    oldPedidosOfDetalleactividades = em.merge(oldPedidosOfDetalleactividades);
-                }
-                detalleactividadesNew.setPedidos(pedidos);
-                detalleactividadesNew = em.merge(detalleactividadesNew);
-            }
+//            List<Detalleservicio> attachedDetalleservicioListNew = new ArrayList<Detalleservicio>();
+//            for (Detalleservicio detalleservicioListNewDetalleservicioToAttach : detalleservicioListNew) {
+//                detalleservicioListNewDetalleservicioToAttach = em.getReference(detalleservicioListNewDetalleservicioToAttach.getClass(), detalleservicioListNewDetalleservicioToAttach.getIdDetalleServicio());
+//                attachedDetalleservicioListNew.add(detalleservicioListNewDetalleservicioToAttach);
+//            }
+//            detalleservicioListNew = attachedDetalleservicioListNew;
+//            pedidos.setDetalleservicioList(detalleservicioListNew);
+//            List<Detalleentregablespedido> attachedDetalleentregablespedidoListNew = new ArrayList<Detalleentregablespedido>();
+//            for (Detalleentregablespedido detalleentregablespedidoListNewDetalleentregablespedidoToAttach : detalleentregablespedidoListNew) {
+//                detalleentregablespedidoListNewDetalleentregablespedidoToAttach = em.getReference(detalleentregablespedidoListNewDetalleentregablespedidoToAttach.getClass(), detalleentregablespedidoListNewDetalleentregablespedidoToAttach.getIdDetalleEntregable());
+//                attachedDetalleentregablespedidoListNew.add(detalleentregablespedidoListNewDetalleentregablespedidoToAttach);
+//            }
+//            detalleentregablespedidoListNew = attachedDetalleentregablespedidoListNew;
+//            pedidos.setDetalleentregablespedidoList(detalleentregablespedidoListNew);
+//            pedidos = em.merge(pedidos);
+//            if (detalleactividadesNew != null && !detalleactividadesNew.equals(detalleactividadesOld)) {
+//                Pedidos oldPedidosOfDetalleactividades = detalleactividadesNew.getPedidos();
+//                if (oldPedidosOfDetalleactividades != null) {
+//                    oldPedidosOfDetalleactividades.setDetalleactividades(null);
+//                    oldPedidosOfDetalleactividades = em.merge(oldPedidosOfDetalleactividades);
+//                }
+//                detalleactividadesNew.setPedidos(pedidos);
+//                detalleactividadesNew = em.merge(detalleactividadesNew);
+//            }
             if (clientesOld != null && !clientesOld.equals(clientesNew)) {
                 clientesOld.getPedidosList().remove(pedidos);
                 clientesOld = em.merge(clientesOld);
@@ -215,28 +215,28 @@ public class PedidosJpaController implements Serializable {
                 paquetesNew.getPedidosList().add(pedidos);
                 paquetesNew = em.merge(paquetesNew);
             }
-            for (Detalleservicio detalleservicioListNewDetalleservicio : detalleservicioListNew) {
-                if (!detalleservicioListOld.contains(detalleservicioListNewDetalleservicio)) {
-                    Pedidos oldPedidosOfDetalleservicioListNewDetalleservicio = detalleservicioListNewDetalleservicio.getPedidos();
-                    detalleservicioListNewDetalleservicio.setPedidos(pedidos);
-                    detalleservicioListNewDetalleservicio = em.merge(detalleservicioListNewDetalleservicio);
-                    if (oldPedidosOfDetalleservicioListNewDetalleservicio != null && !oldPedidosOfDetalleservicioListNewDetalleservicio.equals(pedidos)) {
-                        oldPedidosOfDetalleservicioListNewDetalleservicio.getDetalleservicioList().remove(detalleservicioListNewDetalleservicio);
-                        oldPedidosOfDetalleservicioListNewDetalleservicio = em.merge(oldPedidosOfDetalleservicioListNewDetalleservicio);
-                    }
-                }
-            }
-            for (Detalleentregablespedido detalleentregablespedidoListNewDetalleentregablespedido : detalleentregablespedidoListNew) {
-                if (!detalleentregablespedidoListOld.contains(detalleentregablespedidoListNewDetalleentregablespedido)) {
-                    Pedidos oldPedidosOfDetalleentregablespedidoListNewDetalleentregablespedido = detalleentregablespedidoListNewDetalleentregablespedido.getPedidos();
-                    detalleentregablespedidoListNewDetalleentregablespedido.setPedidos(pedidos);
-                    detalleentregablespedidoListNewDetalleentregablespedido = em.merge(detalleentregablespedidoListNewDetalleentregablespedido);
-                    if (oldPedidosOfDetalleentregablespedidoListNewDetalleentregablespedido != null && !oldPedidosOfDetalleentregablespedidoListNewDetalleentregablespedido.equals(pedidos)) {
-                        oldPedidosOfDetalleentregablespedidoListNewDetalleentregablespedido.getDetalleentregablespedidoList().remove(detalleentregablespedidoListNewDetalleentregablespedido);
-                        oldPedidosOfDetalleentregablespedidoListNewDetalleentregablespedido = em.merge(oldPedidosOfDetalleentregablespedidoListNewDetalleentregablespedido);
-                    }
-                }
-            }
+//            for (Detalleservicio detalleservicioListNewDetalleservicio : detalleservicioListNew) {
+//                if (!detalleservicioListOld.contains(detalleservicioListNewDetalleservicio)) {
+//                    Pedidos oldPedidosOfDetalleservicioListNewDetalleservicio = detalleservicioListNewDetalleservicio.getPedidos();
+//                    detalleservicioListNewDetalleservicio.setPedidos(pedidos);
+//                    detalleservicioListNewDetalleservicio = em.merge(detalleservicioListNewDetalleservicio);
+//                    if (oldPedidosOfDetalleservicioListNewDetalleservicio != null && !oldPedidosOfDetalleservicioListNewDetalleservicio.equals(pedidos)) {
+//                        oldPedidosOfDetalleservicioListNewDetalleservicio.getDetalleservicioList().remove(detalleservicioListNewDetalleservicio);
+//                        oldPedidosOfDetalleservicioListNewDetalleservicio = em.merge(oldPedidosOfDetalleservicioListNewDetalleservicio);
+//                    }
+//                }
+//            }
+//            for (Detalleentregablespedido detalleentregablespedidoListNewDetalleentregablespedido : detalleentregablespedidoListNew) {
+//                if (!detalleentregablespedidoListOld.contains(detalleentregablespedidoListNewDetalleentregablespedido)) {
+//                    Pedidos oldPedidosOfDetalleentregablespedidoListNewDetalleentregablespedido = detalleentregablespedidoListNewDetalleentregablespedido.getPedidos();
+//                    detalleentregablespedidoListNewDetalleentregablespedido.setPedidos(pedidos);
+//                    detalleentregablespedidoListNewDetalleentregablespedido = em.merge(detalleentregablespedidoListNewDetalleentregablespedido);
+//                    if (oldPedidosOfDetalleentregablespedidoListNewDetalleentregablespedido != null && !oldPedidosOfDetalleentregablespedidoListNewDetalleentregablespedido.equals(pedidos)) {
+//                        oldPedidosOfDetalleentregablespedidoListNewDetalleentregablespedido.getDetalleentregablespedidoList().remove(detalleentregablespedidoListNewDetalleentregablespedido);
+//                        oldPedidosOfDetalleentregablespedidoListNewDetalleentregablespedido = em.merge(oldPedidosOfDetalleentregablespedidoListNewDetalleentregablespedido);
+//                    }
+//                }
+//            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();

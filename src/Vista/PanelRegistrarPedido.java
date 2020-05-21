@@ -8,6 +8,7 @@ package Vista;
 import Controladores.IFachadaControl;
 import Entidades.Clientes;
 import Entidades.Paquetes;
+import Entidades.Pedidos;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -16,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 import javafx.scene.control.DatePicker;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -29,14 +31,46 @@ public class PanelRegistrarPedido extends javax.swing.JPanel {
      */
     IFachadaControl fachadaControl;
     DetallePaquete pantallaDetallePaquete;
+    JPanel panelPrincipal;
     Clientes cliente;
     Paquetes paquete;
+    Pedidos pedido;
     int row;
     int num = 0;
     
-    public PanelRegistrarPedido(IFachadaControl fachadaControl) {
+    public PanelRegistrarPedido(IFachadaControl fachadaControl,Pedidos pedido,JPanel panelPrincipal) {
         initComponents();
         this.fachadaControl = fachadaControl;
+        this.panelPrincipal = panelPrincipal;
+        this.pedido = pedido;
+        CrearModelo2();
+        cargarPaquetes();
+        comboClientes.removeAllItems();
+        diseñoTabla();
+        fechaPedido.setDate(pedido.getFechaRequerida());
+        textoCliente.setText(pedido.getClientes().getNombre()+ " "+pedido.getClientes().getApellido());
+        for (int i = 0; i < tablaPaquetes.getRowCount(); i++) {
+            if (tablaPaquetes.getValueAt(i, 0).toString().equalsIgnoreCase(pedido.getPaquetes().getNombre())) {
+                tablaPaquetes.setRowSelectionInterval(i, i);
+                row = i;
+                tablaPaquetes.setEnabled(false);
+                break;
+            }
+        }
+        textoNotas.setText(pedido.getNotas());
+        campoPrecio.setText(Double.toString(pedido.getPrecio()));
+        textoPromocion.setText(pedido.getPromocion());
+        textoErrorPromocion.setVisible(false);
+        textoErrorFecha.setVisible(false);
+        fechaPedido.setMinSelectableDate(new Date());
+        pantallaDetallePaquete = new DetallePaquete(fachadaControl, row + 1);
+        registrarPedido.setText("Modificar Pedido");
+    }
+    
+    public PanelRegistrarPedido(IFachadaControl fachadaControl,JPanel panelPrincipal) {
+        initComponents();
+        this.fachadaControl = fachadaControl;
+        this.panelPrincipal = panelPrincipal;
         CrearModelo2();
         cargarPaquetes();
         comboClientes.removeAllItems();
@@ -296,7 +330,7 @@ public class PanelRegistrarPedido extends javax.swing.JPanel {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jLabel6)))
                     .addComponent(textoErrorFecha))
-                .addContainerGap(56, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -351,6 +385,7 @@ public class PanelRegistrarPedido extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void tablaPaquetesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaPaquetesMouseClicked
+        row = tablaPaquetes.rowAtPoint(evt.getPoint());
         pantallaDetallePaquete = new DetallePaquete(fachadaControl, row + 1);
         if (evt.getClickCount() == 2 && tablaPaquetes.isEnabled()) {
             pantallaDetallePaquete.setVisible(true);
@@ -358,7 +393,7 @@ public class PanelRegistrarPedido extends javax.swing.JPanel {
         if (pantallaDetallePaquete.seleccionado()) {
            tablaPaquetes.setEnabled(false);
             row = tablaPaquetes.rowAtPoint(evt.getPoint());
-            campoPrecio.setText(tablaPaquetes.getValueAt(row, 2).toString());
+            campoPrecio.setText(tablaPaquetes.getValueAt(row, 2).toString().substring(1));
         }
     }//GEN-LAST:event_tablaPaquetesMouseClicked
 
@@ -373,70 +408,107 @@ public class PanelRegistrarPedido extends javax.swing.JPanel {
         try {
             cliente = new Clientes();
             cliente = fachadaControl.getClienteNombre(splited[0], splited[1]);
-            comboClientes.addItem(cliente.getNombre()+" "+cliente.getApellido());
-            System.out.println("Encontrado");  
+            comboClientes.addItem(cliente.getNombre() + " " + cliente.getApellido());
+            System.out.println("Encontrado");
         } catch (Exception e) {
             comboClientes.removeAllItems();
             System.out.println("No existe el cliente");
         }
-        
+
     }//GEN-LAST:event_textoClienteKeyReleased
 
     private void registrarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registrarPedidoActionPerformed
 
-        if (cliente != null) {
-            if ( pantallaDetallePaquete != null &&pantallaDetallePaquete.seleccionado()) {
-                if (fechaPedido.getDate() != null) {
-                    if (textoPromocion != null || textoPromocion.getText() != "") {
-                       fachadaControl.registrarPedido(Float.parseFloat(campoPrecio.getText().substring(1)), fechaPedido.getDate(), textoPromocion.getText()+"%", textoNotas.getText(), cliente.getIdcliente(), fachadaControl.getPaqueteId(row + 1).getIdpaquete()); 
-                    }else{
-                        fachadaControl.registrarPedido(fachadaControl.getPaqueteId(row + 1).getPrecio(), fechaPedido.getDate(),"", textoNotas.getText(), cliente.getIdcliente(), fachadaControl.getPaqueteId(row + 1).getIdpaquete());
+        if (registrarPedido.getText().equalsIgnoreCase("Registrar pedido")) {
+            if (cliente != null) {
+                if (pantallaDetallePaquete != null && pantallaDetallePaquete.seleccionado()) {
+                    if (fechaPedido.getDate() != null) {
+                        if (textoPromocion != null || textoPromocion.getText() != "") {
+                            fachadaControl.registrarPedido(Float.parseFloat(campoPrecio.getText()), fechaPedido.getDate(), textoPromocion.getText() + "%", textoNotas.getText(), cliente.getIdcliente(), fachadaControl.getPaqueteId(row + 1).getIdpaquete());
+                        } else {
+                            fachadaControl.registrarPedido(fachadaControl.getPaqueteId(row + 1).getPrecio(), fechaPedido.getDate(), "", textoNotas.getText(), cliente.getIdcliente(), fachadaControl.getPaqueteId(row + 1).getIdpaquete());
+                        }
+
+                        fachadaControl.asignarDetalleEntregablesPedido(pantallaDetallePaquete.getEntregablesPedido());
+                        fachadaControl.asignarDetalleServiciosPedido(pantallaDetallePaquete.getServiciosPedido());
+                        JOptionPane.showMessageDialog(this, "Pedido Registrado Correctamente");
+                        panelPrincipal.removeAll();
+                        panelPrincipal.repaint();
+                        panelPrincipal.revalidate();
+                    } else {
+                        textoErrorFecha.setText("*Ingrese una fecha*");
+                        textoErrorFecha.setVisible(true);
                     }
-                    
-                    fachadaControl.asignarDetalleEntregablesPedido(pantallaDetallePaquete.getEntregablesPedido());
-                    fachadaControl.asignarDetalleServiciosPedido(pantallaDetallePaquete.getServiciosPedido());
-                    JOptionPane.showMessageDialog(this, "Pedido Registrado Correctamente");
-                }else{
-                   textoErrorFecha.setText("*Ingrese una fecha*");
-                   textoErrorFecha.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Seleccione un paquete");
                 }
             } else {
-                JOptionPane.showMessageDialog(this, "Seleccione un paquete");
+                JOptionPane.showMessageDialog(this, "Seleccione un cliente");
             }
         }else{
-            JOptionPane.showMessageDialog(this, "Seleccione un cliente");
+        pantallaDetallePaquete.setSeleccionado();
+        System.out.println("Modificar Pedido");
+        if (cliente != null) {
+                if (pantallaDetallePaquete != null && pantallaDetallePaquete.seleccionado()) {
+                    if (fechaPedido.getDate() != null) {
+                        if (textoPromocion != null || textoPromocion.getText() != "") {
+                            fachadaControl.modificarPedido(pedido.getIdpedido(),Float.parseFloat(campoPrecio.getText()), fechaPedido.getDate(), textoPromocion.getText() + "%", 
+                                    textoNotas.getText(), cliente.getIdcliente(), fachadaControl.getPaqueteId(row + 1).getIdpaquete(),pantallaDetallePaquete.getEntregablesPedido(),pantallaDetallePaquete.getServiciosPedido());
+                        } else {
+                            fachadaControl.modificarPedido(pedido.getIdpedido(),fachadaControl.getPaqueteId(row + 1).getPrecio(), fechaPedido.getDate(), "", textoNotas.getText(), cliente.getIdcliente(), 
+                                    fachadaControl.getPaqueteId(row + 1).getIdpaquete(),pantallaDetallePaquete.getEntregablesPedido(),pantallaDetallePaquete.getServiciosPedido());
+                        }
+
+                        fachadaControl.asignarDetalleEntregablesPedido(pantallaDetallePaquete.getEntregablesPedido());
+                        fachadaControl.asignarDetalleServiciosPedido(pantallaDetallePaquete.getServiciosPedido());
+                        JOptionPane.showMessageDialog(this, "Pedido modificado Correctamente");
+                        panelPrincipal.removeAll();
+                        panelPrincipal.repaint();
+                        panelPrincipal.revalidate();
+                    } else {
+                        textoErrorFecha.setText("*Ingrese una fecha*");
+                        textoErrorFecha.setVisible(true);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Seleccione un paquete");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Seleccione un cliente");
+            }
+        //panelPrincipal.removeAll();
+        //panelPrincipal.repaint();
+        //panelPrincipal.revalidate();
         }
+
     }//GEN-LAST:event_registrarPedidoActionPerformed
 
     private void actualizarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actualizarClienteActionPerformed
         // TODO add your handling code here:
         try {
-            new FrmNuevoCliente(fachadaControl,cliente.getIdcliente()).setVisible(true); 
+            new FrmNuevoCliente(fachadaControl, cliente.getIdcliente()).setVisible(true);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this,"Seleccione un cliente");
-        }  
+            JOptionPane.showMessageDialog(this, "Seleccione un cliente");
+        }
     }//GEN-LAST:event_actualizarClienteActionPerformed
 
-    
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        tablaPaquetes.setEnabled(true);
-        pantallaDetallePaquete.cambiarPaquete();
-        campoPrecio.setText("");
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void textoPromocionKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textoPromocionKeyReleased
         try {
-            float promocion = Float.parseFloat(textoPromocion.getText().substring(0, textoPromocion.getText().length()));
+            if (!campoPrecio.getText().isEmpty()) {
+               float promocion = Float.parseFloat(textoPromocion.getText());
             textoErrorPromocion.setVisible(false);
             float promocionPedido = promocion / 100;
             System.out.println(promocionPedido);
-            promocionPedido = Float.parseFloat(fachadaControl.getPaqueteId(row + 1).getPrecio().toString()) * promocionPedido;
-            float precio = Float.parseFloat(fachadaControl.getPaqueteId(row + 1).getPrecio().toString()) - promocionPedido;
-            campoPrecio.setText(Float.toString(precio));
+            promocionPedido = Float.parseFloat(tablaPaquetes.getValueAt(row, 2).toString().substring(1)) * promocionPedido;
+            float precio = Float.parseFloat(tablaPaquetes.getValueAt(row, 2).toString().substring(1)) - promocionPedido;
+            campoPrecio.setText(Float.toString(precio)); 
+            }else{
+                JOptionPane.showMessageDialog(this, "Seleccione un paquete");
+            }
         } catch (Exception e) {
             textoErrorPromocion.setVisible(true);
             textoPromocion.setText("");
+            campoPrecio.setText(tablaPaquetes.getValueAt(row, 2).toString().substring(1));
         }
     }//GEN-LAST:event_textoPromocionKeyReleased
 
@@ -447,6 +519,13 @@ public class PanelRegistrarPedido extends javax.swing.JPanel {
     private void comboClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboClientesActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_comboClientesActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        tablaPaquetes.setEnabled(true);
+        pantallaDetallePaquete.cambiarPaquete();
+        campoPrecio.setText("");
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

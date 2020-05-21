@@ -37,8 +37,8 @@ public class ControlEntregable {
     public List<Entregables> getEntregables(){
         return cEnt.findEntregablesEntities();
     }
-    public List<Detalleentregablespedido> getDetalleEntregable(int idPaquete){
-        return cDetEnt.buscarEntregables(idPaquete); 
+    public List<Detalleentregablespedido> getDetalleEntregable(int idPedido){
+        return cDetEnt.buscarEntregables(idPedido); 
     }
     
     public void asignarDetalleEntregablesPedido(List<Detalleentregablespedido> listaEntregablesPedido, Pedidos pedido){

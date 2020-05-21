@@ -197,23 +197,27 @@ public class DetallePaquete extends javax.swing.JDialog {
             System.out.println(e.getMessage());
         }
     }
-    
-    public List<Detalleservicio> getServiciosPedido(){
-      return listaServiciosesPedido;
+
+    public List<Detalleservicio> getServiciosPedido() {
+        return listaServiciosesPedido;
     }
-    
-    public List<Detalleentregablespedido> getEntregablesPedido(){
+
+    public List<Detalleentregablespedido> getEntregablesPedido() {
         return listaEntregablesPedido;
     }
-    
-    public boolean seleccionado(){
+
+    public boolean seleccionado() {
         return seleccionado;
     }
-    
-    public void cambiarPaquete(){
+
+    public void setSeleccionado() {
+        this.seleccionado = true;
+    }
+
+    public void cambiarPaquete() {
         this.seleccionado = false;
     }
-    
+
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 

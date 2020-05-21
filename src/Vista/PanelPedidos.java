@@ -135,7 +135,7 @@ public class PanelPedidos extends javax.swing.JPanel {
         tablaPedidos = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
         botonElimiinarPedido = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        modificarPedido = new javax.swing.JButton();
         jComboBox1 = new javax.swing.JComboBox<>();
         textoBuscarCliente = new javax.swing.JTextField();
 
@@ -179,8 +179,13 @@ public class PanelPedidos extends javax.swing.JPanel {
             }
         });
 
-        jButton3.setFont(new java.awt.Font("Yu Gothic Medium", 0, 18)); // NOI18N
-        jButton3.setText("Modificar");
+        modificarPedido.setFont(new java.awt.Font("Yu Gothic Medium", 0, 18)); // NOI18N
+        modificarPedido.setText("Modificar");
+        modificarPedido.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                modificarPedidoActionPerformed(evt);
+            }
+        });
 
         jComboBox1.setFont(new java.awt.Font("Yu Gothic Medium", 0, 18)); // NOI18N
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Por cliente", "Por fecha", "Por paquete", "Por Precio", " " }));
@@ -206,7 +211,7 @@ public class PanelPedidos extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(botonElimiinarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(modificarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(26, 26, 26)))
                 .addGap(68, 68, 68))
             .addGroup(layout.createSequentialGroup()
@@ -229,7 +234,7 @@ public class PanelPedidos extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(botonElimiinarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(modificarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(21, 21, 21)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(26, 26, 26)))
@@ -239,7 +244,7 @@ public class PanelPedidos extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        PanelRegistrarPedido registrarPedido = new PanelRegistrarPedido(fachadaControl);
+        PanelRegistrarPedido registrarPedido = new PanelRegistrarPedido(fachadaControl,panelPrincipal);
         panelPrincipal.removeAll();
         panelPrincipal.add(registrarPedido, "Registrar Pedido");
         panelPrincipal.repaint();
@@ -258,9 +263,8 @@ public class PanelPedidos extends javax.swing.JPanel {
 
     private void botonElimiinarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonElimiinarPedidoActionPerformed
         // TODO add your handling code here:
-        fachadaControl.eliminarPedido(pedidos.get(row));
         try {
-            
+            fachadaControl.eliminarPedido(pedidos.get(row));
             JOptionPane.showMessageDialog(this, "Pedido eliminado correctamente");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "No se pudo eliminar el pedido");
@@ -272,13 +276,22 @@ public class PanelPedidos extends javax.swing.JPanel {
         row = tablaPedidos.rowAtPoint(evt.getPoint());
     }//GEN-LAST:event_tablaPedidosMouseClicked
 
+    private void modificarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modificarPedidoActionPerformed
+        // TODO add your handling code here:
+        PanelRegistrarPedido registrarPedido = new PanelRegistrarPedido(fachadaControl,pedidos.get(row),panelPrincipal);
+        panelPrincipal.removeAll();
+        panelPrincipal.add(registrarPedido, "Registrar Pedido");
+        panelPrincipal.repaint();
+        panelPrincipal.revalidate();
+    }//GEN-LAST:event_modificarPedidoActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonElimiinarPedido;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton3;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton modificarPedido;
     private javax.swing.JTable tablaPedidos;
     private javax.swing.JTextField textoBuscarCliente;
     // End of variables declaration//GEN-END:variables

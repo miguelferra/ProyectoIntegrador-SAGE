@@ -21,6 +21,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
      * Creates new form FrmPrincipal
      */
     PanelPedidos pedidos;
+    PanelServiciosEntregables serviciosEntregables;
     IFachadaControl fachadaControl;
     Clientes cliente;
     int row;
@@ -45,7 +46,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         menuPedidos = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
+        botonEntregablesServicios = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
@@ -81,15 +82,20 @@ public class FrmPrincipal extends javax.swing.JFrame {
         });
         jPanel1.add(menuPedidos, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 250, 290, 120));
 
-        jButton5.setBackground(new java.awt.Color(57, 0, 10));
-        jButton5.setFont(new java.awt.Font("Yu Gothic Medium", 0, 24)); // NOI18N
-        jButton5.setForeground(new java.awt.Color(255, 255, 255));
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sage/paquetes.png"))); // NOI18N
-        jButton5.setText("    Paquetes");
-        jButton5.setActionCommand("Paquetes");
-        jButton5.setBorder(null);
-        jButton5.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 370, 290, 120));
+        botonEntregablesServicios.setBackground(new java.awt.Color(57, 0, 10));
+        botonEntregablesServicios.setFont(new java.awt.Font("Yu Gothic Medium", 0, 24)); // NOI18N
+        botonEntregablesServicios.setForeground(new java.awt.Color(255, 255, 255));
+        botonEntregablesServicios.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sage/paquetes.png"))); // NOI18N
+        botonEntregablesServicios.setText("    Paquetes");
+        botonEntregablesServicios.setActionCommand("Paquetes");
+        botonEntregablesServicios.setBorder(null);
+        botonEntregablesServicios.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        botonEntregablesServicios.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonEntregablesServiciosActionPerformed(evt);
+            }
+        });
+        jPanel1.add(botonEntregablesServicios, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 370, 290, 120));
 
         jButton6.setBackground(new java.awt.Color(57, 0, 10));
         jButton6.setFont(new java.awt.Font("Yu Gothic Medium", 0, 24)); // NOI18N
@@ -168,6 +174,15 @@ public class FrmPrincipal extends javax.swing.JFrame {
         panelPrincipal.add(pedidos, "Pedidos");
     }//GEN-LAST:event_menuPedidosActionPerformed
 
+    private void botonEntregablesServiciosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonEntregablesServiciosActionPerformed
+        // TODO add your handling code here:
+        panelPrincipal.removeAll();
+        serviciosEntregables = new PanelServiciosEntregables(fachadaControl,panelPrincipal);
+        panelPrincipal.repaint();
+        panelPrincipal.revalidate();
+        panelPrincipal.add(serviciosEntregables, "Servicios y Entregables");
+    }//GEN-LAST:event_botonEntregablesServiciosActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -204,7 +219,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton5;
+    private javax.swing.JButton botonEntregablesServicios;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;

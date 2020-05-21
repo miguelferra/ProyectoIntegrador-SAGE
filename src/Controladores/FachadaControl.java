@@ -161,5 +161,13 @@ public class FachadaControl implements IFachadaControl {
     public void eliminarDetalleServicio(Pedidos pedido){
         controlServicio.eliminarDetalleServicio(pedido);
     }
+    
+     public void modificarPedido(int pedido,float precio, Date fecha,String promocion,String notas,int idCliente,int idPaquete,List<Detalleentregablespedido> listaEntregables ,List<Detalleservicio> listaServicios) {
+        eliminarDetalleServicio(controlPedido.getPedidoID(pedido));
+        eliminarDetalleEntregable(controlPedido.getPedidoID(pedido));
+        controlEntregable.asignarDetalleEntregablesPedido(listaEntregables,controlPedido.getPedidoID(pedido));
+        controlServicio.asignarDetalleServiciosPedido(listaServicios,controlPedido.getPedidoID(pedido));
+        controlPedido.modificarPedido(pedido, precio, fecha, promocion, notas,controlCliente.getClienteId(idCliente), controlPaquete.getPaqueteId(idPaquete),controlEntregable.getDetalleEntregable(pedido),controlServicio.getDetalleServicio(pedido));
+    }
 }
     

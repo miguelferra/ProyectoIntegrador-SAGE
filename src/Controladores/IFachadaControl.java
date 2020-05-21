@@ -34,6 +34,9 @@ public interface IFachadaControl {
     
     public void registrarDetalleServicio(Detalleservicio detalleServicio);
     
+    public void modificarPedido(int pedido,float precio, Date fecha,String promocion,String notas,int idCliente,int idPaquete,
+            List<Detalleentregablespedido> listaEntregables ,List<Detalleservicio> listaServicios);
+    
     public Clientes getClienteId(int id);
 
     public List<Detalleentregablespedido> getDetalleEntregable(int id);

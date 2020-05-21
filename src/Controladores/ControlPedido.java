@@ -84,4 +84,20 @@ public class ControlPedido {
         }
     }
 
+    public void modificarPedido(int id, float precio, Date fecha, String promocion, String notas, Clientes cliente, Paquetes paquete,List<Detalleentregablespedido> listaEntregables ,List<Detalleservicio> listaServicios) {
+        try {
+            Pedidos ped = new Pedidos(id, new Date(), fecha, precio, promocion, notas);
+            ped.setClientes(cliente);
+            ped.setPaquetes(paquete);
+            //ped.setDetalleentregablespedidoList(listaEntregables);
+            //ped.setDetalleservicioList(listaServicios);
+            cPedido.edit(ped);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(ControlPedido.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(ControlPedido.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+
 }
