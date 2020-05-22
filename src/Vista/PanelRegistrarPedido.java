@@ -48,7 +48,8 @@ public class PanelRegistrarPedido extends javax.swing.JPanel {
         comboClientes.removeAllItems();
         diseñoTabla();
         fechaPedido.setDate(pedido.getFechaRequerida());
-        textoCliente.setText(pedido.getClientes().getNombre()+ " "+pedido.getClientes().getApellido());
+        textoCliente.setText(pedido.getClientes().getNombre());
+        campoApellido.setText(pedido.getClientes().getApellido());
         for (int i = 0; i < tablaPaquetes.getRowCount(); i++) {
             if (tablaPaquetes.getValueAt(i, 0).toString().equalsIgnoreCase(pedido.getPaquetes().getNombre())) {
                 tablaPaquetes.setRowSelectionInterval(i, i);
@@ -156,7 +157,6 @@ public class PanelRegistrarPedido extends javax.swing.JPanel {
         nuevoCliente = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaPaquetes = new javax.swing.JTable();
-        actualizarCliente = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -165,6 +165,9 @@ public class PanelRegistrarPedido extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         fechaPedido = new com.toedter.calendar.JDateChooser();
         textoErrorFecha = new javax.swing.JLabel();
+        campoApellido = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(107, 19, 43));
 
@@ -251,14 +254,6 @@ public class PanelRegistrarPedido extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(tablaPaquetes);
 
-        actualizarCliente.setFont(new java.awt.Font("Yu Gothic Medium", 0, 18)); // NOI18N
-        actualizarCliente.setText("Actualizar Cliente");
-        actualizarCliente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                actualizarClienteActionPerformed(evt);
-            }
-        });
-
         jButton1.setText("⟲");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -290,6 +285,21 @@ public class PanelRegistrarPedido extends javax.swing.JPanel {
         textoErrorFecha.setForeground(new java.awt.Color(255, 0, 0));
         textoErrorFecha.setText("*Ingrese fecha*");
 
+        campoApellido.setFont(new java.awt.Font("Yu Gothic Medium", 0, 18)); // NOI18N
+        campoApellido.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                campoApellidoKeyReleased(evt);
+            }
+        });
+
+        jLabel7.setFont(new java.awt.Font("Yu Gothic Medium", 0, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel7.setText("Nombre");
+
+        jLabel8.setFont(new java.awt.Font("Yu Gothic Medium", 0, 14)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel8.setText("Apellido");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -307,12 +317,18 @@ public class PanelRegistrarPedido extends javax.swing.JPanel {
                             .addGap(18, 18, 18)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(layout.createSequentialGroup()
-                                    .addComponent(textoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(nuevoCliente)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(actualizarCliente))
-                                .addComponent(comboClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(textoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel7))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel8)
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(campoApellido, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(18, 18, 18)
+                                            .addComponent(nuevoCliente))))
+                                .addComponent(comboClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 472, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(216, 216, 216))
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1000, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(123, 123, 123)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -337,7 +353,11 @@ public class PanelRegistrarPedido extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(58, 58, 58)
+                        .addGap(47, 47, 47)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel8))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addGroup(layout.createSequentialGroup()
@@ -345,7 +365,7 @@ public class PanelRegistrarPedido extends javax.swing.JPanel {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(textoCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(nuevoCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(actualizarCliente, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                    .addComponent(campoApellido, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel5)))
@@ -371,7 +391,7 @@ public class PanelRegistrarPedido extends javax.swing.JPanel {
                         .addComponent(campoPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(54, 54, 54)
                         .addComponent(registrarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 24, Short.MAX_VALUE))
+                        .addGap(0, 13, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(comboClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -380,7 +400,7 @@ public class PanelRegistrarPedido extends javax.swing.JPanel {
                             .addComponent(jButton1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 530, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(108, Short.MAX_VALUE))
+                .addContainerGap(94, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -404,10 +424,9 @@ public class PanelRegistrarPedido extends javax.swing.JPanel {
 
     private void textoClienteKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textoClienteKeyReleased
         // TODO add your handling code here:
-        String[] splited = textoCliente.getText().split(" ");
         try {
             cliente = new Clientes();
-            cliente = fachadaControl.getClienteNombre(splited[0], splited[1]);
+            cliente = fachadaControl.getClienteNombre(textoCliente.getText(), campoApellido.getText());
             comboClientes.addItem(cliente.getNombre() + " " + cliente.getApellido());
             System.out.println("Encontrado");
         } catch (Exception e) {
@@ -482,15 +501,6 @@ public class PanelRegistrarPedido extends javax.swing.JPanel {
 
     }//GEN-LAST:event_registrarPedidoActionPerformed
 
-    private void actualizarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_actualizarClienteActionPerformed
-        // TODO add your handling code here:
-        try {
-            new FrmNuevoCliente(fachadaControl, cliente.getIdcliente()).setVisible(true);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Seleccione un cliente");
-        }
-    }//GEN-LAST:event_actualizarClienteActionPerformed
-
 
     private void textoPromocionKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textoPromocionKeyReleased
         try {
@@ -527,9 +537,23 @@ public class PanelRegistrarPedido extends javax.swing.JPanel {
         campoPrecio.setText("");
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void campoApellidoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_campoApellidoKeyReleased
+        // TODO add your handling code here:
+        try {
+            cliente = new Clientes();
+            cliente = fachadaControl.getClienteNombre(textoCliente.getText(), campoApellido.getText());
+            comboClientes.addItem(cliente.getNombre() + " " + cliente.getApellido());
+            System.out.println("Encontrado");
+        } catch (Exception e) {
+            comboClientes.removeAllItems();
+            System.out.println("No existe el cliente");
+        }
+
+    }//GEN-LAST:event_campoApellidoKeyReleased
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton actualizarCliente;
+    private javax.swing.JTextField campoApellido;
     private javax.swing.JTextField campoPrecio;
     private javax.swing.JComboBox<String> comboClientes;
     private com.toedter.calendar.JDateChooser fechaPedido;
@@ -540,6 +564,8 @@ public class PanelRegistrarPedido extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton nuevoCliente;

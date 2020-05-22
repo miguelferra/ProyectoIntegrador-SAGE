@@ -50,7 +50,13 @@ public class Entregables implements Serializable {
 
     public Entregables() {
     }
-
+    
+    public Entregables(int id, String tipo, String tamaño) {
+        this.identregable = id;
+        this.tipo = tipo;
+        this.tamaño = tamaño;
+    }
+    
     public Entregables(Integer identregable) {
         this.identregable = identregable;
     }

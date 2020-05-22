@@ -21,6 +21,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
      * Creates new form FrmPrincipal
      */
     PanelPedidos pedidos;
+    PanelAdministrarClientes clientes;
     PanelServiciosEntregables serviciosEntregables;
     IFachadaControl fachadaControl;
     Clientes cliente;
@@ -48,7 +49,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
         menuPedidos = new javax.swing.JButton();
         botonEntregablesServicios = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
+        menuClientes = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         panelPrincipal = new javax.swing.JPanel();
@@ -107,15 +108,20 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jButton6.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 730, 290, 120));
 
-        jButton7.setBackground(new java.awt.Color(57, 0, 10));
-        jButton7.setFont(new java.awt.Font("Yu Gothic Medium", 0, 24)); // NOI18N
-        jButton7.setForeground(new java.awt.Color(255, 255, 255));
-        jButton7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sage/clientes.png"))); // NOI18N
-        jButton7.setText("     Clientes");
-        jButton7.setActionCommand("Paquetes");
-        jButton7.setBorder(null);
-        jButton7.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jPanel1.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 490, 290, 120));
+        menuClientes.setBackground(new java.awt.Color(57, 0, 10));
+        menuClientes.setFont(new java.awt.Font("Yu Gothic Medium", 0, 24)); // NOI18N
+        menuClientes.setForeground(new java.awt.Color(255, 255, 255));
+        menuClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/sage/clientes.png"))); // NOI18N
+        menuClientes.setText("     Clientes");
+        menuClientes.setActionCommand("Paquetes");
+        menuClientes.setBorder(null);
+        menuClientes.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        menuClientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuClientesActionPerformed(evt);
+            }
+        });
+        jPanel1.add(menuClientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 490, 290, 120));
 
         jButton8.setBackground(new java.awt.Color(57, 0, 10));
         jButton8.setFont(new java.awt.Font("Yu Gothic Medium", 0, 24)); // NOI18N
@@ -183,6 +189,15 @@ public class FrmPrincipal extends javax.swing.JFrame {
         panelPrincipal.add(serviciosEntregables, "Servicios y Entregables");
     }//GEN-LAST:event_botonEntregablesServiciosActionPerformed
 
+    private void menuClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuClientesActionPerformed
+        // TODO add your handling code here:
+        panelPrincipal.removeAll();
+        clientes = new PanelAdministrarClientes(fachadaControl,panelPrincipal);
+        panelPrincipal.repaint();
+        panelPrincipal.revalidate();
+        panelPrincipal.add(clientes, "Clientes");
+    }//GEN-LAST:event_menuClientesActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -221,12 +236,12 @@ public class FrmPrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonEntregablesServicios;
     private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JButton menuClientes;
     private javax.swing.JButton menuPedidos;
     private javax.swing.JPanel panelPrincipal;
     // End of variables declaration//GEN-END:variables

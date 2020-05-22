@@ -8,6 +8,8 @@ package Controladores;
 
 import Datos.DetalleservicioJpaController;
 import Datos.ServiciosJpaController;
+import Datos.exceptions.IllegalOrphanException;
+import Datos.exceptions.NonexistentEntityException;
 import Datos.exceptions.PreexistingEntityException;
 import Entidades.Detalleservicio;
 import Entidades.Pedidos;
@@ -64,10 +66,25 @@ public class ControlServicio {
             Logger.getLogger(FachadaControl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void eliminarDetalleServicio(Pedidos pedido){
+
+    public void eliminarDetalleServicio(Pedidos pedido) {
         cDetServ.eliminarDetalleServicio(pedido.getIdpedido());
     }
-       
-    
+
+    public void registrarServicio(String tipo, String lugar, String detalle) {
+        Servicios servicio = new Servicios(0, tipo, lugar, detalle);
+        cServ.create(servicio);
+    }
+
+    public void eliminarServicio(Servicios servicio) {
+        try {
+            cServ.destroy(servicio.getIdservicio());
+        } catch (IllegalOrphanException ex) {
+            Logger.getLogger(ControlServicio.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(ControlServicio.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+
 }

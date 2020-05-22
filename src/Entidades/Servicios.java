@@ -54,6 +54,13 @@ public class Servicios implements Serializable {
     public Servicios() {
     }
 
+    public Servicios(int id, String tipo, String lugar, String detalle) {
+        this.idservicio = id;
+        this.tipo = tipo;
+        this.lugar = lugar;
+        this.detalle = detalle;
+    }
+    
     public Servicios(Integer idservicio) {
         this.idservicio = idservicio;
     }

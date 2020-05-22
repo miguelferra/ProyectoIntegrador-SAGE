@@ -10,6 +10,7 @@ import Entidades.Detalleentregablespaquete;
 import Entidades.Detalleentregablespedido;
 import Entidades.Entregables;
 import Entidades.Servicios;
+import java.awt.Color;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
@@ -26,6 +27,7 @@ public class PanelServiciosEntregables extends javax.swing.JPanel {
     private List<Entregables> listaEntregables;
     private List<Servicios> listaServicios;
     JPanel panelPrincipal;
+    int row;
     /**
      * Creates new form PanelServiciosEntregables
      */
@@ -37,6 +39,18 @@ public class PanelServiciosEntregables extends javax.swing.JPanel {
         CrearModeloServicios();
         cargarEntregables();
         cargarServicios();
+        diseñoTablas();
+    }
+    
+    private void diseñoTablas(){
+        tablaServicios.setRowHeight(30);
+        tablaServicios.getTableHeader().setReorderingAllowed(false);
+       
+        tablaEntregables.setRowHeight(30);
+//        tablaEntregables.getColumnModel().getColumn(0).setMaxWidth(400);
+//        tablaEntregables.getColumnModel().getColumn(1).setMaxWidth(100);
+//        tablaEntregables.getColumnModel().getColumn(2).setMaxWidth(100);
+        tablaEntregables.getTableHeader().setReorderingAllowed(false);
     }
 
     DefaultTableModel modelo3;
@@ -157,11 +171,13 @@ public class PanelServiciosEntregables extends javax.swing.JPanel {
         tablaServicios = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        eliminar = new javax.swing.JButton();
+        botonRegistrar = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(107, 19, 43));
 
+        tablaEntregables.setFont(new java.awt.Font("Yu Gothic Medium", 0, 24)); // NOI18N
+        tablaEntregables.setForeground(new java.awt.Color(102, 0, 0));
         tablaEntregables.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
@@ -174,8 +190,15 @@ public class PanelServiciosEntregables extends javax.swing.JPanel {
             }
         ));
         tablaEntregables.setSelectionBackground(new java.awt.Color(107, 19, 43));
+        tablaEntregables.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaEntregablesMouseClicked(evt);
+            }
+        });
         entregables.setViewportView(tablaEntregables);
 
+        tablaServicios.setFont(new java.awt.Font("Yu Gothic Medium", 0, 24)); // NOI18N
+        tablaServicios.setForeground(new java.awt.Color(102, 0, 0));
         tablaServicios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {},
@@ -188,24 +211,34 @@ public class PanelServiciosEntregables extends javax.swing.JPanel {
             }
         ));
         tablaServicios.setSelectionBackground(new java.awt.Color(107, 19, 43));
+        tablaServicios.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaServiciosMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tablaServicios);
 
-        jLabel1.setFont(new java.awt.Font("Yu Gothic Medium", 0, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Yu Gothic Medium", 0, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Entregables");
 
-        jLabel2.setFont(new java.awt.Font("Yu Gothic Medium", 0, 24)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Yu Gothic Medium", 0, 36)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Servicios");
 
-        jButton1.setFont(new java.awt.Font("Yu Gothic Medium", 0, 24)); // NOI18N
-        jButton1.setText("Eliminar");
-
-        jButton2.setFont(new java.awt.Font("Yu Gothic Medium", 0, 24)); // NOI18N
-        jButton2.setText("Registrar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        eliminar.setFont(new java.awt.Font("Yu Gothic Medium", 0, 24)); // NOI18N
+        eliminar.setText("Eliminar");
+        eliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                eliminarActionPerformed(evt);
+            }
+        });
+
+        botonRegistrar.setFont(new java.awt.Font("Yu Gothic Medium", 0, 24)); // NOI18N
+        botonRegistrar.setText("Registrar");
+        botonRegistrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonRegistrarActionPerformed(evt);
             }
         });
 
@@ -214,52 +247,98 @@ public class PanelServiciosEntregables extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(106, 106, 106)
+                .addGap(45, 45, 45)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(entregables, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addGap(156, 156, 156)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1023, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel2)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(entregables)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 1221, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(161, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(46, 46, 46)
-                .addComponent(jButton2)
-                .addGap(34, 34, 34))
+                    .addComponent(botonRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(eliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)))
+                .addGap(70, 70, 70))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel1))
-                .addGap(18, 18, 18)
+                .addGap(25, 25, 25)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(entregables, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(94, 94, 94))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton2)
-                        .addComponent(jButton1)))
-                .addGap(37, 37, 37))
+                        .addComponent(jLabel1)
+                        .addGap(18, 18, 18)
+                        .addComponent(entregables, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(59, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(eliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(botonRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(94, 94, 94))))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void botonRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonRegistrarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+        String[] options = {"Servicio", "Entregable"};
+        int x = JOptionPane.showOptionDialog(null, "¿Que deseas registrar?",
+                "Elección de registro",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+        if (x == 0) {
+            new FrmEntregableServicio(fachadaControl,"Servicio").setVisible(true);
+        }else{
+            new FrmEntregableServicio(fachadaControl,"Entregable").setVisible(true);
+        }
+    }//GEN-LAST:event_botonRegistrarActionPerformed
+
+    private void eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarActionPerformed
+        // TODO add your handling code here:
+        if (tablaEntregables.getSelectedRow() != -1) {
+            try {
+                fachadaControl.eliminarEntregable(listaEntregables.get(tablaEntregables.getSelectedRow()));
+                JOptionPane.showMessageDialog(this, "Entregable eliminado");
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "No se ha podido eliminar el entregable :(");
+            }
+        }else if(tablaServicios.getSelectedRow() != -1){
+            try {
+                fachadaControl.eliminarServicio(listaServicios.get(tablaServicios.getSelectedRow()));
+                JOptionPane.showMessageDialog(this, "Servicio eliminado");
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "No se ha podido eliminar el servicio :(");
+            }
+        }else{
+            JOptionPane.showMessageDialog(this, "Selecciona un entregable o un servicio");
+        }
+    }//GEN-LAST:event_eliminarActionPerformed
+
+    private void tablaEntregablesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaEntregablesMouseClicked
+        // TODO add your handling code here:
+        tablaServicios.clearSelection();
+        row = tablaEntregables.rowAtPoint(evt.getPoint());
+    }//GEN-LAST:event_tablaEntregablesMouseClicked
+
+    private void tablaServiciosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaServiciosMouseClicked
+        // TODO add your handling code here:
+        tablaEntregables.clearSelection();
+         row = tablaServicios.rowAtPoint(evt.getPoint());
+    }//GEN-LAST:event_tablaServiciosMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton botonRegistrar;
+    private javax.swing.JButton eliminar;
     private javax.swing.JScrollPane entregables;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane2;

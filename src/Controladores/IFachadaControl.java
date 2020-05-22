@@ -77,5 +77,14 @@ public interface IFachadaControl {
     
     public void eliminarPedido(Pedidos pedido);
     
+    public void eliminarCliente(Clientes clientes);
+     
+    public void registrarServicio(String tipo,String lugar, String detalle);
+     
+    public void registrarEntregable(String tipo,String tamaño);
+    
+    public void eliminarServicio(Servicios servicio);
+    
+    public void eliminarEntregable(Entregables entregable);
     
 }

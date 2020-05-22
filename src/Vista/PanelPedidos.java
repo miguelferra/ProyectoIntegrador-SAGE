@@ -108,23 +108,23 @@ public class PanelPedidos extends javax.swing.JPanel {
     }
 
     private void cargarPedidosCliente() {
-        try {
-            Object o[] = null;
-            String[] splited = textoBuscarCliente.getText().split(" ");
-            List<Pedidos> listaPedidos = fachadaControl.getPedidosCliente(splited[0],splited[1]);
-            for (int i = 0; i < listaPedidos.size(); i++) {
-                modelo2.addRow(o);
-                modelo2.setValueAt(listaPedidos.get(i).getClientes().getNombre() + " " + listaPedidos.get(i).getClientes().getApellido(), i, 0);
-                modelo2.setValueAt(listaPedidos.get(i).getPaquetes().getNombre(), i, 1);
-                SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                modelo2.setValueAt(formato.format(listaPedidos.get(i).getFechaRequerida()), i, 2);
-                modelo2.setValueAt("$"+listaPedidos.get(i).getPrecio(), i, 3);
-                
-            }
-            
-        } catch(Exception e) {
-            System.out.println(e.getMessage());
-        }
+//        try {
+//            Object o[] = null;
+//            String[] splited = textoBuscarCliente.getText().split(" ");
+//            List<Pedidos> listaPedidos = fachadaControl.getPedidosCliente(splited[0],splited[1]);
+//            for (int i = 0; i < listaPedidos.size(); i++) {
+//                modelo2.addRow(o);
+//                modelo2.setValueAt(listaPedidos.get(i).getClientes().getNombre() + " " + listaPedidos.get(i).getClientes().getApellido(), i, 0);
+//                modelo2.setValueAt(listaPedidos.get(i).getPaquetes().getNombre(), i, 1);
+//                SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+//                modelo2.setValueAt(formato.format(listaPedidos.get(i).getFechaRequerida()), i, 2);
+//                modelo2.setValueAt("$"+listaPedidos.get(i).getPrecio(), i, 3);
+//                
+//            }
+//            
+//        } catch(Exception e) {
+//            System.out.println(e.getMessage());
+//        }
     }
 
     @SuppressWarnings("unchecked")
@@ -136,8 +136,7 @@ public class PanelPedidos extends javax.swing.JPanel {
         jButton1 = new javax.swing.JButton();
         botonElimiinarPedido = new javax.swing.JButton();
         modificarPedido = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        textoBuscarCliente = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(107, 19, 43));
 
@@ -187,16 +186,9 @@ public class PanelPedidos extends javax.swing.JPanel {
             }
         });
 
-        jComboBox1.setFont(new java.awt.Font("Yu Gothic Medium", 0, 18)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Por cliente", "Por fecha", "Por paquete", "Por Precio", " " }));
-        jComboBox1.setToolTipText("");
-
-        textoBuscarCliente.setFont(new java.awt.Font("Yu Gothic Medium", 0, 18)); // NOI18N
-        textoBuscarCliente.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                textoBuscarClienteKeyReleased(evt);
-            }
-        });
+        jLabel1.setFont(new java.awt.Font("Yu Gothic Medium", 0, 36)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Pedidos");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -204,31 +196,28 @@ public class PanelPedidos extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(68, 68, 68)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 74, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(botonElimiinarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(modificarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(26, 26, 26)))
-                .addGap(68, 68, 68))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(111, 111, 111)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(34, 34, 34)
-                .addComponent(textoBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 262, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(botonElimiinarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(modificarPedido, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(26, 26, 26)))
+                        .addGap(68, 68, 68))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(88, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(textoBuscarCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(50, 50, 50)
+                .addGap(68, 68, 68)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 678, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -250,16 +239,6 @@ public class PanelPedidos extends javax.swing.JPanel {
         panelPrincipal.repaint();
         panelPrincipal.revalidate();
     }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void textoBuscarClienteKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_textoBuscarClienteKeyReleased
-        // TODO add your handling code here:
-        try {
-            cargarPedidosCliente();
-            System.out.println("Encontrado");  
-        } catch (Exception e) {
-            System.out.println("No existe el cliente");
-        }
-    }//GEN-LAST:event_textoBuscarClienteKeyReleased
 
     private void botonElimiinarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonElimiinarPedidoActionPerformed
         // TODO add your handling code here:
@@ -289,10 +268,9 @@ public class PanelPedidos extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton botonElimiinarPedido;
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton modificarPedido;
     private javax.swing.JTable tablaPedidos;
-    private javax.swing.JTextField textoBuscarCliente;
     // End of variables declaration//GEN-END:variables
 }

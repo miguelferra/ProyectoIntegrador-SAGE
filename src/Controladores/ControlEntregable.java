@@ -8,6 +8,8 @@ package Controladores;
 
 import Datos.DetalleentregablespedidoJpaController;
 import Datos.EntregablesJpaController;
+import Datos.exceptions.IllegalOrphanException;
+import Datos.exceptions.NonexistentEntityException;
 import Entidades.Detalleentregablespedido;
 import Entidades.Entregables;
 import Entidades.Pedidos;
@@ -54,10 +56,24 @@ public class ControlEntregable {
             Logger.getLogger(FachadaControl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void eliminarDetalleEntregable(Pedidos pedido){
-       cDetEnt.eliminarDetalleEntregable(pedido.getIdpedido());
+
+    public void eliminarDetalleEntregable(Pedidos pedido) {
+        cDetEnt.eliminarDetalleEntregable(pedido.getIdpedido());
     }
-    
-    
+
+    public void registrarEntregable(String tipo, String tamaño) {
+        Entregables entregable = new Entregables(0, tipo, tamaño);
+        cEnt.create(entregable);
+    }
+
+    public void eliminarEntregable(Entregables entregable) {
+         try {
+             cEnt.destroy(entregable.getIdentregable());
+         } catch (IllegalOrphanException ex) {
+             Logger.getLogger(ControlEntregable.class.getName()).log(Level.SEVERE, null, ex);
+         } catch (NonexistentEntityException ex) {
+             Logger.getLogger(ControlEntregable.class.getName()).log(Level.SEVERE, null, ex);
+         }
+    }
+
 }

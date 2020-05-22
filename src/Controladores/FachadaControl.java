@@ -158,16 +158,36 @@ public class FachadaControl implements IFachadaControl {
         controlEntregable.eliminarDetalleEntregable(pedido);
     }
     
-    public void eliminarDetalleServicio(Pedidos pedido){
+    public void eliminarDetalleServicio(Pedidos pedido) {
         controlServicio.eliminarDetalleServicio(pedido);
     }
     
-     public void modificarPedido(int pedido,float precio, Date fecha,String promocion,String notas,int idCliente,int idPaquete,List<Detalleentregablespedido> listaEntregables ,List<Detalleservicio> listaServicios) {
+    public void modificarPedido(int pedido, float precio, Date fecha, String promocion, String notas, int idCliente, int idPaquete, List<Detalleentregablespedido> listaEntregables, List<Detalleservicio> listaServicios) {
         eliminarDetalleServicio(controlPedido.getPedidoID(pedido));
         eliminarDetalleEntregable(controlPedido.getPedidoID(pedido));
-        controlEntregable.asignarDetalleEntregablesPedido(listaEntregables,controlPedido.getPedidoID(pedido));
-        controlServicio.asignarDetalleServiciosPedido(listaServicios,controlPedido.getPedidoID(pedido));
-        controlPedido.modificarPedido(pedido, precio, fecha, promocion, notas,controlCliente.getClienteId(idCliente), controlPaquete.getPaqueteId(idPaquete),controlEntregable.getDetalleEntregable(pedido),controlServicio.getDetalleServicio(pedido));
+        controlEntregable.asignarDetalleEntregablesPedido(listaEntregables, controlPedido.getPedidoID(pedido));
+        controlServicio.asignarDetalleServiciosPedido(listaServicios, controlPedido.getPedidoID(pedido));
+        controlPedido.modificarPedido(pedido, precio, fecha, promocion, notas, controlCliente.getClienteId(idCliente), controlPaquete.getPaqueteId(idPaquete), controlEntregable.getDetalleEntregable(pedido), controlServicio.getDetalleServicio(pedido));
+    }
+    
+    public void eliminarCliente(Clientes cliente) {
+        controlCliente.eliminarCliente(cliente);
+    }
+    
+    public void eliminarServicio(Servicios servicio) {
+        controlServicio.eliminarServicio(servicio);
+    }
+    
+    public void eliminarEntregable(Entregables entregable) {
+        controlEntregable.eliminarEntregable(entregable);
+    }
+    
+    public void registrarServicio(String tipo, String lugar, String detalle) {
+        controlServicio.registrarServicio(tipo, lugar, detalle);
+    }
+    
+    public void registrarEntregable(String tipo, String tamaño) {
+        controlEntregable.registrarEntregable(tipo, tamaño);
     }
 }
-    
+

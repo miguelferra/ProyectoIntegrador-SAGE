@@ -6,6 +6,7 @@
 package Controladores;
 
 import Datos.ClientesJpaController;
+import Datos.exceptions.IllegalOrphanException;
 import Datos.exceptions.NonexistentEntityException;
 import Entidades.Clientes;
 import java.util.ArrayList;
@@ -61,6 +62,15 @@ public class ControlCliente {
             Logger.getLogger(FachadaControl.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(FachadaControl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void eliminarCliente(Clientes cliente){
+        try {
+            cClientes.destroy(cliente.getIdcliente());
+        } catch (IllegalOrphanException ex) {
+            Logger.getLogger(ControlCliente.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(ControlCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
