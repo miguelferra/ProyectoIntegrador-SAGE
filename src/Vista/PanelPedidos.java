@@ -257,7 +257,7 @@ public class PanelPedidos extends javax.swing.JPanel {
 
     private void modificarPedidoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modificarPedidoActionPerformed
         // TODO add your handling code here:
-        PanelRegistrarPedido registrarPedido = new PanelRegistrarPedido(fachadaControl,pedidos.get(row),panelPrincipal);
+        PanelRegistrarPedido registrarPedido = new PanelRegistrarPedido(fachadaControl,pedidos.get(row),panelPrincipal,pedidos.get(row).getPaquetes());
         panelPrincipal.removeAll();
         panelPrincipal.add(registrarPedido, "Registrar Pedido");
         panelPrincipal.repaint();
